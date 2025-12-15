@@ -16,31 +16,23 @@ export const globalOgImage = {
 };
 
 export const website = {
-  name: 'WeiWeb',
-  email: 'bottle200918@gmail.com',
-  emojiStatus: '🍙',
+  name: 'PengWeb',
+  email: 'lupeng95@hotmail.com',
+  emojiStatus: '📷',
   globalBackgroundTextureImage: 'https://bucket-wei.webdong.dev/global/natural-paper.webp',
   globalHighlightTextureImage: 'https://bucket-wei.webdong.dev/global/highlight-texture.webp',
   socials: [
     {
-      name: 'Blog',
-      url: 'https://www.webdong.dev/',
+      name: 'LinkedIn',
+      url: 'https://linkedin.com/in/peng-lu-54288b174',
     },
     {
       name: 'GitHub',
-      url: 'https://github.com/riceball-tw',
+      url: 'https://github.com/pngl9527',
     },
     {
-      name: 'Threads',
-      url: 'https://www.threads.net/@webdong.dev',
-    },
-    {
-      name: 'Behance',
-      url: 'https://www.behance.net/riceballwei',
-    },
-    {
-      name: 'CakeResume',
-      url: 'https://www.cakeresume.com/me/Riceball-wei',
+      name: 'Google Scholar',
+      url: 'https://scholar.google.com/citations?user=KaqQ8gIAAAAJ',
     },
   ],
   get copyright() {
