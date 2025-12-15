@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import icon from 'astro-icon';
 import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
   output: 'static',
@@ -17,7 +16,7 @@ export default defineConfig({
   vite: {
     css: {
       postcss: {
-        plugins: [tailwindcss(), autoprefixer()]
+        plugins: [tailwindcss()]
       }
     }
   }
