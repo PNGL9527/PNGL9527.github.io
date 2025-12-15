@@ -21,8 +21,8 @@ export const regionTags = {
   zh: 'zh-Hant-TW',
 } as const;
 
-export const defaultLocale = 'zh-tw';
-export const prefixDefaultLocale = true;
+export const defaultLocale = 'en';
+export const prefixDefaultLocale = false;
 
 export type LanguageKey = keyof typeof languages;
 export type LanguageValue = (typeof languages)[LanguageKey];
