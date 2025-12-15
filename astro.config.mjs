@@ -1,26 +1,22 @@
 import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import tailwindcss from '@tailwindcss/vite';
+import tailwind from '@astrojs/tailwind';
 import icon from 'astro-icon';
-import { languages, prefixDefaultLocale, defaultLocale } from './src/i18n/i18n.ts';
 
-// https://astro.build/config
 export default defineConfig({
-  prefetch: {
-    prefetchAll: true,
+  output: 'static',
+
+  // GitHub Pages 用户主页仓库：PNGL9527.github.io 通常不需要 base
+  site: 'https://PNGL9527.github.io',
+
+  // 如果你仍保留多语言路由，先保持原模板的 locale 列表
+  // 等你确认只做英文，再把 locales 改为 ['en']，并同步改你的 i18n 文件
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'zh-cn', 'zh-tw']
   },
-  site: 'https://weweweb.pages.dev',
-  build: {
-    inlineStylesheets: 'always',
-  },
-i18n: {
-  locales: ['en'],
-  defaultLocale: 'en',
-  // 其他跟路由前缀相关的配置按你项目现状保留
-},
-  },
-  integrations: [mdx(), icon()],
-  vite: {
-    plugins: [tailwindcss()],
-  },
+
+  integrations: [
+    tailwind(),
+    icon()
+  ]
 });
