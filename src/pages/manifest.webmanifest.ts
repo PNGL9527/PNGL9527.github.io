@@ -6,7 +6,7 @@ import { favicons } from '@/utility/config.ts';
 export const GET: APIRoute = () =>
   new Response(
     JSON.stringify({
-      name: "Wei's Website",
+      name: "Peng's Portfolio",
       icons: [
         { src: favicons['android-chrome-192'], type: 'image/png', sizes: '192x192' },
         { src: favicons['android-chrome-512'], type: 'image/png', sizes: '512x512' },
