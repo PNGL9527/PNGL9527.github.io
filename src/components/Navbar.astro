@@ -1,0 +1,60 @@
+---
+import LanguagePicker from '@/components/LanguagePicker.astro'
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { defaultLocale, useTranslations,prefixDefaultLocale,  type LanguageKey } from '@/i18n/i18n.ts';
+import Logo from '@/assets/logo.svg';
+
+const t = useTranslations(Astro.currentLocale as LanguageKey);
+
+const links = [
+  { url: '/', name: t('Navbar-1'), isHiddenOnMobile: true },
+  { url: '/resume', name: t('Navbar-2') },
+  { url: '/work', name: t('Navbar-3') },
+  { url: '/faq', name: t('Navbar-4') },
+];
+
+function isActiveNavItem(navItem: string) {
+  const { pathname } = new URL(Astro.url);
+  const currentPath = pathname.replace(/^\/|\/$/g, '');
+  const localePrefix = prefixDefaultLocale ? Astro.currentLocale : '';
+  const isHomepage = navItem === '/'
+  const isDefaultLocaleActive = currentPath === localePrefix
+  const isOtherLocaleActive = currentPath === Astro.currentLocale
+
+  if (isHomepage) {
+    return isOtherLocaleActive || isDefaultLocaleActive;
+  }
+
+  return currentPath.includes(navItem.replace(/^\/|\/$/g, ''));
+}
+---
+
+<nav style="height: var(--navbar-height)" class="px-4 flex flex-col md:flex-row flex-wrap justify-center z-50 relative md:justify-between items-center container mx-auto print:hidden">
+  <a
+    class="hover:bg-primary-100 p-4 -m-4 rounded-full aspect-square flex justify-center items-center transition-colors"
+    href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/')}
+  >
+    <Logo />
+  </a>
+
+  <div class="flex gap-2 items-center">
+    <ul class="flex gap-2">
+      {
+        links.map(({ url, name, isHiddenOnMobile }) => (
+          <li class={isHiddenOnMobile ? 'hidden md:inline-block' : ''}>
+            <a
+              class={`md:px-8 px-4 py-4 rounded-full transition-colors whitespace-nowrap ${
+                isActiveNavItem(url) ? 'bg-primary-900 text-primary-50' : 'hover:bg-primary-100'
+              }`}
+              href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, url)}
+            >
+              {name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <LanguagePicker/>
+  </div>
+</nav>
+

@@ -1,0 +1,72 @@
+---
+import { defaultLocale, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { website } from '@/utility/config.ts'
+
+const t = useTranslations(Astro.currentLocale as LanguageKey);
+---
+
+<footer class="print:hidden container mx-auto px-4 py-8">
+  <div class="flex flex-wrap justify-between mb-8">
+    <h2 class="text-3xl md:text-5xl mb-8">
+      <span class="font-bold">{t('Footer-1')}</span>
+      <span class="text-primary-700">
+        <br />
+        {t('Footer-2')} <button class="cursor-pointer highlight" data-mail-btn={website.email}>Email</button> {t('Footer-3')} <a class="highlight" href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/resume')}>{t('Footer-4')}</a> {t('Footer-5')}
+      </span>
+    </h2>
+
+    <div>
+      <h3 class="text-lg font-medium mb-4 sr-only lg:not-sr-only">{t('Footer-6')}</h3>
+      <ul>
+        {
+          website.socials.map((social) => (
+            <li>
+              <a
+                class="hover:bg-primary-100 rounded-full transition-colors p-4 ml-0 lg:-ml-4 inline-block"
+                href={social.url}
+                target="_blank"
+              >
+                {social.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  <div class="flex justify-between">
+    <p class="opacity-80" set:html={website.copyright} />
+    <span>{ website.emojiStatus }</span>
+  </div>
+</footer>
+
+<script is:inline define:vars={{ popoverText: t('Footer-7')}}>
+  document.addEventListener("astro:page-load", () => {
+    document.querySelector('[data-mail-btn]').addEventListener('click', (e) => {
+      navigator.clipboard.writeText(e.target.dataset.mailBtn);
+
+      /* eslint-disable no-param-reassign */
+      function showPopover(targetElement) {
+        targetElement.disabled = true;
+        const popover = document.createElement('div');
+        popover.textContent = popoverText;
+        targetElement.appendChild(popover);
+        popover.style.position = 'absolute';
+        popover.style.fontSize = '1rem';
+        popover.style.letterSpacing = '0.05rem';
+        popover.style.whiteSpace = 'nowrap';
+        popover.style.left = '50%';
+        popover.style.transform = 'translate(-50%, 0%)';
+
+        setTimeout(() => {
+          targetElement.removeChild(popover);
+          targetElement.disabled = false;
+        }, 1000);
+      }
+      /* eslint-enable no-param-reassign */
+
+      showPopover(e.target);
+    });
+  });
+</script>
