@@ -9,15 +9,17 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
   },
-  site: 'https://weweweb.pages.dev',
+  // 你现在部署到 GitHub Pages（PNGL9527.github.io）时建议改成这个：
+  site: 'https://PNGL9527.github.io',
   build: {
     inlineStylesheets: 'always',
   },
   i18n: {
-    defaultLocale,
-    locales: Object.keys(languages),
+    defaultLocale: 'en',
+    locales: ['en'],
     routing: {
-      prefixDefaultLocale,
+      // 你目前路由结构是 /[language]/...，为了不大改路由，建议先保留 /en 前缀：
+      prefixDefaultLocale: true,
       redirectToDefaultLocale: false,
     },
   },
