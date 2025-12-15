@@ -1,23 +1,29 @@
 import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
+import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
-import tailwindcss from 'tailwindcss';
+import { languages, prefixDefaultLocale, defaultLocale } from './src/i18n/i18n.ts';
 
+// https://astro.build/config
 export default defineConfig({
-  output: 'static',
-  site: 'https://PNGL9527.github.io',
-
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'zh-cn', 'zh-tw']
+  prefetch: {
+    prefetchAll: true,
   },
-
-  integrations: [icon()],
-
+  site: 'https://weweweb.pages.dev',
+  build: {
+    inlineStylesheets: 'always',
+  },
+  i18n: {
+    defaultLocale,
+    locales: Object.keys(languages),
+    routing: {
+      prefixDefaultLocale,
+      redirectToDefaultLocale: false,
+    },
+  },
+  integrations: [mdx(), icon()],
   vite: {
-    css: {
-      postcss: {
-        plugins: [tailwindcss()]
-      }
-    }
-  }
+    plugins: [tailwindcss()],
+  },
 });
+
