@@ -1,0 +1,44 @@
+{
+  "personalInfo": {
+    "name": "Your Name",
+    "role": "Your Role",
+    "description": "Short professional summary (HTML is allowed).",
+    "socialLinks": [
+      { "name": "Email", "url": "mailto:you@example.com", "icon": "material-symbols:mail-outline" },
+      { "name": "GitHub", "url": "https://github.com/PNGL9527", "icon": "simple-icons:github" }
+    ]
+  },
+  "workExperience": [
+    {
+      "title": "Role Title",
+      "time": "2024 — Present",
+      "company": { "name": "Company", "link": "https://example.com" },
+      "achievements": [
+        "Achievement 1",
+        ["Sub-point 1", "Sub-point 2"],
+        "Achievement 2"
+      ],
+      "techs": ["Astro", "TypeScript"]
+    }
+  ],
+  "achievements": [
+    { "title": "Project / Award", "subtitle": "Short description", "url": "https://example.com" }
+  ],
+  "education": [
+    {
+      "title": "Degree, University",
+      "time": "2019 — 2023",
+      "description": "One-line description (HTML is allowed)."
+    }
+  ],
+  "skills": [
+    { "developments": ["Skill area 1", "Skill area 2"] }
+  ],
+  "links": [
+    {
+      "mySite": [
+        { "title": "Portfolio:", "link": "https://yourdomain.com" }
+      ]
+    }
+  ]
+}
