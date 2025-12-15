@@ -13,13 +13,11 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
-  i18n: {
-    defaultLocale,
-    locales: Object.keys(languages),
-    routing: {
-      prefixDefaultLocale,
-      redirectToDefaultLocale: false,
-    },
+i18n: {
+  locales: ['en'],
+  defaultLocale: 'en',
+  // 其他跟路由前缀相关的配置按你项目现状保留
+},
   },
   integrations: [mdx(), icon()],
   vite: {
