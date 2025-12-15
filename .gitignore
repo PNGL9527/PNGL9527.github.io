@@ -25,3 +25,6 @@ src/content
 
 # Lighthouse
 .lighthouseci
+.DS_Store
+src/.DS_Store
+.DS_Store
