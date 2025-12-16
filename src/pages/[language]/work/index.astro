@@ -1,65 +1,37 @@
-<!-- Project list -->
-<ul data-works class="grid md:grid-cols-2 gap-12">
-  {sortedProjects.map((project) => {
-    const normalizedSlug = project.slug.startsWith(`${currentLocale}/`)
-      ? project.slug.slice(currentLocale.length + 1)
-      : project.slug;
+import { defineCollection, z } from 'astro:content';
 
-    return (
-      <li
-        data-tags={(project.data.tags ?? []).join(',')}
-        class="flex flex-col gap-4"
-      >
-        {project.data.thumbnail?.src && (
-          <img
-            src={project.data.thumbnail.src}
-            alt={project.data.thumbnail.alt}
-            class="rounded-lg"
-            width="720"
-            height="540"
-          />
-        )}
+const project = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    publishDate: z.coerce.date(),
+    draft: z.boolean().default(false),
 
-        <h3 class="text-xl font-medium">
-          {project.data.title}
-          <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
-        </h3>
+    // Keep existing constraints in your repo (may be enum-based elsewhere)
+    tech: z.array(z.string()).default([]),
 
-        {project.data.context && (
-          <p class="text-sm opacity-70">{project.data.context}</p>
-        )}
+    // ✅ Research / method / theme tags (free text)
+    tags: z.array(z.string()).default([]),
 
-        <p class="text-base">{project.data.description}</p>
+    // Optional metadata for cards & overview page
+    context: z.string().optional(),
+    role: z.string().optional(),
+    highlights: z.array(z.string()).default([]),
 
-        {project.data.highlights?.length > 0 && (
-          <ul class="list-disc list-inside text-sm opacity-80">
-            {project.data.highlights.slice(0, 3).map((h) => (
-              <li>{h}</li>
-            ))}
-          </ul>
-        )}
+    thumbnail: z
+      .object({
+        src: z.string(),
+        alt: z.string().default('Project thumbnail'),
+      })
+      .optional(),
 
-        <div class="flex flex-wrap gap-2">
-          {(project.data.tags ?? []).length > 0 && (
-            <div class="flex flex-wrap gap-2">
-             {project.data.tags.map((tag) => (
-              <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
-                {tag}
-              </span>
-             ))}
-            </div>
-          )}
-        </div>
+    // Long-form case (e.g., Notion)
+    caseUrl: z.string().url().optional(),
 
-        <div class="flex gap-4 pt-2">
-          <a
-            href={`./${normalizedSlug}/`}
-            class="underline underline-offset-4"
-          >
-            View overview
-          </a>
-        </div>
-      </li>
-    );
-  })}
-</ul>
+    // External landing page (optional)
+    externalUrl: z.string().url().optional(),
+  }),
+});
+
+export const collections = { project };
