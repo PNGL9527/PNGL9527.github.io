@@ -1,37 +1,268 @@
-import { defineCollection, z } from 'astro:content';
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Banner from '@/components/Banner.astro';
+import { Icon } from 'astro-icon/components';
+import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 
-const project = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    publishDate: z.coerce.date(),
-    draft: z.boolean().default(false),
+const currentLocale = Astro.currentLocale as LanguageKey;
+const t = useTranslations(currentLocale);
 
-    // Keep existing constraints in your repo (may be enum-based elsewhere)
-    tech: z.array(z.string()).default([]),
-
-    // ✅ Research / method / theme tags (free text)
-    tags: z.array(z.string()).default([]),
-
-    // Optional metadata for cards & overview page
-    context: z.string().optional(),
-    role: z.string().optional(),
-    highlights: z.array(z.string()).default([]),
-
-    thumbnail: z
-      .object({
-        src: z.string(),
-        alt: z.string().default('Project thumbnail'),
-      })
-      .optional(),
-
-    // Long-form case (e.g., Notion)
-    caseUrl: z.string().url().optional(),
-
-    // External landing page (optional)
-    externalUrl: z.string().url().optional(),
-  }),
+const publicCurrentLangProjects = await getCollection('project', (project) => {
+  const isPublicProject = !project.data.draft;
+  const isCurrentLangProject = project.id.startsWith(currentLocale);
+  return isPublicProject && isCurrentLangProject;
 });
 
-export const collections = { project };
+const sortedProjects = publicCurrentLangProjects.sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+);
+
+const allProjectTags = publicCurrentLangProjects
+  .reduce<string[]>((acc, curr) => {
+    const tags = curr.data.tags || [];
+    return [...new Set([...acc, ...tags])];
+  }, [])
+  .sort((a, b) => a.localeCompare(b));
+
+type TagGroupIds =
+  | 'Work-TagGroup-all'
+  | 'Work-TagGroup-Methods'
+  | 'Work-TagGroup-Systems'
+  | 'Work-TagGroup-Mobility'
+  | 'Work-TagGroup-Healthcare';
+
+type TagGroup = {
+  id: TagGroupIds;
+  label: string;
+  relatedTags: string[];
+  icon: string;
+  themeColor: string;
+};
+
+const allTagGroups: TagGroup[] = [
+  {
+    id: 'Work-TagGroup-all',
+    label: 'All',
+    relatedTags: [],
+    icon: 'material-symbols:apps',
+    themeColor: '#171717',
+  },
+  {
+    id: 'Work-TagGroup-Methods',
+    label: 'Methods',
+    relatedTags: [
+      'Quali-quantitative research',
+      'Phenomenological interviews',
+      'Experience sampling',
+      'Framework development',
+    ],
+    icon: 'material-symbols:science-outline',
+    themeColor: '#1f2a44',
+  },
+  {
+    id: 'Work-TagGroup-Systems',
+    label: 'Systems',
+    relatedTags: ['Service blueprinting', 'System mapping', 'Process analysis'],
+    icon: 'material-symbols:account-tree-outline',
+    themeColor: '#2b3a2e',
+  },
+  {
+    id: 'Work-TagGroup-Mobility',
+    label: 'Mobility',
+    relatedTags: ['Smart mobility', 'Human–vehicle interaction', 'Co-driving experience'],
+    icon: 'material-symbols:directions-car',
+    themeColor: '#3a2b2b',
+  },
+  {
+    id: 'Work-TagGroup-Healthcare',
+    label: 'Healthcare',
+    relatedTags: ['Healthcare services', 'Operational analysis', 'Patient flow'],
+    icon: 'material-symbols:local-hospital-outline',
+    themeColor: '#2b2e3a',
+  },
+];
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((language) => ({
+    params: { language },
+  }));
+}
+---
+
+<style is:inline>
+  .active[data-group-id] {
+    background-color: var(--themeColor);
+    color: white;
+    border-color: transparent;
+  }
+
+  [data-group-id]:hover {
+    color: var(--themeColor);
+  }
+
+  .active {
+    background-color: var(--color-primary-900);
+    color: var(--color-primary-50);
+    border-color: transparent;
+  }
+</style>
+
+<script is:inline define:vars={{ allTagGroups }}>
+  document.addEventListener('astro:page-load', () => {
+    let activeTags = [];
+
+    const groupFilterElement = document.querySelector('[data-group-filter]');
+    const filterElement = document.querySelector('[data-filter]');
+    const worksElement = document.querySelector('[data-works]');
+
+    function updateList() {
+      // Tag buttons
+      filterElement?.querySelectorAll('button').forEach((button) => {
+        button.classList.toggle('active', activeTags.includes(button.innerText));
+      });
+
+      // Group buttons
+      groupFilterElement?.querySelectorAll('button').forEach((button) => {
+        const groupId = button.dataset.groupId;
+        const related = allTagGroups.find((g) => g.id === groupId)?.relatedTags || [];
+        const isActive = related.length > 0 && related.every((t) => activeTags.includes(t));
+        button.classList.toggle('active', isActive);
+      });
+
+      // Cards
+      worksElement?.querySelectorAll('[data-tags]').forEach((card) => {
+        const tags = card.dataset.tags?.split(',').filter(Boolean) || [];
+        const visible = activeTags.length === 0 || activeTags.some((tag) => tags.includes(tag));
+        card.classList.toggle('hidden', !visible);
+      });
+    }
+
+    filterElement?.addEventListener('click', (e) => {
+      const button = e.target?.closest?.('button');
+      if (!button) return;
+
+      const tag = button.innerText;
+      activeTags = activeTags.includes(tag)
+        ? activeTags.filter((t) => t !== tag)
+        : [...activeTags, tag];
+
+      updateList();
+    });
+
+    groupFilterElement?.addEventListener('click', (e) => {
+      const button = e.target?.closest?.('button');
+      if (!button) return;
+
+      const groupId = button.dataset.groupId;
+      const related = allTagGroups.find((g) => g.id === groupId)?.relatedTags || [];
+      activeTags = [...related];
+
+      updateList();
+    });
+  });
+</script>
+
+<Base title={t('Navbar-3')}>
+  <main class="p-4 md:p-8 min-h-screen">
+    <Banner>
+      <h1 class="text-3xl md:text-5xl font-medium">
+        Selected Work<br />
+        Research-driven UX, service & system projects
+      </h1>
+    </Banner>
+
+    <section class="container mx-auto flex flex-col gap-12">
+      <!-- Group filter -->
+      <ul class="flex flex-wrap gap-2" data-group-filter>
+        {allTagGroups.map((group) => (
+          <li>
+            <button
+              data-group-id={group.id}
+              style={`--themeColor: ${group.themeColor};`}
+              class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
+              type="button"
+            >
+              <Icon size={24} name={group.icon} />
+              {/* 如果你还没加 i18n key，就用 label 作为 fallback */}
+              {t(group.id) !== group.id ? t(group.id) : group.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <!-- Tag filter -->
+      <ul class="flex flex-wrap gap-2" data-filter>
+        {allProjectTags.map((tag) => (
+          <li>
+            <button
+              class="border-2 py-1 md:py-2 px-2 md:px-4 border-primary-50 rounded-full text-xs lg:text-sm"
+              type="button"
+            >
+              {tag}
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <!-- Project list -->
+      <ul data-works class="grid md:grid-cols-2 gap-12">
+        {sortedProjects.map((project) => {
+          const normalizedSlug = project.slug.startsWith(`${currentLocale}/`)
+            ? project.slug.slice(currentLocale.length + 1)
+            : project.slug;
+
+          const tags = project.data.tags ?? [];
+
+          return (
+            <li data-tags={tags.join(',')} class="flex flex-col gap-4">
+              {project.data.thumbnail?.src && (
+                <img
+                  src={project.data.thumbnail.src}
+                  alt={project.data.thumbnail.alt}
+                  class="rounded-lg"
+                  width="720"
+                  height="540"
+                  loading="lazy"
+                />
+              )}
+
+              <h3 class="text-xl font-medium">
+                {project.data.title}
+                <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+              </h3>
+
+              {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
+
+              <p class="text-base">{project.data.description}</p>
+
+              {project.data.highlights?.length > 0 && (
+                <ul class="list-disc list-inside text-sm opacity-80">
+                  {project.data.highlights.slice(0, 3).map((h) => (
+                    <li>{h}</li>
+                  ))}
+                </ul>
+              )}
+
+              {tags.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div class="flex gap-4 pt-2">
+                <a href={`./${normalizedSlug}/`} class="underline underline-offset-4">
+                  View overview
+                </a>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  </main>
+</Base>
