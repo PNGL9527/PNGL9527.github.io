@@ -1,38 +1,98 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
-// 只生成英文路径
+type Params = { language: LanguageKey; slug: string };
+
 export async function getStaticPaths() {
-  const works = await getCollection('work');
+  const projects = await getCollection('project', (entry) => !entry.data.draft);
 
-  return works.map((work) => ({
-    params: {
-      language: 'en',
-      slug: work.slug,
-    },
-  }));
+  // 只为 languages 中的语言生成；并且要求 entry.id 以语言开头（与你 Work 列表页一致）
+  return Object.keys(languages).flatMap((language) => {
+    const lang = language as LanguageKey;
+    const inLang = projects.filter((p) => p.id.startsWith(lang));
+
+    return inLang.map((p) => {
+      // 约定：文件路径形如 "en/xxx" 或 "en/xxx/index"
+      // Astro 的 slug 通常会是 "en/xxx"（取决于你的 content 组织）
+      // 我们将语言前缀去掉，得到路由 slug = "xxx"
+      const normalized = p.slug.startsWith(`${lang}/`) ? p.slug.slice(lang.length + 1) : p.slug;
+
+      return {
+        params: { language: lang, slug: normalized } satisfies Params,
+        props: { id: p.id },
+      };
+    });
+  });
 }
 
-const { slug } = Astro.params;
+const { id } = Astro.props as { id: string };
+const { language, slug } = Astro.params as Params;
 
-// 根据 slug 获取当前 work 内容
-const works = await getCollection('work');
-const work = works.find((item) => item.slug === slug);
+const projects = await getCollection('project', (entry) => !entry.data.draft);
+const project = projects.find((p) => p.id === id);
 
-if (!work) {
-  throw new Error(`Work not found: ${slug}`);
+if (!project) {
+  throw new Error(`Project not found: ${language}/${slug}`);
 }
+
+const year = project.data.publishDate?.getFullYear?.() ?? '';
 ---
 
-<Base title={work.data.title}>
-  <article class="container mx-auto py-16 prose">
-    <h1>{work.data.title}</h1>
+<Base title={project.data.title}>
+  <main class="container mx-auto px-4 py-12">
+    <article class="max-w-3xl">
+      <header class="space-y-3">
+        <h1 class="text-3xl md:text-5xl font-semibold">{project.data.title}</h1>
 
-    {work.data.description && (
-      <p>{work.data.description}</p>
-    )}
+        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm opacity-70">
+          {year && <span>{year}</span>}
+          {project.data.context && <span>{project.data.context}</span>}
+          {project.data.role && <span>{project.data.role}</span>}
+        </div>
 
-    <slot />
-  </article>
+        <p class="text-lg">{project.data.description}</p>
+
+        {project.data.highlights?.length > 0 && (
+          <ul class="list-disc list-inside text-base opacity-90">
+            {project.data.highlights.map((h) => <li>{h}</li>)}
+          </ul>
+        )}
+
+        {project.data.tech?.length > 0 && (
+          <div class="flex flex-wrap gap-2 pt-1">
+            {project.data.tech.map((tag) => (
+              <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div class="flex flex-wrap gap-4 pt-4">
+          {project.data.caseUrl && (
+            <a class="underline underline-offset-4" href={project.data.caseUrl}>
+              Read full case
+            </a>
+          )}
+          {!project.data.caseUrl && project.data.externalUrl && (
+            <a class="underline underline-offset-4" href={project.data.externalUrl}>
+              View project
+            </a>
+          )}
+          <a class="underline underline-offset-4 opacity-70" href={`../`}>
+            Back to selected work
+          </a>
+        </div>
+      </header>
+
+      <hr class="my-10 border-b" />
+
+      <!-- Optional short overview written in MD/MDX -->
+      <section class="prose max-w-none">
+        <slot />
+      </section>
+    </article>
+  </main>
 </Base>
