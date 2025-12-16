@@ -1,43 +1,53 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
-import { languages, type LanguageKey } from '@/i18n/i18n.ts';
+import type { LanguageKey } from '@/i18n/i18n.ts';
+import { languages } from '@/i18n/i18n.ts';
 
 type Params = { language: LanguageKey; slug: string };
 
 export async function getStaticPaths() {
-  const projects = await getCollection('project', (entry) => !entry.data.draft);
+  const entries = await getCollection('project', (e) => !e.data.draft);
 
-  // 只为 languages 中的语言生成；并且要求 entry.id 以语言开头（与你 Work 列表页一致）
-  return Object.keys(languages).flatMap((language) => {
-    const lang = language as LanguageKey;
-    const inLang = projects.filter((p) => p.id.startsWith(lang));
+  return entries
+    .map((e) => {
+      const id = String(e.id ?? '');
+      const slug = String(e.slug ?? '');
 
-    return inLang.map((p) => {
-      // 约定：文件路径形如 "en/xxx" 或 "en/xxx/index"
-      // Astro 的 slug 通常会是 "en/xxx"（取决于你的 content 组织）
-      // 我们将语言前缀去掉，得到路由 slug = "xxx"
-      const normalized = p.slug.startsWith(`${lang}/`) ? p.slug.slice(lang.length + 1) : p.slug;
+      // Infer language from entry id, e.g. "en/demo-project"
+      const inferredLang = id.split('/')[0] as LanguageKey;
+
+      // Only generate routes for languages you support
+      if (!Object.prototype.hasOwnProperty.call(languages, inferredLang)) return null;
+
+      // Normalize slug by stripping "en/" prefix if present
+      const normalizedSlug = slug.startsWith(`${inferredLang}/`)
+        ? slug.slice(inferredLang.length + 1)
+        : slug;
 
       return {
-        params: { language: lang, slug: normalized } satisfies Params,
-        props: { id: p.id },
+        params: {
+          language: inferredLang,
+          slug: normalizedSlug,
+        } satisfies Params,
+        props: {
+          entryId: id,
+        },
       };
-    });
-  });
+    })
+    .filter(Boolean) as Array<{ params: Params; props: { entryId: string } }>;
 }
 
-const { id } = Astro.props as { id: string };
-const { language, slug } = Astro.params as Params;
-
-const projects = await getCollection('project', (entry) => !entry.data.draft);
-const project = projects.find((p) => p.id === id);
+const { entryId } = Astro.props as { entryId: string };
+const entries = await getCollection('project', (e) => !e.data.draft);
+const project = entries.find((e) => String(e.id ?? '') === entryId);
 
 if (!project) {
-  throw new Error(`Project not found: ${language}/${slug}`);
+  throw new Error(`Project not found: ${entryId}`);
 }
 
 const year = project.data.publishDate?.getFullYear?.() ?? '';
+const tags = project.data.tags ?? [];
 ---
 
 <Base title={project.data.title}>
@@ -60,9 +70,9 @@ const year = project.data.publishDate?.getFullYear?.() ?? '';
           </ul>
         )}
 
-        {project.data.tech?.length > 0 && (
+        {tags.length > 0 && (
           <div class="flex flex-wrap gap-2 pt-1">
-            {project.data.tech.map((tag) => (
+            {tags.map((tag) => (
               <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
                 {tag}
               </span>
@@ -81,7 +91,7 @@ const year = project.data.publishDate?.getFullYear?.() ?? '';
               View project
             </a>
           )}
-          <a class="underline underline-offset-4 opacity-70" href={`../`}>
+          <a class="underline underline-offset-4 opacity-70" href="../">
             Back to selected work
           </a>
         </div>
