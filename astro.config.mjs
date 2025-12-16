@@ -14,15 +14,7 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-    routing: {
-      // 你目前路由结构是 /[language]/...，为了不大改路由，建议先保留 /en 前缀：
-      prefixDefaultLocale: true,
-      redirectToDefaultLocale: false,
-    },
-  },
+  
   integrations: [mdx(), icon()],
   vite: {
     plugins: [tailwindcss()],
