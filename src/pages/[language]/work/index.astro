@@ -5,67 +5,90 @@ import Banner from '@/components/Banner.astro';
 import { Icon } from 'astro-icon/components';
 
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
-import type { AllowedTechsEnum } from '@/types/collections'
 
 const currentLocale = Astro.currentLocale as LanguageKey;
 const t = useTranslations(currentLocale);
 
 const publicCurrentLangProjects = await getCollection('project', (project) => {
-  const isPublicProject = !project.data.draft 
-  const isCurrentLangProject = project.id.startsWith(currentLocale)
-  return isPublicProject && isCurrentLangProject
+  const isPublicProject = !project.data.draft;
+  const isCurrentLangProject = project.id.startsWith(currentLocale);
+  return isPublicProject && isCurrentLangProject;
 });
-const sortedProjects = publicCurrentLangProjects.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
-const allProjectTechs = publicCurrentLangProjects.reduce<AllowedTechsEnum[]>((acc, curr) => {
-  const techs = curr.data?.tech || []
-  return [...new Set([...acc, ...techs])]
-}, []).sort((a, b) => a.localeCompare(b))
 
-type TechGroupIds = 'Work-TechGroup-Vue' | 'Work-TechGroup-React' | 'Work-TechGroup-Testing' | 'Work-TechGroup-Database' | 'Work-TechGroup-UserInterface' | 'Work-TechGroup-all';
+const sortedProjects = publicCurrentLangProjects.sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+);
 
-type TechGroup = {
-  id: TechGroupIds,
-  relatedTechs: AllowedTechsEnum[],
-  icon: string,
-  themeColor: string,
-} 
+const allProjectTags = publicCurrentLangProjects
+  .reduce<string[]>((acc, curr) => {
+    const tags = curr.data.tech || [];
+    return [...new Set([...acc, ...tags])];
+  }, [])
+  .sort((a, b) => a.localeCompare(b));
 
+type TagGroupIds =
+  | 'Work-TagGroup-all'
+  | 'Work-TagGroup-Methods'
+  | 'Work-TagGroup-Systems'
+  | 'Work-TagGroup-Mobility'
+  | 'Work-TagGroup-Healthcare';
 
-const allTechGroups = [
-{
-  id: 'Work-TechGroup-all',
-  relatedTechs: [],
-  icon: 'material-symbols:person-play-outline-rounded',
-  themeColor: '#171717',
-},  
-{
-  id: 'Work-TechGroup-UserInterface',
-  relatedTechs: ['Bootstrap', 'Chart.js', 'Daisy UI', 'Framer Motion', 'GSAP', 'Shadcn UI'],
-  icon: 'material-symbols:layers-outline-rounded',
-  themeColor: '#5c038f',
-},  
-{
-  id: 'Work-TechGroup-Vue',
-  relatedTechs: ['Nuxt(Vue)', 'Pinia', 'Vue', 'Vue Router'],
-  icon: 'mdi:vuejs',
-  themeColor: '#33a06f',
-}, {
-  id: 'Work-TechGroup-React',
-  relatedTechs: ['Next(React)', 'React', 'React Router'],
-  icon: 'mdi:react',
-  themeColor: '#087ea4',
-}, {
-  id: 'Work-TechGroup-Testing',
-  relatedTechs: ['Playwright', 'Vitest', 'Cypress', 'Lighthouse CI', 'Node.js Test Runner'],
-  icon: 'material-symbols:thermostat-rounded',
-  themeColor: '#608f03',
-}, {
-  id: 'Work-TechGroup-Database',
-  relatedTechs: ['Supabase(Postgres)', 'MySQL', 'Drizzle ORM'],
-  icon: 'material-symbols:database-outline',
-  themeColor: '#03118f',
-},
-] satisfies TechGroup[]
+type TagGroup = {
+  id: TagGroupIds;
+  relatedTags: string[];
+  icon: string;
+  themeColor: string;
+};
+
+const allTagGroups: TagGroup[] = [
+  {
+    id: 'Work-TagGroup-all',
+    relatedTags: [],
+    icon: 'material-symbols:apps',
+    themeColor: '#171717',
+  },
+  {
+    id: 'Work-TagGroup-Methods',
+    relatedTags: [
+      'Quali-quantitative research',
+      'Phenomenological interviews',
+      'Experience sampling',
+      'Framework development',
+    ],
+    icon: 'material-symbols:science-outline',
+    themeColor: '#1f2a44',
+  },
+  {
+    id: 'Work-TagGroup-Systems',
+    relatedTags: [
+      'Service blueprinting',
+      'System mapping',
+      'Process analysis',
+    ],
+    icon: 'material-symbols:account-tree-outline',
+    themeColor: '#2b3a2e',
+  },
+  {
+    id: 'Work-TagGroup-Mobility',
+    relatedTags: [
+      'Smart mobility',
+      'Human–vehicle interaction',
+      'Co-driving experience',
+    ],
+    icon: 'material-symbols:directions-car',
+    themeColor: '#3a2b2b',
+  },
+  {
+    id: 'Work-TagGroup-Healthcare',
+    relatedTags: [
+      'Healthcare services',
+      'Operational analysis',
+      'Patient flow',
+    ],
+    icon: 'material-symbols:local-hospital-outline',
+    themeColor: '#2b2e3a',
+  },
+];
 
 export function getStaticPaths() {
   return Object.keys(languages).map((language) => ({
@@ -77,275 +100,180 @@ export function getStaticPaths() {
 <style is:inline>
   .active[data-group-id] {
     background-color: var(--themeColor);
+    color: white;
   }
 
   [data-group-id]:hover {
     color: var(--themeColor);
   }
 
-  .active[data-group-id]:hover {
-    color: white;
-  }
-
-  [data-group-id]:hover [data-group-icon] {
-    color: var(--themeColor);
-  }
-
-  .active[data-group-id]:hover [data-group-icon] {
-    color: currentColor;
-  }
-
   .active {
     background-color: var(--color-primary-900);
     color: var(--color-primary-50);
-    border-color: transparent
+    border-color: transparent;
   }
 </style>
 
-<script is:inline define:vars={{
-  allTechGroups
-}}>
-document.addEventListener("astro:page-load", pageLoadEvent => {
-  const isOnWorkPage = pageLoadEvent.target.location.pathname.includes('work') 
-  if (!isOnWorkPage) return
+<script
+  is:inline
+  define:vars={{
+    allTagGroups,
+  }}
+>
+  document.addEventListener('astro:page-load', () => {
+    let activeTags = [];
 
-  let activedTechs = []
-  const groupFilterElement = document.querySelector('[data-group-filter]')
-  const filterElement = document.querySelector('[data-filter]')
-  const worksElement = document.querySelector('[data-works]')
+    const groupFilterElement = document.querySelector('[data-group-filter]');
+    const filterElement = document.querySelector('[data-filter]');
+    const worksElement = document.querySelector('[data-works]');
 
-  function updateTechList() {
-    // Update filter buttons
-    filterElement?.querySelectorAll('button').forEach(button => {
-      if (activedTechs.includes(button.innerText)) {
-        button.classList.add('active')
-      } else {
-        button.classList.remove('active')
-      }
-    })
+    function updateList() {
+      filterElement?.querySelectorAll('button').forEach((button) => {
+        button.classList.toggle('active', activeTags.includes(button.innerText));
+      });
 
-    // Update group filter buttons
-    groupFilterElement?.querySelectorAll('button').forEach(button => {
-      const techId = button.dataset.groupId
-      const relatedTechs = allTechGroups.find(group => group.id === techId)?.relatedTechs || []
-      const isActive = relatedTechs.every(tech => activedTechs.includes(tech)) && relatedTechs.length > 0
-      if (isActive) {
-        button.classList.add('active')
-      } else {
-        button.classList.remove('active')
-      }
-    })
+      groupFilterElement?.querySelectorAll('button').forEach((button) => {
+        const groupId = button.dataset.groupId;
+        const related = allTagGroups.find((g) => g.id === groupId)?.relatedTags || [];
+        const isActive = related.length > 0 && related.every((t) => activeTags.includes(t));
+        button.classList.toggle('active', isActive);
+      });
 
-    // Update card
-    worksElement?.querySelectorAll('[data-tech]').forEach(work => {
-      const workTechs = (work).dataset.tech?.split(",") || []
-
-      if (activedTechs.length === 0) {
-        work.classList.remove('hidden')
-        return
-      }
-
-      if (activedTechs.some(tech => workTechs.includes(tech))) {
-        work.classList.remove('hidden')
-      } else {
-        work.classList.add('hidden')
-      }
-    })
-  }
-
-  filterElement?.addEventListener('click', (e) => {
-    if (!e.target) return
-    const targetElement = e.target
-
-    if (targetElement.tagName === 'BUTTON') {
-      const tech = targetElement.innerText
-      const techIndex = activedTechs.indexOf(tech)
-      const isIndexExist = techIndex > -1
-      if (isIndexExist) {
-        activedTechs.splice(techIndex, 1)
-      } else {
-        activedTechs.push(tech)
-      }
-
-      updateTechList()
+      worksElement?.querySelectorAll('[data-tags]').forEach((card) => {
+        const tags = card.dataset.tags?.split(',') || [];
+        const visible =
+          activeTags.length === 0 || activeTags.some((tag) => tags.includes(tag));
+        card.classList.toggle('hidden', !visible);
+      });
     }
-  })
 
-  groupFilterElement?.addEventListener('click', e => {
-    if (!e.target) return
-    const targetElement = e.target
+    filterElement?.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'BUTTON') return;
+      const tag = e.target.innerText;
+      activeTags = activeTags.includes(tag)
+        ? activeTags.filter((t) => t !== tag)
+        : [...activeTags, tag];
+      updateList();
+    });
 
-    if (targetElement.tagName === 'BUTTON') {
-      const techId = targetElement.dataset.groupId
-      const relatedTechs = allTechGroups.find(group => group.id === techId)?.relatedTechs || []
-      
-      activedTechs = [...relatedTechs]
-
-      updateTechList()
-    }
-  })
-
-
-});
-
+    groupFilterElement?.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'BUTTON') return;
+      const groupId = e.target.dataset.groupId;
+      activeTags = allTagGroups.find((g) => g.id === groupId)?.relatedTags || [];
+      updateList();
+    });
+  });
 </script>
 
 <Base title={t('Navbar-3')}>
-  <div class="p-4 md:p-8">
-    <main class="min-h-screen">
-      <Banner>
-        <h1 class="text-3xl md:text-5xl font-medium">{t('Work-1')}<br />{t('Work-2')}</h1>
-      </Banner>
+  <main class="p-4 md:p-8 min-h-screen">
+    <Banner>
+      <h1 class="text-3xl md:text-5xl font-medium">
+        Selected Work<br />
+        Research-driven UX, service & system projects
+      </h1>
+    </Banner>
 
-      <section class="container mx-auto flex flex-col gap-16">
-        <h2 class="sr-only">{t('Work-3', {number: `${publicCurrentLangProjects.length}`})}</h2>
+    <section class="container mx-auto flex flex-col gap-12">
+      <!-- Group filter -->
+      <ul class="flex flex-wrap gap-2" data-group-filter>
+        {allTagGroups.map((group) => (
+          <li>
+            <button
+              data-group-id={group.id}
+              style={`--themeColor: ${group.themeColor};`}
+              class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
+              type="button"
+            >
+              <Icon size={24} name={group.icon} />
+              {t(group.id)}
+            </button>
+          </li>
+        ))}
+      </ul>
 
-        <ul class="flex flex-wrap gap-2" data-group-filter>
-          {
-            allTechGroups.map(techGroup => <li>
-                <button data-group-id={techGroup.id} style={
-                  `--themeColor: ${techGroup.themeColor};`
-                } class="hover:border-(--themeColor)/60 hover:bg-(--themeColor)/10 cursor-pointer border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full text-md inline-flex items-center gap-4 transition" type="button">
-                  <Icon class="pointer-events-none size-8 md:size-10" data-group-icon size={32} name={techGroup.icon} />
-                  { t(techGroup.id) }
-                </button>
-              </li>)
-          }
-        </ul>
+      <!-- Tag filter -->
+      <ul class="flex flex-wrap gap-2" data-filter>
+        {allProjectTags.map((tag) => (
+          <li>
+            <button
+              class="border-2 py-1 md:py-2 px-2 md:px-4 border-primary-50 rounded-full text-xs lg:text-sm"
+              type="button"
+            >
+              {tag}
+            </button>
+          </li>
+        ))}
+      </ul>
 
-          <ul class="flex flex-wrap gap-2" data-filter>
-            {
-              allProjectTechs.map(tech => <li>
-              <button class="cursor-pointer border-2 py-1 md:py-2 px-2 md:px-4 border-primary-50 rounded-full text-xs lg:text-sm" type="button">
-                { tech }
-              </button>
-            </li>)
-            }
-          </ul>
+      <!-- Project list -->
+      <ul data-works class="grid md:grid-cols-2 gap-12">
+        {sortedProjects.map((project) => (
+          <li
+            data-tags={project.data.tech.join(',')}
+            class="flex flex-col gap-4"
+          >
+            {project.data.thumbnail?.src && (
+              <img
+                src={project.data.thumbnail.src}
+                alt={project.data.thumbnail.alt}
+                class="rounded-lg"
+                width="720"
+                height="540"
+              />
+            )}
 
-        <ul data-works class="grid md:grid-cols-2 grid-cols-1 gap-8">
-          {
-            sortedProjects.map((project, index) => {
-              const imagesInsideView = 2;
-              return (
-                <li data-tech={project.data.tech} class="relative overflow-hidden flex flex-col gap-4 group">
-                  {
-                    project.data.hasContainerized && (
-                      <div class="absolute top-0 right-0 z-(--z-index-work-ribbon)">
-                        <div class="w-56 h-10 absolute top-10 -right-12">
-                          <div style="--docker: #1D63ED" class="h-full w-full flex justify-center items-center gap-2 text-primary-50 bg-primary-600 group-hover:bg-(--docker) group-hover:saturate-100 saturate-0 transition-all text-center font-semibold transform rotate-45">
-                            <Icon size={24} name="simple-icons:docker" />
-                            <span>{t('Work-4')}</span>
-                            </div>
-                        </div>
-                      </div>
-                    )
-                  }  
-                  <div style="--thumbnailWidth: 720px; --thumbnailHeight: 540px;" class="relative max-w-(--thumbnailWidth) max-h-(--thumbnailHeight) before:animate-pulse before:bg-primary-100 before:border-transparent before:inset-0 before:absolute before:rounded-lg">
-                    {(() => {
-                      if (project.data.video) {
-                        return (
-                          <video
-                            style="aspect-ratio: 4 / 3;"
-                            class="rounded-lg z-(--z-index-work-thumbnail) relative"
-                            width="720"
-                            height="540"
-                            autoplay
-                            loop
-                            muted
-                            playsinline
-                            poster={project.data?.thumbnail?.src || ''}
-                          >
-                            {project.data.video.map((source) => (
-                              <source src={source.src} type={source.type} />
-                            ))}
-                          </video>
-                        );
-                      } if (project.data?.thumbnail?.src) {
-                        return (
-                          <img
-                            loading={index >= imagesInsideView ? 'lazy' : 'eager'}
-                            class="w-full rounded-lg z-(--z-index-work-thumbnail) relative"
-                            width="720"
-                            height="540"
-                            src={project.data.thumbnail.src}
-                            alt={project.data.thumbnail.alt}
-                          />
-                        );
-                      } 
-                        return (
-                          <div 
-                            style="aspect-ratio: 4 / 3;" 
-                            class="w-full text-center bg-primary-100 text-primary-600 flex justify-center items-center z-(--z-index-work-thumbnail) relative text-4xl font-bold"
-                          >
-                            {project.data.title}
-                          </div>
-                        );
-                      
-                    })()}
-                  </div>
+            <h3 class="text-xl font-medium">
+              {project.data.title}
+              <time class="opacity-60">
+                {' '}
+                — {project.data.publishDate.getFullYear()}
+              </time>
+            </h3>
 
-                  <h3 class="text-lg font-medium">
-                    {project.data?.link?.url ? (
-                      <a href={project.data.link.url}>{project.data.title}</a>
-                    ) : (
-                      <span>{ project.data.title }</span>
-                    )}
+            {project.data.context && (
+              <p class="text-sm opacity-70">{project.data.context}</p>
+            )}
 
-                    <time class="opacity-60"> - {project.data.publishDate.getFullYear()}</time>
-                  </h3>
+            <p class="text-base">{project.data.description}</p>
 
-                  <p class="text-lg mb-4">{project.data.description}</p>
+            {project.data.highlights?.length > 0 && (
+              <ul class="list-disc list-inside text-sm opacity-80">
+                {project.data.highlights.slice(0, 3).map((h) => (
+                  <li>{h}</li>
+                ))}
+              </ul>
+            )}
 
-                  <div class="flex flex-wrap items-center justify-between gap-4">
-                    {project.data.tech && (
-                      <ul class="flex flex-wrap gap-2 xl:w-1/2 w-auto">
-                        {project.data.tech.map((tech) => (
-                          <li class="border-2 py-1 md:py-2 px-2 md:px-4 border-primary-50 rounded-full text-xs lg:text-sm">
-                            {tech}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+            <div class="flex flex-wrap gap-2">
+              {project.data.tech.map((tag) => (
+                <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
+                  {tag}
+                </span>
+              ))}
+            </div>
 
-                    {project.data.link && (
-                      <ul class="flex gap-4 ">
-                        {project.data.link.sourceCodeUrl && (
-                          <li>
-                            <a class="flex gap-2 hover:bg-primary-100 rounded-full transition-colors p-4 ml-0 lg:-ml-4" href={project.data.link.sourceCodeUrl}>
-                              <img
-                                class="object-contain"
-                                width="20"
-                                height="20"
-                                src="/assets/global/github.svg"
-                                alt="GitHub Logo"
-                              />
-                              {t('Work-5')}
-                            </a>
-                          </li>
-                        )}
-                        {project.data.link.url && (
-                          <li>
-                            <a class="flex gap-2 hover:bg-primary-100 rounded-full transition-colors p-4 ml-0 lg:-ml-4" href={project.data.link.url}>
-                              <img
-                                width="20"
-                                height="20"
-                                src="/assets/global/open-new.svg"
-                                alt={t('Work-6')}
-                              />
-                              {t('Work-7')}
-                            </a>
-                          </li>
-                        )}
-                      </ul>
-                    )}
-                  </div>
-                </li>
-              );
-            })
-          }
-        </ul>
-      </section>
-    </main>
-  </div>
+            <div class="flex gap-4 pt-2">
+              {project.data.caseUrl && (
+                <a
+                  href={project.data.caseUrl}
+                  class="underline underline-offset-4"
+                >
+                  Read full case
+                </a>
+              )}
+              {!project.data.caseUrl && project.data.externalUrl && (
+                <a
+                  href={project.data.externalUrl}
+                  class="underline underline-offset-4"
+                >
+                  View project
+                </a>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
 </Base>
