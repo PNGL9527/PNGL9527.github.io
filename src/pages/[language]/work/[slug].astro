@@ -1,8 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
-import type { LanguageKey } from '@/i18n/i18n.ts';
-import { languages } from '@/i18n/i18n.ts';
+import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
 type Params = { language: LanguageKey; slug: string };
 
@@ -12,66 +11,72 @@ export async function getStaticPaths() {
   return entries
     .map((e) => {
       const id = String(e.id ?? '');
-      const slug = String(e.slug ?? '');
+      const rawSlug = String(e.slug ?? '');
 
-      // Infer language from entry id, e.g. "en/demo-project"
+      // id 形如：en/demo-project
       const inferredLang = id.split('/')[0] as LanguageKey;
 
-      // Only generate routes for languages you support
-      if (!Object.prototype.hasOwnProperty.call(languages, inferredLang)) return null;
+      // 只生成支持的语言
+      if (!languages[inferredLang]) return null;
 
-      // Normalize slug by stripping "en/" prefix if present
-      const normalizedSlug = slug.startsWith(`${inferredLang}/`)
-        ? slug.slice(inferredLang.length + 1)
-        : slug;
+      // 去掉语言前缀
+      let normalizedSlug = rawSlug.startsWith(`${inferredLang}/`)
+        ? rawSlug.slice(inferredLang.length + 1)
+        : rawSlug;
+
+      // 🚨 关键修复：slug 不能为空
+      if (!normalizedSlug) return null;
 
       return {
         params: {
           language: inferredLang,
           slug: normalizedSlug,
         } satisfies Params,
-        props: {
-          entryId: id,
-        },
       };
     })
-    .filter(Boolean) as Array<{ params: Params; props: { entryId: string } }>;
+    .filter(Boolean) as Array<{ params: Params }>;
 }
 
-const { entryId } = Astro.props as { entryId: string };
+const { language, slug } = Astro.params as Params;
+
 const entries = await getCollection('project', (e) => !e.data.draft);
-const project = entries.find((e) => String(e.id ?? '') === entryId);
+
+// 反查当前 project
+const project = entries.find((e) => {
+  const rawSlug = String(e.slug ?? '');
+  const normalized = rawSlug.startsWith(`${language}/`)
+    ? rawSlug.slice(language.length + 1)
+    : rawSlug;
+  return normalized === slug;
+});
 
 if (!project) {
-  throw new Error(`Project not found: ${entryId}`);
+  throw new Error(`Project not found: ${language}/${slug}`);
 }
 
-const year = project.data.publishDate?.getFullYear?.() ?? '';
 const tags = project.data.tags ?? [];
 ---
 
 <Base title={project.data.title}>
   <main class="container mx-auto px-4 py-12">
-    <article class="max-w-3xl">
+    <article class="max-w-3xl space-y-6">
       <header class="space-y-3">
-        <h1 class="text-3xl md:text-5xl font-semibold">{project.data.title}</h1>
+        <h1 class="text-3xl md:text-5xl font-semibold">
+          {project.data.title}
+        </h1>
 
-        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm opacity-70">
-          {year && <span>{year}</span>}
-          {project.data.context && <span>{project.data.context}</span>}
-          {project.data.role && <span>{project.data.role}</span>}
-        </div>
-
-        <p class="text-lg">{project.data.description}</p>
+        <p class="text-lg opacity-90">
+          {project.data.description}
+        </p>
 
         {project.data.highlights?.length > 0 && (
-          <ul class="list-disc list-inside text-base opacity-90">
+          <ul class="list-disc list-inside">
             {project.data.highlights.map((h) => <li>{h}</li>)}
           </ul>
         )}
 
         {tags.length > 0 && (
-          <div class="flex flex-wrap gap-2 pt-1">
+          <div class="flex flex-wrap gap-2 pt-2">
             {tags.map((tag) => (
               <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
                 {tag}
@@ -80,26 +85,20 @@ const tags = project.data.tags ?? [];
           </div>
         )}
 
-        <div class="flex flex-wrap gap-4 pt-4">
+        <div class="flex gap-4 pt-4">
           {project.data.caseUrl && (
-            <a class="underline underline-offset-4" href={project.data.caseUrl}>
+            <a href={project.data.caseUrl} class="underline underline-offset-4">
               Read full case
             </a>
           )}
-          {!project.data.caseUrl && project.data.externalUrl && (
-            <a class="underline underline-offset-4" href={project.data.externalUrl}>
-              View project
-            </a>
-          )}
-          <a class="underline underline-offset-4 opacity-70" href="../">
+          <a href="../" class="underline underline-offset-4 opacity-70">
             Back to selected work
           </a>
         </div>
       </header>
 
-      <hr class="my-10 border-b" />
+      <hr class="my-8" />
 
-      <!-- Optional short overview written in MD/MDX -->
       <section class="prose max-w-none">
         <slot />
       </section>
