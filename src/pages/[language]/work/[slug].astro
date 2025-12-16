@@ -1,38 +1,107 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
-// 只生成英文路径
+type Params = { language: LanguageKey; slug: string };
+
 export async function getStaticPaths() {
-  const works = await getCollection('work');
+  const entries = await getCollection('project', (e) => !e.data.draft);
 
-  return works.map((work) => ({
-    params: {
-      language: 'en',
-      slug: work.slug,
-    },
-  }));
+  return entries
+    .map((e) => {
+      const id = String(e.id ?? '');
+      const rawSlug = String(e.slug ?? '');
+
+      // id 形如：en/demo-project
+      const inferredLang = id.split('/')[0] as LanguageKey;
+
+      // 只生成支持的语言
+      if (!languages[inferredLang]) return null;
+
+      // 去掉语言前缀
+      let normalizedSlug = rawSlug.startsWith(`${inferredLang}/`)
+        ? rawSlug.slice(inferredLang.length + 1)
+        : rawSlug;
+
+      // 🚨 关键修复：slug 不能为空
+      if (!normalizedSlug) return null;
+
+      return {
+        params: {
+          language: inferredLang,
+          slug: normalizedSlug,
+        } satisfies Params,
+      };
+    })
+    .filter(Boolean) as Array<{ params: Params }>;
 }
 
-const { slug } = Astro.params;
+const { language, slug } = Astro.params as Params;
 
-// 根据 slug 获取当前 work 内容
-const works = await getCollection('work');
-const work = works.find((item) => item.slug === slug);
+const entries = await getCollection('project', (e) => !e.data.draft);
 
-if (!work) {
-  throw new Error(`Work not found: ${slug}`);
+// 反查当前 project
+const project = entries.find((e) => {
+  const rawSlug = String(e.slug ?? '');
+  const normalized = rawSlug.startsWith(`${language}/`)
+    ? rawSlug.slice(language.length + 1)
+    : rawSlug;
+  return normalized === slug;
+});
+
+if (!project) {
+  throw new Error(`Project not found: ${language}/${slug}`);
 }
+
+const tags = project.data.tags ?? [];
 ---
 
-<Base title={work.data.title}>
-  <article class="container mx-auto py-16 prose">
-    <h1>{work.data.title}</h1>
+<Base title={project.data.title}>
+  <main class="container mx-auto px-4 py-12">
+    <article class="max-w-3xl space-y-6">
+      <header class="space-y-3">
+        <h1 class="text-3xl md:text-5xl font-semibold">
+          {project.data.title}
+        </h1>
 
-    {work.data.description && (
-      <p>{work.data.description}</p>
-    )}
+        <p class="text-lg opacity-90">
+          {project.data.description}
+        </p>
 
-    <slot />
-  </article>
+        {project.data.highlights?.length > 0 && (
+          <ul class="list-disc list-inside">
+            {project.data.highlights.map((h) => <li>{h}</li>)}
+          </ul>
+        )}
+
+        {tags.length > 0 && (
+          <div class="flex flex-wrap gap-2 pt-2">
+            {tags.map((tag) => (
+              <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div class="flex gap-4 pt-4">
+          {project.data.caseUrl && (
+            <a href={project.data.caseUrl} class="underline underline-offset-4">
+              Read full case
+            </a>
+          )}
+          <a href="../" class="underline underline-offset-4 opacity-70">
+            Back to selected work
+          </a>
+        </div>
+      </header>
+
+      <hr class="my-8" />
+
+      <section class="prose max-w-none">
+        <slot />
+      </section>
+    </article>
+  </main>
 </Base>

@@ -17,23 +17,35 @@ export function getStaticPaths() {
 <Base title={t('Navbar-1')}>
   <main class="md:min-h-screen min-h-auto">
     <Banner>
-      <h1 class="text-3xl md:text-6xl font-semibold px-4">
-        {t('Hero-1', { name: t('Me-1') })}<br />
-        {t('Hero-2', { number: '100' })} <a class="highlight" href={`https://www.webdong.dev/${Astro.currentLocale}/post/`}>{t('Hero-3')}</a> {t('Hero-4')} {t('Hero-5', {number: '800'})}
-        {t('Hero-6')} <a class="highlight" href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/work')}>{t('Hero-7')}</a
-        > {t('Hero-8')}
-        
-      </h1>
+
+  <h1 class="px-4 font-semibold">
+    <span class="block text-3xl md:text-6xl leading-tight">
+      {t('Hero-1', { name: t('Me-1') })}
+    </span>
+
+    <span class="block mt-4 md:mt-6 text-3xl md:text-6xl leading-tight">
+      {t('Hero-2')}
+    </span>
+
+    <span class="block mt-6 md:mt-8 text-2xl md:text-6xl max-w-6xl font-normal">
+      {t('Hero-3')}
+    </span>
+
+    <span class="block mt-6 md:mt-8">
+      <a
+        class="highlight text-xl md:text-3xl"
+        href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/work')}
+      >
+        {t('Hero-4')}
+      </a>
+    </span>
+  </h1>
+
     </Banner>
 
-    <section class="mb-16">
-      <h2 class="sr-only">{t('NewestWork-1')}</h2>
-      <div style="background-color: black;" class="aspect-video flex justify-center mx-4 rounded-lg">
-        <video class="w-full h-full" width="720" height="540" autoplay loop muted playsinline poster="https://bucket-wei.webdong.dev/hero-blur.webp">
-          <source src="https://bucket-wei.webdong.dev/hero.webm" type="video/webm" />
-          <source src="https://bucket-wei.webdong.dev/hero.mp4" type="video/mp4" />
-        </video>
-      </div>
-    </section>
+<section class="mb-16 mx-4">
+  <div class="h-px w-full opacity-20"></div>
+</section>
+
   </main>
 </Base>
