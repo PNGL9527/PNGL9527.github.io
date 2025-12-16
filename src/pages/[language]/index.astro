@@ -20,9 +20,10 @@ export function getStaticPaths() {
 
   <h1 class="text-3xl md:text-6xl font-semibold px-4">
     {t('Hero-1', { name: t('Me-1') })}<br />
-    {t('Hero-2')}<br /><br />
+    
+    {t('Hero-2')}<br />
 
-    {t('Hero-3')}<br /><br />
+    {t('Hero-3')}<br />
 
     <a class="highlight" href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/work')}>
       {t('Hero-4')}
