@@ -12,9 +12,13 @@ const project = defineCollection({
     // but use it as "tags" (methods/themes) in content.
     tech: z.array(z.string()).default([]),
 
+    tags: z.array(z.string()).default([]),
+
     // Optional research-friendly metadata (used on cards if present)
     context: z.string().optional(), // e.g., "PhD research / Industry internship / Thesis project"
+    
     role: z.string().optional(),    // e.g., "Design researcher, UX researcher"
+    
     highlights: z.array(z.string()).default([]), // 2–4 bullet highlights
 
     thumbnail: z
