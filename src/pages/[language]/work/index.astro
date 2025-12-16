@@ -7,7 +7,7 @@
 
     return (
       <li
-        data-tags={project.data.tech.join(',')}
+        data-tags={project.data.tags.join(',')}
         class="flex flex-col gap-4"
       >
         {project.data.thumbnail?.src && (
@@ -40,7 +40,7 @@
         )}
 
         <div class="flex flex-wrap gap-2">
-          {project.data.tech.map((tag) => (
+          {project.data.tags.map((tag) => (
             <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
               {tag}
             </span>
