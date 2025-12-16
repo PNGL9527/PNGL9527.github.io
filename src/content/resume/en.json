@@ -1,43 +1,152 @@
 {
   "personalInfo": {
-    "name": "Your Name",
-    "role": "Your Role",
-    "description": "Short professional summary (HTML is allowed).",
+    "name": "Peng Lu",
+    "role": "Research-driven UX and Service & System Designer",
+    "description": "Research-driven UX and Service & System Designer with PhD training in design research. My work focuses on understanding complex socio-technical systems and human experience dynamics through quali-quantitative research, analytical framework development, and system-level analysis. I am particularly interested in translating research insights into service design and experience-informed decision-making.",
     "socialLinks": [
-      { "name": "Email", "url": "mailto:you@example.com", "icon": "material-symbols:mail-outline" },
-      { "name": "GitHub", "url": "https://github.com/PNGL9527", "icon": "simple-icons:github" }
+      {
+        "name": "Email",
+        "url": "mailto:lupeng95@hotmail.com",
+        "icon": "material-symbols:mail-outline"
+      },
+      {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/in/peng-lu-54288b174/",
+        "icon": "simple-icons:linkedin"
+      }
     ]
   },
+
   "workExperience": [
     {
-      "title": "Role Title",
-      "time": "2024 — Present",
-      "company": { "name": "Company", "link": "https://example.com" },
+      "title": "PhD Researcher",
+      "time": "2021 — 2025",
+      "company": {
+        "name": "Politecnico di Milano",
+        "link": "https://www.polimi.it"
+      },
       "achievements": [
-        "Achievement 1",
-        ["Sub-point 1", "Sub-point 2"],
-        "Achievement 2"
+        "Conducted long-term quali-quantitative research on human–technology interaction and user experience in complex socio-technical systems.",
+        [
+          "Designed and applied phenomenological research methods, including experience sampling and in-depth interviews.",
+          "Developed analytical frameworks and conceptual models to interpret experiential data."
+        ],
+        "Communicated research insights to interdisciplinary audiences to support discussions on system design, innovation, and experience-oriented improvement."
       ],
-      "techs": ["Astro", "TypeScript"]
+      "techs": [
+        "Quali-quantitative research",
+        "Phenomenological methods",
+        "Analytical framework development",
+        "Human–Computer Interaction",
+        "User Experience Research"
+      ]
+    },
+    {
+      "title": "Design Researcher Intern",
+      "time": "2023 — 2023",
+      "company": {
+        "name": "GranStudio",
+        "link": "https://www.granstudio.it"
+      },
+      "achievements": [
+        "Engaged with professional designers to observe and understand industry design processes, constraints, and decision-making practices.",
+        "Analyzed service and product development workflows to identify opportunities for research-informed design reflection.",
+        "Provided research-based perspectives to internal discussions, supporting design reasoning rather than direct solution delivery."
+      ],
+      "techs": [
+        "Design research",
+        "Service and system analysis",
+        "Research-to-design communication",
+        "Qualitative analysis"
+      ]
+    },
+    {
+      "title": "Service Design & Management Thesis Intern",
+      "time": "2021 — 2021",
+      "company": {
+        "name": "Humanitas San Pio X Hospital",
+        "link": "https://www.humanitas.it"
+      },
+      "achievements": [
+        "Analyzed patient flow and service processes using quantitative, time-based operational data within a highly regulated healthcare context.",
+        "Applied service design tools such as service blueprints and system maps to structure findings and communicate insights.",
+        "Identified bottlenecks and prolonged service phases to support internal reflection on service efficiency and organization."
+      ],
+      "techs": [
+        "Service blueprinting",
+        "System mapping",
+        "Operational data analysis",
+        "Healthcare service design"
+      ]
     }
   ],
+
   "achievements": [
-    { "title": "Project / Award", "subtitle": "Short description", "url": "https://example.com" }
+    {
+      "title": "Doctoral Research on Human–Vehicle Interaction",
+      "subtitle": "Conceptual frameworks and experiential analysis of co-driving pleasure and human–vehicle relations.",
+      "url": "https://bit.ly/penglu"
+    }
   ],
+
   "education": [
     {
-      "title": "Degree, University",
-      "time": "2019 — 2023",
-      "description": "One-line description (HTML is allowed)."
+      "title": "Ph.D. in Design, Politecnico di Milano",
+      "time": "2021 — 2025",
+      "description": "Focus on Human–Computer Interaction and user experience research in complex socio-technical systems."
+    },
+    {
+      "title": "M.Sc. in Product-Service System Design and Management Engineering, Politecnico di Milano",
+      "time": "2018 — 2021",
+      "description": "Focus on service systems, organizational processes, and business-oriented design for complex services."
+    },
+    {
+      "title": "B.Eng. in Architecture, Anhui Jianzhu University",
+      "time": "2014 — 2018",
+      "description": "Background in spatial thinking and foundational understanding of built and service environments."
     }
   ],
+
   "skills": [
-    { "developments": ["Skill area 1", "Skill area 2"] }
+    {
+      "title": "Research & Analysis",
+      "developments": [
+        "Quali-quantitative research",
+        "Phenomenological interviews",
+        "Experience sampling methods",
+        "Analytical framework development",
+        "SWOT and PESTEL analysis"
+      ]
+    },
+    {
+      "title": "Service & System Design",
+      "developments": [
+        "Service blueprinting",
+        "System mapping",
+        "User journey analysis",
+        "Process and system analysis in complex contexts",
+        "Design thinking (theoretical and applied)"
+      ]
+    },
+    {
+      "title": "Collaboration & Tools",
+      "developments": [
+        "Figma, Miro, ProtoPie",
+        "Research-to-design communication",
+        "Understanding of Agile and Lean principles",
+        "Notion and Jira for documentation and project tracking",
+        "Excel and PowerPoint for analysis and reporting"
+      ]
+    }
   ],
+
   "links": [
     {
       "mySite": [
-        { "title": "Portfolio:", "link": "https://yourdomain.com" }
+        {
+          "title": "Portfolio:",
+          "link": "https://pngl9527.github.io/en/"
+        }
       ]
     }
   ]
