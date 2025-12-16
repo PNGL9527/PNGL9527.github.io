@@ -18,16 +18,27 @@ export function getStaticPaths() {
   <main class="md:min-h-screen min-h-auto">
     <Banner>
 
-  <h1 class="text-3xl md:text-6xl font-semibold px-4">
-    {t('Hero-1', { name: t('Me-1') })}<br />
-    
-    {t('Hero-2')}<br />
+  <h1 class="px-4 font-semibold">
+    <span class="block text-3xl md:text-6xl leading-tight">
+      {t('Hero-1', { name: t('Me-1') })}
+    </span>
 
-    {t('Hero-3')}<br />
+    <span class="block mt-4 md:mt-6 text-3xl md:text-6xl leading-tight">
+      {t('Hero-2')}
+    </span>
 
-    <a class="highlight" href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/work')}>
-      {t('Hero-4')}
-    </a>
+    <span class="block mt-6 md:mt-8 text-2xl md:text-4xl max-w-4xl font-normal">
+      {t('Hero-3')}
+    </span>
+
+    <span class="block mt-6 md:mt-8">
+      <a
+        class="highlight text-xl md:text-2xl"
+        href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/work')}
+      >
+        {t('Hero-4')}
+      </a>
+    </span>
   </h1>
 
     </Banner>
