@@ -17,13 +17,22 @@ export function getStaticPaths() {
 <Base title={t('Navbar-1')}>
   <main class="md:min-h-screen min-h-auto">
     <Banner>
-      <h1 class="text-3xl md:text-6xl font-semibold px-4">
-        {t('Hero-1', { name: t('Me-1') })}<br />
-        {t('Hero-2', { number: '100' })} <a class="highlight" href={`https://www.webdong.dev/${Astro.currentLocale}/post/`}>{t('Hero-3')}</a> {t('Hero-4')} {t('Hero-5', {number: '800'})}
-        {t('Hero-6')} <a class="highlight" href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/work')}>{t('Hero-7')}</a
-        > {t('Hero-8')}
-        
-      </h1>
+
+<h1 class="text-3xl md:text-6xl font-semibold px-4">
+  {t('Hero-1')}<br />
+
+  {t('Hero-2')}
+  <a class="highlight" href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/work')}>
+    {t('Hero-3')}
+  </a>
+  {t('Hero-4')}<br />
+
+  {t('Hero-5')}
+  <a class="highlight" href="https://bit.ly/penglu" target="_blank" rel="noopener noreferrer">
+    {t('Hero-6')}
+  </a>
+</h1>
+
     </Banner>
 
 <section class="mb-16 mx-4">
