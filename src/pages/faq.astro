@@ -2,21 +2,21 @@
 import Base from '@/layouts/Base.astro';
 import Banner from '@/components/Banner.astro';
 import Accorditions from '@/components/Accorditions.astro'
-import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+//import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { getCollection, render } from 'astro:content';
 
 
-const currentLocale = Astro.currentLocale as LanguageKey;
-const t = useTranslations(currentLocale as LanguageKey);
+//const currentLocale = Astro.currentLocale as LanguageKey;
+//const t = useTranslations(currentLocale as LanguageKey);
 
 const faqs = await getCollection('faq');
 const localeRelatedFaqs = faqs.filter(faq => faq.id.startsWith(currentLocale));
 
-export function getStaticPaths() {
-  return Object.keys(languages).map((language) => ({
-    params: { language },
-  }));
-}
+//export function getStaticPaths() {
+  //return Object.keys(languages).map((language) => ({
+    //params: { language },
+  //}));
+//}
 ---
 
 <Base title={t('Navbar-4')}>
