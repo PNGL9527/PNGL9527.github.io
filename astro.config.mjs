@@ -10,7 +10,7 @@ export default defineConfig({
     prefetchAll: true,
   },
   // 你现在部署到 GitHub Pages（PNGL9527.github.io）时建议改成这个：
-  site: 'https://PNGL9527.github.io',
+  site: 'https://pngl9527.github.io',
   build: {
     inlineStylesheets: 'always',
   },
