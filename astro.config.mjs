@@ -14,6 +14,15 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
+
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+    routing: {
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: false,
+    },
+  },
   
   integrations: [mdx(), icon()],
   vite: {
