@@ -1,19 +1,19 @@
 import enTranslation from './en.json';
-import zhCnTranslation from './zh-cn.json';
-import zhTwTranslation from './zh-tw.json';
+//import zhCnTranslation from './zh-cn.json';
+//import zhTwTranslation from './zh-tw.json';
 
 export const languages = {
   en: 'English',
-  'zh-cn': '简体中文',
-  'zh-tw': '繁體中文',
+  //'zh-cn': '简体中文',
+  //'zh-tw': '繁體中文',
 } as const;
 
 // https://en.wikipedia.org/wiki/IETF_language_tag
 // IETF language tag
 export const languageTags = {
   en: 'en',
-  'zh-cn': 'zh-Hans',
-  'zh-tw': 'zh-Hant-TW',
+  //'zh-cn': 'zh-Hans',
+  //'zh-tw': 'zh-Hant-TW',
 } as const;
 
 // To address Missing region-independant link for that language Problem, Here's a table storing existing region data
