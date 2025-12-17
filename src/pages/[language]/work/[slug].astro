@@ -1,6 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntryBySlug } from 'astro:content';
 import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
 type Params = { language: LanguageKey; slug: string };
@@ -33,24 +33,20 @@ export async function getStaticPaths() {
 
 const { language, slug } = Astro.params as Params;
 
-const entries = await getCollection('project', (e) => !e.data.draft);
+// ✅ 用 entrySlug 直接读取该语言下的 mdx（这是可 render 的 entry）
+const entrySlug = `${language}/${slug}`;
 
-// 反查当前 project（用 id 推导 slug，避免 e.slug 为空导致匹配失败）
-const project = entries.find((e) => {
-  const id = String(e.id ?? '');
-  const normalized = id.startsWith(`${language}/`)
-    ? id.slice(language.length + 1)
-    : id;
-  return normalized === slug;
-});
+// 注意：getEntryBySlug 的第二个参数是 “collection 内部 slug”
+// 在你的结构下，它应当等于 "en/co-driving-pleasure"
+const project = await getEntryBySlug('project', entrySlug);
 
-if (!project) {
-  throw new Error(`Project not found: ${language}/${slug}`);
+if (!project || project.data.draft) {
+  throw new Error(`Project not found: ${entrySlug}`);
 }
 
 const tags = project.data.tags ?? [];
 
-// ✅ 关键：渲染 MDX 内容组件
+// ✅ 关键：这里的 project 一定有 render()
 const { Content } = await project.render();
 ---
 
