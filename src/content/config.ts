@@ -18,7 +18,7 @@ const project = defineCollection({
 
       thumbnail: z
         .object({
-          src: image(), // ✅ 关键：用 image()，不要用 z.string()
+          src: image(), // ← 这一行必须是 image()
           alt: z.string().default('Project thumbnail'),
         })
         .optional(),
