@@ -208,12 +208,14 @@ export function getStaticPaths() {
 <!-- Project list -->
 <ul data-works class="grid md:grid-cols-2 gap-12">
   {sortedProjects.map((project) => {
-    const rawSlug = String(project.slug ?? '');
-    const normalizedSlug = rawSlug.startsWith(`${currentLocale}/`)
-      ? rawSlug.slice(currentLocale.length + 1)
-      : rawSlug;
+    const id = String(project.id ?? ''); // e.g. "en/co-driving-pleasure"
+    const normalizedSlug = id.startsWith(`${currentLocale}/`)
+      ? id.slice(currentLocale.length + 1)
+      : id;
+
 
     const tags = project.data.tags ?? [];
+    if (!normalizedSlug) return null;
 
     return (
       <li data-tags={tags.join(',')} class="flex flex-col gap-4">
@@ -256,7 +258,7 @@ export function getStaticPaths() {
 
         <div class="flex gap-4 pt-2">
           <a
-            href={`/${currentLocale}/work/${normalizedSlug}`}
+            href={`/${currentLocale}/work/${normalizedSlug}/`}
             class="underline underline-offset-4"
           >
             View overview
