@@ -1,6 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
 type Params = { language: LanguageKey; slug: string };
@@ -33,7 +33,7 @@ export async function getStaticPaths() {
 
 const { language, slug } = Astro.params as Params;
 
-// 先拿列表（轻量），用 id 匹配到目标条目
+// 先用 getCollection 找到目标条目的 id
 const entries = await getCollection('project', (e) => !e.data.draft);
 
 const hit = entries.find((e) => {
@@ -48,7 +48,7 @@ if (!hit) {
   throw new Error(`Project not found: ${language}/${slug}`);
 }
 
-// ✅ 用 getEntry 再取一次（这是可 render 的 entry）
+// 再用 getEntry 拿到真正的 entry
 const project = await getEntry('project', hit.id);
 
 if (!project) {
@@ -56,7 +56,9 @@ if (!project) {
 }
 
 const tags = project.data.tags ?? [];
-const { Content } = await project.render();
+
+// ✅ Astro 5.8 content layer：用 render(entry) 获取жаў Content 组件
+const { Content } = await render(project);
 ---
 
 <Base title={project.data.title}>
