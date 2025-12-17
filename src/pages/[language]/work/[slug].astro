@@ -10,21 +10,15 @@ export async function getStaticPaths() {
 
   return entries
     .map((e) => {
-      const id = String(e.id ?? '');
-      const rawSlug = String(e.slug ?? '');
-
-      // id 形如：en/demo-project
+      const id = String(e.id ?? ''); // e.g. "en/co-driving-pleasure"
       const inferredLang = id.split('/')[0] as LanguageKey;
 
-      // 只生成支持的语言
       if (!languages[inferredLang]) return null;
 
-      // 去掉语言前缀
-      let normalizedSlug = rawSlug.startsWith(`${inferredLang}/`)
-        ? rawSlug.slice(inferredLang.length + 1)
-        : rawSlug;
+      const normalizedSlug = id.startsWith(`${inferredLang}/`)
+        ? id.slice(inferredLang.length + 1)
+        : id;
 
-      // 🚨 关键修复：slug 不能为空
       if (!normalizedSlug) return null;
 
       return {
@@ -43,12 +37,13 @@ const entries = await getCollection('project', (e) => !e.data.draft);
 
 // 反查当前 project
 const project = entries.find((e) => {
-  const rawSlug = String(e.slug ?? '');
-  const normalized = rawSlug.startsWith(`${language}/`)
-    ? rawSlug.slice(language.length + 1)
-    : rawSlug;
+  const id = String(e.id ?? '');
+  const normalized = id.startsWith(`${language}/`)
+    ? id.slice(language.length + 1)
+    : id;
   return normalized === slug;
 });
+
 
 if (!project) {
   throw new Error(`Project not found: ${language}/${slug}`);
