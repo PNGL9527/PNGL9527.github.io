@@ -266,14 +266,24 @@ export function getStaticPaths() {
                 <!-- Right: image -->
                 {project.data.thumbnail ? (
                   <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
-                    <Image
-                      src={project.data.thumbnail.src}
-                      alt={project.data.thumbnail.alt ?? project.data.title}
-                      class="h-full w-full object-cover"
+                    {typeof project.data.thumbnail === 'object' && 'src' in project.data.thumbnail ? (
+                      <Image
+                        src={project.data.thumbnail.src}
+                        alt={project.data.thumbnail.alt ?? project.data.title}
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <Image
+                        src={project.data.thumbnail}
+                        alt={project.data.title}
+                        class="h-full w-full object-cover"
                       loading="lazy"
                     />
-                  </div>
-                ) : null}
+                  )}
+                </div>
+              ) : null}
+
               </li>
             );
           })}
