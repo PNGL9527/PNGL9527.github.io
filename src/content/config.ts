@@ -17,10 +17,13 @@ const project = defineCollection({
       highlights: z.array(z.string()).default([]),
 
       thumbnail: z
-        .object({
-          src: image(), // 这是 ImageMetadata
-          alt: z.string().optional(),
-        })
+        .union([
+          z.object({
+            src: image(),
+            alt: z.string().optional(),
+          }),
+          image(),
+        ])
         .optional(),
 
       caseUrl: z.string().url().optional(),
