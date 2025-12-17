@@ -210,10 +210,11 @@ export function getStaticPaths() {
   <!-- Project list -->
   <ul data-works class="grid md:grid-cols-2 gap-12">
     {sortedProjects.map((project) => {
-      const rawSlug = String(project.slug ?? '');
-      const normalizedSlug = rawSlug.startsWith(`${currentLocale}/`)
-        ? rawSlug.slice(currentLocale.length + 1)
-        : rawSlug;
+      const id = String(project.id ?? ''); // e.g. "en/co-driving-pleasure"
+      const normalizedSlug = id.startsWith(`${currentLocale}/`)
+        ? id.slice(currentLocale.length + 1)
+        : id.split('/').slice(1).join('/'); // fallback: drop first segment
+
 
       const tags = project.data.tags ?? [];
 
