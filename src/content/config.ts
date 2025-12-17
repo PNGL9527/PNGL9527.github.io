@@ -18,8 +18,8 @@ const project = defineCollection({
 
       thumbnail: z
         .object({
-          src: image(), // ← 这一行必须是 image()
-          alt: z.string().default('Project thumbnail'),
+          src: image(), // 这是 ImageMetadata
+          alt: z.string().optional(),
         })
         .optional(),
 
