@@ -10,7 +10,7 @@ export async function getStaticPaths() {
 
   return entries
     .map((e) => {
-      const id = String(e.id ?? ''); // e.g. "en/co-driving-pleasure"
+      const id = String(e.id ?? '');
       const inferredLang = id.split('/')[0] as LanguageKey;
 
       if (!languages[inferredLang]) return null;
@@ -25,18 +25,18 @@ export async function getStaticPaths() {
         params: {
           language: inferredLang,
           slug: normalizedSlug,
-        } satisfies Params,
+        },
       };
     })
-    .filter(Boolean) as Array<{ params: Params }>;
+    .filter(Boolean);
 }
 
 const { language, slug } = Astro.params as Params;
 
-// 先用 getCollection 找到目标条目的 id
+// 直接用 getCollection 找 entry
 const entries = await getCollection('project', (e) => !e.data.draft);
 
-const hit = entries.find((e) => {
+const project = entries.find((e) => {
   const id = String(e.id ?? '');
   const normalized = id.startsWith(`${language}/`)
     ? id.slice(language.length + 1)
@@ -44,26 +44,17 @@ const hit = entries.find((e) => {
   return normalized === slug;
 });
 
-if (!hit) {
+if (!project) {
   throw new Error(`Project not found: ${language}/${slug}`);
 }
 
-// 再用 getEntry 拿到真正的 entry
-const project = await getEntry('project', hit.id);
-
-if (!project) {
-  throw new Error(`Project entry not found by id: ${String(hit.id)}`);
-}
+// ✅ Astro 5 正确方式
+const { Content } = await project.render();
 
 const tags = project.data.tags ?? [];
-
-// ✅ Astro 5.8 content layer：用 render(entry) 获取жаў Content 组件
-const { Content } = await project.render();
 ---
-
 <Base title={project.data.title}>
   <main class="px-4 py-12" style="padding-top: var(--navbar-height);">
-
     <article class="px-4 max-w-6xl space-y-10">
       <header class="space-y-3">
         <h1 class="text-3xl md:text-5xl font-semibold">
