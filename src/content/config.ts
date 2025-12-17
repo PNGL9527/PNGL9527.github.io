@@ -16,15 +16,8 @@ const project = defineCollection({
       role: z.string().optional(),
       highlights: z.array(z.string()).default([]),
 
-      thumbnail: z
-        .union([
-          z.object({
-            src: image(),
-            alt: z.string().optional(),
-          }),
-          image(),
-        ])
-        .optional(),
+      thumbnail: image().optional(),
+      thumbnailAlt: z.string().optional(),
 
       caseUrl: z.string().url().optional(),
       externalUrl: z.string().url().optional(),
