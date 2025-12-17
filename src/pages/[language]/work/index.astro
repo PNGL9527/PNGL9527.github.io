@@ -117,10 +117,12 @@ export function getStaticPaths() {
     const worksElement = document.querySelector('[data-works]');
 
     function updateList() {
+      // Tag buttons
       filterElement?.querySelectorAll('button').forEach((button) => {
         button.classList.toggle('active', activeTags.includes(button.innerText));
       });
 
+      // Group buttons
       groupFilterElement?.querySelectorAll('button').forEach((button) => {
         const groupId = button.dataset.groupId;
         const related = allTagGroups.find((g) => g.id === groupId)?.relatedTags || [];
@@ -128,6 +130,7 @@ export function getStaticPaths() {
         button.classList.toggle('active', isActive);
       });
 
+      // Cards
       worksElement?.querySelectorAll('[data-tags]').forEach((card) => {
         const tags = card.dataset.tags?.split(',').filter(Boolean) || [];
         const visible = activeTags.length === 0 || activeTags.some((tag) => tags.includes(tag));
@@ -223,15 +226,10 @@ export function getStaticPaths() {
                 <div class="max-w-prose flex flex-col gap-4">
                   <h3 class="text-xl md:text-2xl font-medium leading-snug">
                     {project.data.title}
-                    <time class="opacity-60">
-                      {' '}
-                      — {project.data.publishDate.getFullYear()}
-                    </time>
+                    <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
                   </h3>
 
-                  {project.data.context && (
-                    <p class="text-sm opacity-70">{project.data.context}</p>
-                  )}
+                  {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
 
                   <p class="text-base">{project.data.description}</p>
 
@@ -263,27 +261,17 @@ export function getStaticPaths() {
                   </div>
                 </div>
 
-                <!-- Right: image -->
+                <!-- Right: image (thumbnail: image(), thumbnailAlt: string) -->
                 {project.data.thumbnail ? (
                   <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
-                    {typeof project.data.thumbnail === 'object' && 'src' in project.data.thumbnail ? (
-                      <Image
-                        src={project.data.thumbnail.src}
-                        alt={project.data.thumbnail.alt ?? project.data.title}
-                        class="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <Image
-                        src={project.data.thumbnail}
-                        alt={project.data.title}
-                        class="h-full w-full object-cover"
+                    <Image
+                      src={project.data.thumbnail}
+                      alt={project.data.thumbnailAlt ?? project.data.title}
+                      class="h-full w-full object-cover"
                       loading="lazy"
                     />
-                  )}
-                </div>
-              ) : null}
-
+                  </div>
+                ) : null}
               </li>
             );
           })}
