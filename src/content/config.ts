@@ -16,6 +16,10 @@ const project = defineCollection({
       role: z.string().optional(),
       highlights: z.array(z.string()).default([]),
 
+      // Use Astro Content Collections image() helper (returns ImageMetadata)
+      // Frontmatter example:
+      // thumbnail: ../../assets/projects/co-driving-pleasure/cover.jpg
+      // thumbnailAlt: Cover image for co-driving pleasure
       thumbnail: image().optional(),
       thumbnailAlt: z.string().optional(),
 
