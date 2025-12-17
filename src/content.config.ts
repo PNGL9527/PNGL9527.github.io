@@ -3,38 +3,57 @@ import { glob } from 'astro/loaders';
 import { allowedTechsEnum } from '@/types/collections.ts';
 
 type Achievement = string | Achievement[];
-const AchievementSchema: z.ZodType<Achievement> = z.lazy(() => z.union([z.string(), z.array(AchievementSchema)]));
+const AchievementSchema: z.ZodType<Achievement> = z.lazy(() =>
+  z.union([z.string(), z.array(AchievementSchema)]),
+);
 
 // eslint-disable-next-line import/prefer-default-export
 export const collections = {
   project: defineCollection({
     loader: glob({ pattern: '**/[^_]*.mdx', base: './src/content/project' }),
-    schema: z.object({
-      draft: z.boolean(),
-      hasContainerized: z.boolean().optional(),
-      title: z.string(),
-      description: z.string(),
-      link: z
-        .object({
-          url: z.string().optional(),
-          sourceCodeUrl: z.string().optional(),
-        })
-        .optional(),
-      thumbnail: image().optional(),
-      thumbnailAlt: z.string().optional(),
 
-      video: z.array(z.object({ src: z.string(), type: z.string() })).optional(),
-      tech: z.array(allowedTechsEnum),
-      themeColor: z.string().min(4).max(9).regex(/^#/).default('#fff'),
-      publishDate: z.date(),
-    }),
+    // ✅ IMPORTANT: image() comes from this function parameter
+    schema: ({ image }) =>
+      z.object({
+        draft: z.boolean().default(false),
+        hasContainerized: z.boolean().optional(),
+        title: z.string(),
+        description: z.string(),
+
+        link: z
+          .object({
+            url: z.string().optional(),
+            sourceCodeUrl: z.string().optional(),
+          })
+          .optional(),
+
+        // ✅ Now image() is defined
+        thumbnail: image().optional(),
+        thumbnailAlt: z.string().optional(),
+
+        video: z.array(z.object({ src: z.string(), type: z.string() })).optional(),
+        tech: z.array(allowedTechsEnum).default([]),
+        tags: z.array(z.string()).default([]),
+
+        context: z.string().optional(),
+        role: z.string().optional(),
+        highlights: z.array(z.string()).default([]),
+
+        themeColor: z.string().min(4).max(9).regex(/^#/).default('#fff'),
+        publishDate: z.coerce.date(),
+
+        caseUrl: z.string().url().optional(),
+        externalUrl: z.string().url().optional(),
+      }),
   }),
+
   faq: defineCollection({
     loader: glob({ pattern: '**/[^_]*.mdx', base: './src/content/faq' }),
     schema: z.object({
       title: z.string(),
     }),
   }),
+
   resume: defineCollection({
     loader: glob({ pattern: '**/[^_]*.json', base: './src/content/resume' }),
     schema: z.object({
