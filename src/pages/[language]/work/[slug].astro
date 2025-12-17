@@ -1,6 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { getCollection, getEntryBySlug } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
 type Params = { language: LanguageKey; slug: string };
@@ -33,20 +33,29 @@ export async function getStaticPaths() {
 
 const { language, slug } = Astro.params as Params;
 
-// ✅ 用 entrySlug 直接读取该语言下的 mdx（这是可 render 的 entry）
-const entrySlug = `${language}/${slug}`;
+// 先拿列表（轻量），用 id 匹配到目标条目
+const entries = await getCollection('project', (e) => !e.data.draft);
 
-// 注意：getEntryBySlug 的第二个参数是 “collection 内部 slug”
-// 在你的结构下，它应当等于 "en/co-driving-pleasure"
-const project = await getEntryBySlug('project', entrySlug);
+const hit = entries.find((e) => {
+  const id = String(e.id ?? '');
+  const normalized = id.startsWith(`${language}/`)
+    ? id.slice(language.length + 1)
+    : id;
+  return normalized === slug;
+});
 
-if (!project || project.data.draft) {
-  throw new Error(`Project not found: ${entrySlug}`);
+if (!hit) {
+  throw new Error(`Project not found: ${language}/${slug}`);
+}
+
+// ✅ 用 getEntry 再取一次（这是可 render 的 entry）
+const project = await getEntry('project', hit.id);
+
+if (!project) {
+  throw new Error(`Project entry not found by id: ${String(hit.id)}`);
 }
 
 const tags = project.data.tags ?? [];
-
-// ✅ 关键：这里的 project 一定有 render()
 const { Content } = await project.render();
 ---
 
