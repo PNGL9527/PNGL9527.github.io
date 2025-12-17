@@ -164,15 +164,15 @@ export function getStaticPaths() {
 </script>
 
 <Base title={t('Navbar-3')}>
-  <main class="p-4 md:p-8 min-h-screen">
+  <main class="min-h-screen">
     <Banner>
-      <h1 class="text-3xl md:text-5xl font-medium">
+      <h1 class="px-4 text-3xl md:text-5xl font-medium">
         Selected Work<br />
         Research-driven UX, service & system projects
       </h1>
     </Banner>
 
-    <section class="container mx-auto flex flex-col gap-12">
+    <section class="px-4 flex flex-col gap-12">
       <!-- Group filter -->
       <ul class="flex flex-wrap gap-2" data-group-filter>
         {allTagGroups.map((group) => (
