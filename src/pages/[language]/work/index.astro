@@ -257,7 +257,10 @@ export function getStaticPaths() {
           )}
 
           <div class="flex gap-4 pt-2">
-            <a href={`./${normalizedSlug}/`} class="underline underline-offset-4">
+            <a
+              href={`/${currentLocale}/work/${normalizedSlug}/`}
+              class="underline underline-offset-4"
+            >
               View overview
             </a>
           </div>
