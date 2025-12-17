@@ -28,7 +28,7 @@ export const collections = {
           .optional(),
 
         // ✅ Now image() is defined
-        thumbnail: image().optional(),
+        thumbnail: z.string().optional(),
         thumbnailAlt: z.string().optional(),
 
         video: z.array(z.object({ src: z.string(), type: z.string() })).optional(),
