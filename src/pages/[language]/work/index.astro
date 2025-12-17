@@ -222,14 +222,16 @@ export function getStaticPaths() {
       return (
         <li data-tags={tags.join(',')} class="flex flex-col gap-4">
           {project.data.thumbnail && (
-            <Image
-              src={project.data.thumbnail.src}
-              alt={project.data.thumbnail.alt}
-              class="rounded-lg w-full"
-              width="720"
-              height="540"
-            />
+            <div class="w-full aspect-[4/3] rounded-lg overflow-hidden bg-neutral-200">
+              <img
+                src={project.data.thumbnail.src}
+                alt={project.data.thumbnail.alt}
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
           )}
+
 
           <h3 class="text-xl font-medium">
             {project.data.title}
