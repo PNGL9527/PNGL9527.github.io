@@ -215,95 +215,83 @@ export function getStaticPaths() {
 
         <!-- Project list -->
         <ul data-works class="flex flex-col gap-16">
-          {sortedProjects.map((project) => {
-            const id = String(project.id ?? '');
-            const normalizedSlug = id.startsWith(`${currentLocale}/`)
-              ? id.slice(currentLocale.length + 1)
-              : id.split('/').slice(1).join('/');
+  {sortedProjects.map((project) => {
+    const id = String(project.id ?? '');
+    const normalizedSlug = id.startsWith(`${currentLocale}/`)
+      ? id.slice(currentLocale.length + 1)
+      : id.split('/').slice(1).join('/');
 
-            const tags = project.data.tags ?? [];
+    const tags = project.data.tags ?? [];
 
-            return (
-              <li
-                data-tags={tags.join(',')}
-                class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-start"
-              >
-                <!-- Left: text -->
-                <div class="max-w-prose flex flex-col gap-4">
-                  <h3 class="text-xl md:text-2xl font-medium leading-snug">
-                    {project.data.title}
-                    <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
-                  </h3>
+    return (
+      <li
+        data-tags={tags.join(',')}
+        class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-start"
+      >
+        {/* Left: text */}
+        <div class="max-w-prose flex flex-col gap-4">
+          <h3 class="text-xl md:text-2xl font-medium leading-snug">
+            {project.data.title}
+            <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+          </h3>
 
-                  {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
+          {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
 
-                  <p class="text-base">{project.data.description}</p>
+          <p class="text-base">{project.data.description}</p>
 
-                  {project.data.highlights?.length > 0 && (
-                    <ul class="list-disc list-inside text-sm opacity-80">
-                        {project.data.highlights.slice(0, 3).map((h) => {
-                          // 1) string highlight
-                          if (typeof h === 'string') {
-                            return <li>{h}</li>;
-                          }
+          {project.data.highlights?.length > 0 && (
+            <ul class="list-disc list-inside text-sm opacity-80">
+              {project.data.highlights.slice(0, 3).map((h) => {
+                if (typeof h === 'string') return <li>{h}</li>;
 
-                          // 2) object highlight
-                          const title = h?.title ? `${h.title}: ` : '';
-                          const text = h?.text ?? '';
-                          const items = Array.isArray(h?.items) ? h.items : [];
+                const title = h?.title ? `${h.title}: ` : '';
+                const text = h?.text ?? '';
+                const items = Array.isArray(h?.items) ? h.items : [];
 
-                          // Prefer: title + text, else list first item
-                          if (title || text) {
-                            return <li>{title}{text}</li>;
-                          }
+                if (title || text) return <li>{title}{text}</li>;
+                if (items.length > 0) return <li>{items[0]}</li>;
 
-                          if (items.length > 0) {
-                            return <li>{items[0]}</li>;
-                          }
+                return null;
+              })}
+            </ul>
+          )}
 
-                          return null;
-                        })}
-                      </ul>
-                    )}
+          {tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 pt-1">
+              {tags.map((tag) => (
+                <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
 
+          <div class="pt-3">
+            <a
+              href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+              class="md:px-8 px-4 py-4 rounded-full transition-colors whitespace-nowrap bg-primary-900 text-primary-50"
+            >
+              View overview
+            </a>
+          </div>
+        </div>
 
-                  {tags.length > 0 && (
-                    <div class="flex flex-wrap gap-2 pt-1">
-                      {tags.map((tag) => (
-                        <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+        {/* Right: image */}
+        {project.data.thumbnail ? (
+          <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+            <img
+              src={project.data.thumbnail}
+              alt={project.data.thumbnailAlt ?? project.data.title}
+              class="h-full w-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        ) : null}
+      </li>
+    );
+  })}
+</ul>
 
-                  <div class="pt-3">
-                  <a
-                    href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
-                    class="md:px-8 px-4 py-4 rounded-full transition-colors whitespace-nowrap bg-primary-900 text-primary-50"
-                  >
-                    View overview
-                  </a>
-
-
-
-                </div>
-
-                <!-- Right: image (thumbnail: image(), thumbnailAlt: string) -->
-                {project.data.thumbnail ? (
-                  <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
-                    <img
-                      src={project.data.thumbnail}
-                      alt={project.data.thumbnailAlt ?? project.data.title}
-                      class="h-full w-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
       </section>
 
       <div class="h-20"></div>
