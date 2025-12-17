@@ -172,103 +172,100 @@ export function getStaticPaths() {
       </h1>
     </Banner>
 
-    <section class="px-4 flex flex-col gap-12">
-      <!-- Group filter -->
-      <ul class="flex flex-wrap gap-2" data-group-filter>
-        {allTagGroups.map((group) => (
-          <li>
-            <button
-              data-group-id={group.id}
-              style={`--themeColor: ${group.themeColor};`}
-              class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
-              type="button"
-            >
-              <Icon size={24} name={group.icon} />
-              {/* 如果你还没加 i18n key，就用 label 作为 fallback */}
-              {t(group.id) !== group.id ? t(group.id) : group.label}
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <!-- Tag filter -->
-      <ul class="flex flex-wrap gap-2" data-filter>
-        {allProjectTags.map((tag) => (
-          <li>
-            <button
-              class="border-2 py-1 md:py-2 px-2 md:px-4 border-primary-50 rounded-full text-xs lg:text-sm"
-              type="button"
-            >
-              {tag}
-            </button>
-          </li>
-        ))}
-      </ul>
-
-<!-- Project list -->
-<ul data-works class="grid md:grid-cols-2 gap-12">
-  {sortedProjects.map((project) => {
-    const id = String(project.id ?? ''); // e.g. "en/co-driving-pleasure"
-    const normalizedSlug = id.startsWith(`${currentLocale}/`)
-      ? id.slice(currentLocale.length + 1)
-      : id;
-
-
-    const tags = project.data.tags ?? [];
-    if (!normalizedSlug) return null;
-
-    return (
-      <li data-tags={tags.join(',')} class="flex flex-col gap-4">
-        {project.data.thumbnail?.src && (
-          <img
-            src={project.data.thumbnail.src}
-            alt={project.data.thumbnail.alt}
-            class="rounded-lg"
-            width="720"
-            height="540"
-          />
-        )}
-
-        <h3 class="text-xl font-medium">
-          {project.data.title}
-          <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
-        </h3>
-
-        {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
-
-        <p class="text-base">{project.data.description}</p>
-
-        {project.data.highlights?.length > 0 && (
-          <ul class="list-disc list-inside text-sm opacity-80">
-            {project.data.highlights.slice(0, 3).map((h) => (
-              <li>{h}</li>
-            ))}
-          </ul>
-        )}
-
-        {tags.length > 0 && (
-          <div class="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div class="flex gap-4 pt-2">
-          <a
-            href={`/${currentLocale}/work/${normalizedSlug}/`}
-            class="underline underline-offset-4"
-          >
-            View overview
-          </a>
-        </div>
+<section
+  class="px-4 flex flex-col gap-12"
+  style="padding-top: var(--navbar-height);"
+>
+  <!-- Group filter -->
+  <ul class="flex flex-wrap gap-2" data-group-filter>
+    {allTagGroups.map((group) => (
+      <li>
+        <button
+          data-group-id={group.id}
+          style={`--themeColor: ${group.themeColor};`}
+          class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
+          type="button"
+        >
+          <Icon size={24} name={group.icon} />
+          {t(group.id) !== group.id ? t(group.id) : group.label}
+        </button>
       </li>
-    );
-  })}
-</ul>
+    ))}
+  </ul>
 
-    </section>
+  <!-- Tag filter -->
+  <ul class="flex flex-wrap gap-2" data-filter>
+    {allProjectTags.map((tag) => (
+      <li>
+        <button
+          class="border-2 py-1 md:py-2 px-2 md:px-4 border-primary-50 rounded-full text-xs lg:text-sm"
+          type="button"
+        >
+          {tag}
+        </button>
+      </li>
+    ))}
+  </ul>
+
+  <!-- Project list -->
+  <ul data-works class="grid md:grid-cols-2 gap-12">
+    {sortedProjects.map((project) => {
+      const rawSlug = String(project.slug ?? '');
+      const normalizedSlug = rawSlug.startsWith(`${currentLocale}/`)
+        ? rawSlug.slice(currentLocale.length + 1)
+        : rawSlug;
+
+      const tags = project.data.tags ?? [];
+
+      return (
+        <li data-tags={tags.join(',')} class="flex flex-col gap-4">
+          {project.data.thumbnail?.src && (
+            <img
+              src={project.data.thumbnail.src}
+              alt={project.data.thumbnail.alt}
+              class="rounded-lg"
+              width="720"
+              height="540"
+            />
+          )}
+
+          <h3 class="text-xl font-medium">
+            {project.data.title}
+            <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+          </h3>
+
+          {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
+
+          <p class="text-base">{project.data.description}</p>
+
+          {project.data.highlights?.length > 0 && (
+            <ul class="list-disc list-inside text-sm opacity-80">
+              {project.data.highlights.slice(0, 3).map((h) => (
+                <li>{h}</li>
+              ))}
+            </ul>
+          )}
+
+          {tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div class="flex gap-4 pt-2">
+            <a href={`./${normalizedSlug}/`} class="underline underline-offset-4">
+              View overview
+            </a>
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+</section>
+
   </main>
 </Base>
