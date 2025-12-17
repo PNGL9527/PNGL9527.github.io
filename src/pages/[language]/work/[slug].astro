@@ -1,6 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
 type Params = { language: LanguageKey; slug: string };
@@ -58,11 +58,11 @@ if (!project) {
 const tags = project.data.tags ?? [];
 
 // ✅ Astro 5.8 content layer：用 render(entry) 获取жаў Content 组件
-const { Content } = await render(project);
+const { Content } = await project.render();
 ---
 
 <Base title={project.data.title}>
-  <main class="py-12">
+  <main class="px-4 py-12" style="padding-top: var(--navbar-height);">
 
     <article class="px-4 max-w-6xl space-y-10">
       <header class="space-y-3">
@@ -104,7 +104,7 @@ const { Content } = await render(project);
 
       <hr class="my-8" />
 
-      <section class="prose max-w-none">
+      <section class="prose prose-lg max-w-none">
         <Content />
       </section>
     </article>
