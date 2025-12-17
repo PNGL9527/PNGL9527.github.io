@@ -1,6 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
 type Params = { language: LanguageKey; slug: string };
@@ -48,8 +48,7 @@ if (!project) {
   throw new Error(`Project not found: ${language}/${slug}`);
 }
 
-// ✅ Astro 5 正确方式
-const { Content } = await project.render();
+const { Content } = await render(project);
 
 const tags = project.data.tags ?? [];
 ---
