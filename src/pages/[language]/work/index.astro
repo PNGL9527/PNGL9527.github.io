@@ -4,6 +4,7 @@ import Base from '@/layouts/Base.astro';
 import Banner from '@/components/Banner.astro';
 import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import { Image } from 'astro:assets';
 
 const currentLocale = Astro.currentLocale as LanguageKey;
 const t = useTranslations(currentLocale);
@@ -220,11 +221,11 @@ export function getStaticPaths() {
 
       return (
         <li data-tags={tags.join(',')} class="flex flex-col gap-4">
-          {project.data.thumbnail?.src && (
-            <img
+          {project.data.thumbnail && (
+            <Image
               src={project.data.thumbnail.src}
               alt={project.data.thumbnail.alt}
-              class="rounded-lg"
+              class="rounded-lg w-full"
               width="720"
               height="540"
             />
