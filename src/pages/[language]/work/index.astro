@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
-import Banner from '@/components/Banner.astro';
 import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
@@ -118,12 +117,10 @@ export function getStaticPaths() {
     const worksElement = document.querySelector('[data-works]');
 
     function updateList() {
-      // Tag buttons
       filterElement?.querySelectorAll('button').forEach((button) => {
         button.classList.toggle('active', activeTags.includes(button.innerText));
       });
 
-      // Group buttons
       groupFilterElement?.querySelectorAll('button').forEach((button) => {
         const groupId = button.dataset.groupId;
         const related = allTagGroups.find((g) => g.id === groupId)?.relatedTags || [];
@@ -131,7 +128,6 @@ export function getStaticPaths() {
         button.classList.toggle('active', isActive);
       });
 
-      // Cards
       worksElement?.querySelectorAll('[data-tags]').forEach((card) => {
         const tags = card.dataset.tags?.split(',').filter(Boolean) || [];
         const visible = activeTags.length === 0 || activeTags.some((tag) => tags.includes(tag));
@@ -166,7 +162,6 @@ export function getStaticPaths() {
 
 <Base title={t('Navbar-3')}>
   <main>
-    <!-- One container to rule them all -->
     <div class="mx-auto w-full max-w-screen-xl px-6">
       <!-- Hero -->
       <section class="pt-20">
@@ -176,7 +171,7 @@ export function getStaticPaths() {
         </h1>
       </section>
 
-      <!-- Filters + Works -->
+      <!-- Filters + works -->
       <section class="mt-12 flex flex-col gap-10">
         <!-- Group filter -->
         <ul class="flex flex-wrap gap-2" data-group-filter>
@@ -209,7 +204,7 @@ export function getStaticPaths() {
           ))}
         </ul>
 
-        <!-- Project list: one project per row -->
+        <!-- Project list -->
         <ul data-works class="flex flex-col gap-16">
           {sortedProjects.map((project) => {
             const id = String(project.id ?? '');
@@ -224,14 +219,19 @@ export function getStaticPaths() {
                 data-tags={tags.join(',')}
                 class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-start"
               >
-                {/* Left: text */}
+                <!-- Left: text -->
                 <div class="max-w-prose flex flex-col gap-4">
                   <h3 class="text-xl md:text-2xl font-medium leading-snug">
                     {project.data.title}
-                    <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+                    <time class="opacity-60">
+                      {' '}
+                      — {project.data.publishDate.getFullYear()}
+                    </time>
                   </h3>
 
-                  {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
+                  {project.data.context && (
+                    <p class="text-sm opacity-70">{project.data.context}</p>
+                  )}
 
                   <p class="text-base">{project.data.description}</p>
 
@@ -263,24 +263,23 @@ export function getStaticPaths() {
                   </div>
                 </div>
 
-                {/* Right: image */}
-                <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
-                  {project.data.thumbnail ? (
+                <!-- Right: image -->
+                {project.data.thumbnail ? (
+                  <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
                     <Image
-                      src={project.data.thumbnail}
-                      alt={project.data.thumbnailAlt ?? project.data.thumbnail?.alt ?? 'Project cover'}
+                      src={project.data.thumbnail.src}
+                      alt={project.data.thumbnail.alt ?? project.data.title}
                       class="h-full w-full object-cover"
                       loading="lazy"
                     />
-                  ) : null}
-                </div>
+                  </div>
+                ) : null}
               </li>
             );
           })}
         </ul>
       </section>
 
-      <!-- bottom breathing room -->
       <div class="h-20"></div>
     </div>
   </main>
