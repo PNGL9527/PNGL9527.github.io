@@ -167,15 +167,18 @@ export function getStaticPaths() {
   <main>
     <div class="mx-auto w-full max-w-screen-xl px-6">
       <!-- Hero -->
-        <section class="pt-[calc(var(--navbar-height)+3rem)]">
-          <h1 class="text-4xl md:text-6xl font-semibold leading-tight">
+      <section class="pt-[calc(var(--navbar-height)+3rem)]">
+        <h1 class="px-4 font-semibold">
+          <span class="block text-3xl md:text-6xl leading-tight">
             Selected Work
-          </h1>
+          </span>
 
-          <p class="mt-4 text-base md:text-lg opacity-70 max-w-3xl">
+          <span class="block mt-6 md:mt-8 text-2xl md:text-6xl max-w-6xl font-normal">
             Research-driven UX, service &amp; system projects
-          </p>
-        </section>
+          </span>
+        </h1>
+</section>
+
 
       <!-- Filters + works -->
       <section class="mt-12 flex flex-col gap-10">
@@ -275,13 +278,14 @@ export function getStaticPaths() {
                   )}
 
                   <div class="pt-3">
-                    <a
-                       href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
-                       class="inline-flex items-center justify-center rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-medium hover:bg-black/10 transition"
-                     >
-                      View overview
-                    </a>
-                  </div>
+                  <a
+                    href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+                    class="md:px-8 px-4 py-4 rounded-full transition-colors whitespace-nowrap bg-primary-900 text-primary-50"
+                  >
+                    View overview
+                  </a>
+
+
 
                 </div>
 
