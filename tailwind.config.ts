@@ -3,6 +3,7 @@ import type { Config } from 'tailwindcss';
 // @ts-expect-error
 // tailwindcss-fluid-type has no type, so ignore ts-error
 import fluidType from 'tailwindcss-fluid-type';
+import typography from '@tailwindcss/typography';
 
 export default {
   plugins: [
@@ -38,5 +39,6 @@ export default {
         '9xl': 10,
       },
     }),
+    typography,
   ],
 } satisfies Config;
