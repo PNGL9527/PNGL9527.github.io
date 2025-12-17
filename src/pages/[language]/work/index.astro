@@ -235,11 +235,31 @@ export function getStaticPaths() {
 
                   {project.data.highlights?.length > 0 && (
                     <ul class="list-disc list-inside text-sm opacity-80">
-                      {project.data.highlights.slice(0, 3).map((h) => (
-                        <li>{h}</li>
-                      ))}
-                    </ul>
-                  )}
+                        {project.data.highlights.slice(0, 3).map((h) => {
+                          // 1) string highlight
+                          if (typeof h === 'string') {
+                            return <li>{h}</li>;
+                          }
+
+                          // 2) object highlight
+                          const title = h?.title ? `${h.title}: ` : '';
+                          const text = h?.text ?? '';
+                          const items = Array.isArray(h?.items) ? h.items : [];
+
+                          // Prefer: title + text, else list first item
+                          if (title || text) {
+                            return <li>{title}{text}</li>;
+                          }
+
+                          if (items.length > 0) {
+                            return <li>{items[0]}</li>;
+                          }
+
+                          return null;
+                        })}
+                      </ul>
+                    )}
+
 
                   {tags.length > 0 && (
                     <div class="flex flex-wrap gap-2 pt-1">
