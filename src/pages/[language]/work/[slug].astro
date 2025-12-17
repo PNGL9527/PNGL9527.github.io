@@ -35,7 +35,7 @@ const { language, slug } = Astro.params as Params;
 
 const entries = await getCollection('project', (e) => !e.data.draft);
 
-// 反查当前 project
+// 反查当前 project（用 id 推导 slug，避免 e.slug 为空导致匹配失败）
 const project = entries.find((e) => {
   const id = String(e.id ?? '');
   const normalized = id.startsWith(`${language}/`)
@@ -44,12 +44,14 @@ const project = entries.find((e) => {
   return normalized === slug;
 });
 
-
 if (!project) {
   throw new Error(`Project not found: ${language}/${slug}`);
 }
 
 const tags = project.data.tags ?? [];
+
+// ✅ 关键：渲染 MDX 内容组件
+const { Content } = await project.render();
 ---
 
 <Base title={project.data.title}>
@@ -95,7 +97,7 @@ const tags = project.data.tags ?? [];
       <hr class="my-8" />
 
       <section class="prose max-w-none">
-        <slot />
+        <Content />
       </section>
     </article>
   </main>
