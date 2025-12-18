@@ -40,19 +40,7 @@ export const collections = {
 
         context: z.string().optional(),
         role: z.string().optional(),
-        highlights: z
-          .array(
-            z.union([
-              z.string(),
-              z.object({
-                title: z.string().optional(),
-                text: z.string().optional(),
-                items: z.array(z.string()).optional(),
-              }),
-            ]),
-          )
-          .default([]),
-
+        highlights: z.array(z.string()).default([]),
 
         themeColor: z.string().min(4).max(9).regex(/^#/).default('#fff'),
         publishDate: z.coerce.date(),
