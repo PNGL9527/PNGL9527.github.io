@@ -55,52 +55,66 @@ const tags = project.data.tags ?? [];
 
 <Base title={project.data.title}>
   <main>
-    {/* Header aligned with /work via Banner */}
+    {/* Header: same width system as body */}
     <Banner>
-      <h1 class="px-4 font-semibold">
-        <span class="block text-3xl md:text-6xl leading-tight">
-          {project.data.title}
-        </span>
-      </h1>
-    </Banner>
+      <div class="container mx-auto px-4 max-w-6xl">
+        <h1 class="font-semibold">
+          <span class="block text-3xl md:text-6xl leading-tight">
+            {project.data.title}
+          </span>
+        </h1>
 
-    {/* Body container aligned with /work (single px-4, no double indent) */}
-    <article class="container mx-auto px-4 max-w-6xl space-y-10">
-      <header class="space-y-4">
-        <p class="text-lg opacity-90 max-w-3xl">
+        {/* Description under title (controlled width) */}
+        <p class="mt-6 text-lg opacity-90 max-w-3xl">
           {project.data.description}
         </p>
 
-        {project.data.highlights?.length > 0 && (
-          <ul class="list-disc list-inside">
-            {project.data.highlights.map((h) => <li>{h}</li>)}
-          </ul>
-        )}
-
-        {tags.length > 0 && (
-          <div class="flex flex-wrap gap-2 pt-2">
-            {tags.map((tag) => (
-              <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div class="flex flex-wrap gap-4 pt-4">
-          {project.data.caseUrl && (
-            <a href={project.data.caseUrl} class="highlight text-base md:text-lg font-medium inline-block">
-              Read full case ↗
-            </a>
+        {/* Optional highlights + tags + links live in header (not repeated in body) */}
+        <div class="mt-6 space-y-4">
+          {project.data.highlights?.length > 0 && (
+            <ul class="list-disc list-inside">
+              {project.data.highlights.map((h) => <li>{h}</li>)}
+            </ul>
           )}
-          <a href="../" class="highlight text-base md:text-lg font-medium inline-block opacity-80">
-            Back to selected work →
-          </a>
+
+          {tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div class="flex flex-wrap gap-4 pt-2">
+            {project.data.caseUrl && (
+              <a
+                href={project.data.caseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="highlight text-base md:text-lg font-medium inline-block"
+              >
+                Read full case ↗
+              </a>
+            )}
+
+            <a
+              href="../"
+              class="highlight text-base md:text-lg font-medium inline-block opacity-80"
+            >
+              ← Back to selected work
+            </a>
+          </div>
         </div>
-      </header>
+      </div>
+    </Banner>
 
-      <hr class="my-8 opacity-20" />
+    {/* Body: same width as header container */}
+    <article class="container mx-auto px-4 max-w-6xl">
+      <hr class="my-10 opacity-20" />
 
+      {/* Important: Content only (to avoid duplicating title/description here) */}
       <section class="prose prose-lg max-w-none">
         <Content />
       </section>
