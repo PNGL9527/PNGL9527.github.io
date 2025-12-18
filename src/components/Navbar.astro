@@ -35,11 +35,13 @@ function isActiveNavItem(navItem: string) {
   class="px-4 flex flex-col md:flex-row flex-wrap justify-center z-50 relative md:justify-between items-center container mx-auto print:hidden gap-4 md:gap-0"
 >
 
-    class="hover:bg-primary-100 p-4 -m-4 rounded-full aspect-square flex justify-center items-center transition-colors"
-    href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/')}
-  >
-    <Logo class="h-8 md:h-6 w-auto" />
-  </a>
+<a
+  class="hover:bg-primary-100 p-4 -m-4 rounded-full aspect-square flex justify-center items-center transition-colors"
+  href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, '/')}
+>
+  <Logo class="h-8 md:h-6 w-auto" />
+</a>
+
 
   <div class="flex gap-2 items-center">
     <ul class="flex gap-2">
