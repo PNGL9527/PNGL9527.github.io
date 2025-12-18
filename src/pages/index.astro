@@ -2,6 +2,7 @@
 const target = '/en/';
 ---
 
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -15,10 +16,5 @@ const target = '/en/';
     <p>
       Redirecting to <a href={target}>{target}</a>…
     </p>
-
-    <script>
-      // Backup redirect (some clients ignore meta refresh)
-      window.location.replace("{target}");
-    </script>
   </body>
 </html>
