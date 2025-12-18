@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import Banner from '@/components/Banner.astro';
 
 const currentLocale = Astro.currentLocale as LanguageKey;
 const t = useTranslations(currentLocale);
@@ -167,11 +168,12 @@ export function getStaticPaths() {
     <!-- Change #2: align with homepage (use container, and control px via px-4 like homepage) -->
     <div class="container mx-auto">
       <!-- Change #1: remove subtitle, keep same headline scale as homepage -->
-      <section class="pt-[calc(var(--navbar-height)+3rem)]">
-        <h1 class="px-4 font-semibold">
-          <span class="block text-3xl md:text-6xl leading-tight">Selected Work</span>
-        </h1>
-      </section>
+<Banner>
+  <h1 class="px-4 font-semibold">
+    <span class="block text-3xl md:text-6xl leading-tight">Selected Work</span>
+  </h1>
+</Banner>
+
 
       <!-- Filters + works -->
       <section class="mt-12 px-4 flex flex-col gap-10">
