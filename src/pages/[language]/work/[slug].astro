@@ -88,16 +88,7 @@ const tags = project.data.tags ?? [];
           )}
 
           <div class="flex flex-wrap gap-4 pt-2">
-            
-
-            <a
-              href="../"
-              class="highlight text-base md:text-lg font-medium inline-block opacity-80"
-            >
-              ← Back to selected work
-            </a>
-          
-          {project.data.caseUrl && (
+            {project.data.caseUrl && (
               <a
                 href={project.data.caseUrl}
                 target="_blank"
@@ -107,6 +98,13 @@ const tags = project.data.tags ?? [];
                 Read full case ↗
               </a>
             )}
+
+            <a
+              href="../"
+              class="highlight text-base md:text-lg font-medium inline-block opacity-80"
+            >
+              ← Back to selected work
+            </a>
           </div>
         </div>
       </div>
