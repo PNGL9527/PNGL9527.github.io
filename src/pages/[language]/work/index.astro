@@ -18,7 +18,7 @@ const sortedProjects = publicCurrentLangProjects.sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
 );
 
-// 用于项目内展示 tags（不用于过滤）
+// Tags（用于 tag 筛选）
 const allProjectTags = publicCurrentLangProjects
   .reduce<string[]>((acc, curr) => {
     const tags = curr.data.tags || [];
@@ -59,6 +59,7 @@ export function getStaticPaths() {
 ---
 
 <style is:inline>
+  /* 复用你站点原来的 active 视觉语言 */
   .active {
     background-color: var(--color-primary-900);
     color: var(--color-primary-50);
@@ -69,9 +70,12 @@ export function getStaticPaths() {
 <script is:inline define:vars={{ allProjectTypes }}>
   document.addEventListener('astro:page-load', () => {
     let activeType = 'All';
+    let activeTags = [];
 
     const typeFilterElement = document.querySelector('[data-type-filter]');
+    const tagFilterElement = document.querySelector('[data-tag-filter]');
     const worksElement = document.querySelector('[data-works]');
+    const clearTagsBtn = document.querySelector('[data-clear-tags]');
 
     function updateList() {
       // Type buttons active state
@@ -79,12 +83,26 @@ export function getStaticPaths() {
         button.classList.toggle('active', button.dataset.type === activeType);
       });
 
-      // Cards visibility
-      worksElement?.querySelectorAll('[data-type]').forEach((card) => {
-        const type = card.dataset.type || '';
-        const visible = activeType === 'All' || type === activeType;
-        card.classList.toggle('hidden', !visible);
+      // Tag buttons active state
+      tagFilterElement?.querySelectorAll('button').forEach((button) => {
+        button.classList.toggle('active', activeTags.includes(button.dataset.tag));
       });
+
+      // Cards visibility: type AND tags
+      worksElement?.querySelectorAll('[data-type][data-tags]').forEach((card) => {
+        const type = card.dataset.type || '';
+        const tags = (card.dataset.tags || '').split(',').filter(Boolean);
+
+        const typeMatch = activeType === 'All' || type === activeType;
+        const tagMatch = activeTags.length === 0 || activeTags.some((t) => tags.includes(t));
+
+        card.classList.toggle('hidden', !(typeMatch && tagMatch));
+      });
+
+      // Clear tags button
+      if (clearTagsBtn) {
+        clearTagsBtn.classList.toggle('hidden', activeTags.length === 0);
+      }
     }
 
     typeFilterElement?.addEventListener('click', (e) => {
@@ -95,6 +113,25 @@ export function getStaticPaths() {
       updateList();
     });
 
+    tagFilterElement?.addEventListener('click', (e) => {
+      const button = e.target?.closest?.('button');
+      if (!button) return;
+
+      const tag = button.dataset.tag;
+      if (!tag) return;
+
+      activeTags = activeTags.includes(tag)
+        ? activeTags.filter((t) => t !== tag)
+        : [...activeTags, tag];
+
+      updateList();
+    });
+
+    clearTagsBtn?.addEventListener('click', () => {
+      activeTags = [];
+      updateList();
+    });
+
     updateList();
   });
 </script>
@@ -102,7 +139,7 @@ export function getStaticPaths() {
 <Base title={t('Navbar-3')}>
   <main>
     <div class="container mx-auto">
-      <!-- Title: aligned with homepage via Banner -->
+      <!-- Title aligned with homepage -->
       <Banner>
         <h1 class="px-4 font-semibold">
           <span class="block text-3xl md:text-6xl leading-tight">Selected Work</span>
@@ -110,7 +147,6 @@ export function getStaticPaths() {
       </Banner>
 
       <!-- Filters + Works -->
-      <!-- 这里 mt-6 是让标题下面内容“跟着一起上提”，你可改 mt-4/mt-8 -->
       <section class="mt-6 px-4 flex flex-col gap-10">
         <!-- Project type filter (icon + label) -->
         <ul class="flex flex-wrap gap-2" data-type-filter>
@@ -127,6 +163,34 @@ export function getStaticPaths() {
             </li>
           ))}
         </ul>
+
+        <!-- Tag filter (multi-select) -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between gap-4">
+            <p class="text-sm opacity-60">Filter by tags</p>
+            <button
+              type="button"
+              data-clear-tags
+              class="hidden text-sm underline underline-offset-4 opacity-70 hover:opacity-100"
+            >
+              Clear tags
+            </button>
+          </div>
+
+          <ul class="flex flex-wrap gap-2" data-tag-filter>
+            {allProjectTags.map((tag) => (
+              <li>
+                <button
+                  data-tag={tag}
+                  type="button"
+                  class="border-2 py-1.5 md:py-2 px-3 md:px-4 border-primary-50 rounded-full text-xs md:text-sm transition-colors hover:bg-primary-100"
+                >
+                  {tag}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <!-- Project list -->
         <ul data-works class="flex flex-col gap-16">
@@ -159,7 +223,7 @@ export function getStaticPaths() {
                   <div class="w-full aspect-[4/3] rounded-2xl border border-black/10 bg-black/5" />
                 )}
 
-                {/* Right: content with equal top/bottom spacing on wide screens */}
+                {/* Right: content */}
                 <div class="flex h-full flex-col md:py-12 py-8">
                   <div class="flex flex-col gap-4">
                     <h3 class="text-xl md:text-2xl font-medium leading-snug">
@@ -182,7 +246,7 @@ export function getStaticPaths() {
                     )}
                   </div>
 
-                  {/* CTA pinned to bottom; with minimum spacing to avoid sticking to tags on narrower widths */}
+                  {/* CTA pinned to bottom */}
                   <div class="mt-auto pt-6 md:pt-8">
                     <a
                       href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
