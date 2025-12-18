@@ -263,16 +263,17 @@ return (
       </div>
 
       {/* CTA pinned to bottom; bottom spacing equals top spacing via md:py-12 */}
-      <div class="mt-auto">
-        <a
-          href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
-          class="inline-flex items-center justify-center rounded-full px-6 py-4 text-sm font-medium transition-colors
-                 bg-primary-100 text-primary-900 border border-black/10
-                 hover:bg-primary-900 hover:text-primary-50"
-        >
-          View overview
-        </a>
-      </div>
+<div class="mt-auto pt-6 md:pt-8">
+  <a
+    href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+    class="inline-flex items-center justify-center rounded-full px-6 py-4 text-sm font-medium transition-colors
+           bg-primary-100 text-primary-900 border border-black/10
+           hover:bg-primary-900 hover:text-primary-50"
+  >
+    View overview
+  </a>
+</div>
+
     </div>
   </li>
 );
