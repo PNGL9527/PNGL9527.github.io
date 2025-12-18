@@ -55,7 +55,7 @@ const tags = project.data.tags ?? [];
 
 <Base title={project.data.title}>
   <main>
-    {/* Header: same width system as body */}
+    {/* Header: aligned + same width system as body */}
     <Banner>
       <div class="container mx-auto px-4 max-w-6xl">
         <h1 class="font-semibold">
@@ -69,23 +69,59 @@ const tags = project.data.tags ?? [];
           {project.data.description}
         </p>
 
-        {/* Optional highlights + tags + links live in header (not repeated in body) */}
-        <div class="mt-6 space-y-4">
-{project.data.highlights?.length > 0 && (
-  <div class="space-y-2">
-    <p class="text-sm font-medium uppercase tracking-wider opacity-60">
-      Highlights
-    </p>
+        {/* Meta blocks */}
+        <div class="mt-6 space-y-6">
+          {/* Highlights with label + robust rendering */}
+          {project.data.highlights?.length > 0 && (
+            <div class="space-y-2">
+              <p class="text-sm font-medium uppercase tracking-wider opacity-60">
+                Highlights
+              </p>
 
-    <ul class="list-disc list-inside">
-      {project.data.highlights.map((h) => (
-        <li>{String(h)}</li>
-      ))}
-    </ul>
-  </div>
-)}
+              <ul class="list-disc list-inside">
+                {project.data.highlights.map((h) => {
+                  // Case 1: normal string
+                  if (typeof h === 'string') return <li>{h}</li>;
 
+                  // Case 2: schema-defined object { title?, text?, items? }
+                  if (h && typeof h === 'object') {
+                    const title = 'title' in h ? h.title : undefined;
+                    const text = 'text' in h ? h.text : undefined;
+                    const items = 'items' in h ? h.items : undefined;
 
+                    // Case 3: YAML "Key: Value" mapping becomes { "Key": "Value" }
+                    // Render it as "Key: Value"
+                    if (!title && !text && !items) {
+                      const entries = Object.entries(h);
+                      if (entries.length === 1) {
+                        const [k, v] = entries[0];
+                        return <li>{`${k}: ${String(v)}`}</li>;
+                      }
+                      return <li>{JSON.stringify(h)}</li>;
+                    }
+
+                    // Render structured form if you use it later
+                    return (
+                      <li>
+                        {title ? <strong>{title}</strong> : null}
+                        {title && text ? ': ' : null}
+                        {text ? <span>{text}</span> : null}
+                        {items?.length ? (
+                          <ul class="list-disc list-inside mt-2 opacity-90">
+                            {items.map((it) => <li>{it}</li>)}
+                          </ul>
+                        ) : null}
+                      </li>
+                    );
+                  }
+
+                  return <li>{String(h)}</li>;
+                })}
+              </ul>
+            </div>
+          )}
+
+          {/* Tags */}
           {tags.length > 0 && (
             <div class="flex flex-wrap gap-2">
               {tags.map((tag) => (
@@ -96,27 +132,26 @@ const tags = project.data.tags ?? [];
             </div>
           )}
 
-<div class="flex flex-wrap gap-4 pt-2">
-  <a
-    href="../"
-    class="highlight text-base md:text-lg font-medium inline-block opacity-80"
-  >
-    ← Back to selected work
-  </a>
+          {/* Links */}
+          <div class="flex flex-wrap gap-4 pt-2">
+            <a
+              href="../"
+              class="highlight text-base md:text-lg font-medium inline-block opacity-80"
+            >
+              ← Back to selected work
+            </a>
 
-  {project.data.caseUrl && (
-    <a
-      href={project.data.caseUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="highlight text-base md:text-lg font-medium inline-block"
-    >
-      Read full case ↗
-    </a>
-  )}
-</div>
-
-
+            {project.data.caseUrl && (
+              <a
+                href={project.data.caseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="highlight text-base md:text-lg font-medium inline-block"
+              >
+                Read full case ↗
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </Banner>
@@ -125,7 +160,7 @@ const tags = project.data.tags ?? [];
     <article class="container mx-auto px-4 max-w-6xl">
       <hr class="my-10 opacity-20" />
 
-      {/* Important: Content only (to avoid duplicating title/description here) */}
+      {/* Content only (avoid duplicating title/description in body) */}
       <section class="prose prose-lg max-w-none">
         <Content />
       </section>
