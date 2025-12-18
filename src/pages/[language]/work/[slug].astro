@@ -1,5 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
+import Banner from '@/components/Banner.astro';
 import { getCollection, render } from 'astro:content';
 import { languages, type LanguageKey } from '@/i18n/i18n.ts';
 
@@ -33,7 +34,6 @@ export async function getStaticPaths() {
 
 const { language, slug } = Astro.params as Params;
 
-// 直接用 getCollection 找 entry
 const entries = await getCollection('project', (e) => !e.data.draft);
 
 const project = entries.find((e) => {
@@ -52,15 +52,22 @@ const { Content } = await render(project);
 
 const tags = project.data.tags ?? [];
 ---
-<Base title={project.data.title}>
-  <main class="px-4 py-12" style="padding-top: var(--navbar-height);">
-    <article class="px-4 max-w-6xl space-y-10">
-      <header class="space-y-3">
-        <h1 class="text-3xl md:text-5xl font-semibold">
-          {project.data.title}
-        </h1>
 
-        <p class="text-lg opacity-90">
+<Base title={project.data.title}>
+  <main>
+    {/* Header aligned with /work via Banner */}
+    <Banner>
+      <h1 class="px-4 font-semibold">
+        <span class="block text-3xl md:text-6xl leading-tight">
+          {project.data.title}
+        </span>
+      </h1>
+    </Banner>
+
+    {/* Body container aligned with /work (single px-4, no double indent) */}
+    <article class="container mx-auto px-4 max-w-6xl space-y-10">
+      <header class="space-y-4">
+        <p class="text-lg opacity-90 max-w-3xl">
           {project.data.description}
         </p>
 
@@ -80,23 +87,25 @@ const tags = project.data.tags ?? [];
           </div>
         )}
 
-        <div class="flex gap-4 pt-4">
+        <div class="flex flex-wrap gap-4 pt-4">
           {project.data.caseUrl && (
-            <a href={project.data.caseUrl} class="underline underline-offset-4">
-              Read full case
+            <a href={project.data.caseUrl} class="highlight text-base md:text-lg font-medium inline-block">
+              Read full case ↗
             </a>
           )}
-          <a href="../" class="underline underline-offset-4 opacity-70">
-            Back to selected work
+          <a href="../" class="highlight text-base md:text-lg font-medium inline-block opacity-80">
+            Back to selected work →
           </a>
         </div>
       </header>
 
-      <hr class="my-8" />
+      <hr class="my-8 opacity-20" />
 
       <section class="prose prose-lg max-w-none">
         <Content />
       </section>
     </article>
+
+    <div class="h-20"></div>
   </main>
 </Base>
