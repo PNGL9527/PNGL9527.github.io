@@ -71,11 +71,20 @@ const tags = project.data.tags ?? [];
 
         {/* Optional highlights + tags + links live in header (not repeated in body) */}
         <div class="mt-6 space-y-4">
-          {project.data.highlights?.length > 0 && (
-            <ul class="list-disc list-inside">
-              {project.data.highlights.map((h) => <li>{h}</li>)}
-            </ul>
-          )}
+{project.data.highlights?.length > 0 && (
+  <div class="space-y-2">
+    <p class="text-sm font-medium uppercase tracking-wider opacity-60">
+      Highlights
+    </p>
+
+    <ul class="list-disc list-inside">
+      {project.data.highlights.map((h) => (
+        <li>{String(h)}</li>
+      ))}
+    </ul>
+  </div>
+)}
+
 
           {tags.length > 0 && (
             <div class="flex flex-wrap gap-2">
