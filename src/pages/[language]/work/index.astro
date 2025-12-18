@@ -238,10 +238,10 @@ return (
       <div class="w-full aspect-[4/3] rounded-2xl border border-black/10 bg-black/5" />
     )}
 
-    {/* Right: text block with controlled vertical rhythm */}
-    <div class="flex h-full flex-col">
-      {/* 这一层负责“整体往下放放”的距离，你想更往下就把 pt-10 改 pt-12/pt-14 */}
-      <div class="flex flex-col gap-4 pt-10">
+    {/* Right: text + CTA (equal top/bottom spacing on wide screens) */}
+    <div class="flex h-full flex-col md:py-12 py-6">
+      {/* Content pushed down by the top padding above */}
+      <div class="flex flex-col gap-4">
         <h3 class="text-xl md:text-2xl font-medium leading-snug">
           {project.data.title}
           <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
@@ -262,11 +262,13 @@ return (
         )}
       </div>
 
-      {/* Spacer pushes CTA to the bottom (matches your red-line intent) */}
-      <div class="mt-auto pt-8">
+      {/* CTA pinned to bottom; bottom spacing equals top spacing via md:py-12 */}
+      <div class="mt-auto">
         <a
           href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
-          class="md:px-8 px-4 py-4 rounded-full transition-colors whitespace-nowrap bg-primary-900 text-primary-50 inline-flex items-center justify-center"
+          class="inline-flex items-center justify-center rounded-full px-6 py-4 text-sm font-medium transition-colors
+                 bg-primary-100 text-primary-900 border border-black/10
+                 hover:bg-primary-900 hover:text-primary-50"
         >
           View overview
         </a>
@@ -274,6 +276,7 @@ return (
     </div>
   </li>
 );
+
 
           })}
         </ul>
