@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
+import Banner from '@/components/Banner.astro';
 import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
-import Banner from '@/components/Banner.astro';
 
 const currentLocale = Astro.currentLocale as LanguageKey;
 const t = useTranslations(currentLocale);
@@ -18,6 +18,7 @@ const sortedProjects = publicCurrentLangProjects.sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
 );
 
+// 用于项目内展示 tags（不用于过滤）
 const allProjectTags = publicCurrentLangProjects
   .reduce<string[]>((acc, curr) => {
     const tags = curr.data.tags || [];
@@ -25,62 +26,29 @@ const allProjectTags = publicCurrentLangProjects
   }, [])
   .sort((a, b) => a.localeCompare(b));
 
-type TagGroupIds =
-  | 'Work-TagGroup-all'
-  | 'Work-TagGroup-Methods'
-  | 'Work-TagGroup-Systems'
-  | 'Work-TagGroup-Mobility'
-  | 'Work-TagGroup-Healthcare';
+type ProjectTypeId =
+  | 'All'
+  | 'Research'
+  | 'Product'
+  | 'Service'
+  | 'Strategy'
+  | 'Prototype'
+  | 'Writing';
 
-type TagGroup = {
-  id: TagGroupIds;
+type ProjectType = {
+  id: ProjectTypeId;
   label: string;
-  relatedTags: string[];
   icon: string;
-  themeColor: string;
 };
 
-const allTagGroups: TagGroup[] = [
-  {
-    id: 'Work-TagGroup-all',
-    label: 'All',
-    relatedTags: [],
-    icon: 'material-symbols:apps',
-    themeColor: '#171717',
-  },
-  {
-    id: 'Work-TagGroup-Methods',
-    label: 'Methods',
-    relatedTags: [
-      'Quali-quantitative research',
-      'Phenomenological interviews',
-      'Experience sampling',
-      'Framework development',
-    ],
-    icon: 'material-symbols:science-outline',
-    themeColor: '#1f2a44',
-  },
-  {
-    id: 'Work-TagGroup-Systems',
-    label: 'Systems',
-    relatedTags: ['Service blueprinting', 'System mapping', 'Process analysis'],
-    icon: 'material-symbols:account-tree-outline',
-    themeColor: '#2b3a2e',
-  },
-  {
-    id: 'Work-TagGroup-Mobility',
-    label: 'Mobility',
-    relatedTags: ['Smart mobility', 'Human–vehicle interaction', 'Co-driving experience'],
-    icon: 'material-symbols:directions-car',
-    themeColor: '#3a2b2b',
-  },
-  {
-    id: 'Work-TagGroup-Healthcare',
-    label: 'Healthcare',
-    relatedTags: ['Healthcare services', 'Operational analysis', 'Patient flow'],
-    icon: 'material-symbols:local-hospital-outline',
-    themeColor: '#2b2e3a',
-  },
+const allProjectTypes: ProjectType[] = [
+  { id: 'All', label: 'All', icon: 'material-symbols:apps' },
+  { id: 'Research', label: 'Research', icon: 'material-symbols:science-outline' },
+  { id: 'Product', label: 'Product / UX', icon: 'material-symbols:widgets-outline' },
+  { id: 'Service', label: 'Service / System', icon: 'material-symbols:account-tree-outline' },
+  { id: 'Strategy', label: 'Strategy', icon: 'material-symbols:target' },
+  { id: 'Prototype', label: 'Prototype', icon: 'material-symbols:rocket-launch-outline' },
+  { id: 'Writing', label: 'Writing', icon: 'material-symbols:article-outline' },
 ];
 
 export function getStaticPaths() {
@@ -91,16 +59,6 @@ export function getStaticPaths() {
 ---
 
 <style is:inline>
-  .active[data-group-id] {
-    background-color: var(--themeColor);
-    color: white;
-    border-color: transparent;
-  }
-
-  [data-group-id]:hover {
-    color: var(--themeColor);
-  }
-
   .active {
     background-color: var(--color-primary-900);
     color: var(--color-primary-50);
@@ -108,110 +66,69 @@ export function getStaticPaths() {
   }
 </style>
 
-<script is:inline define:vars={{ allTagGroups }}>
+<script is:inline define:vars={{ allProjectTypes }}>
   document.addEventListener('astro:page-load', () => {
-    let activeTags = [];
+    let activeType = 'All';
 
-    const groupFilterElement = document.querySelector('[data-group-filter]');
-    const filterElement = document.querySelector('[data-filter]');
+    const typeFilterElement = document.querySelector('[data-type-filter]');
     const worksElement = document.querySelector('[data-works]');
 
     function updateList() {
-      // Tag buttons
-      filterElement?.querySelectorAll('button').forEach((button) => {
-        button.classList.toggle('active', activeTags.includes(button.innerText));
+      // Type buttons active state
+      typeFilterElement?.querySelectorAll('button').forEach((button) => {
+        button.classList.toggle('active', button.dataset.type === activeType);
       });
 
-      // Group buttons
-      groupFilterElement?.querySelectorAll('button').forEach((button) => {
-        const groupId = button.dataset.groupId;
-        const related = allTagGroups.find((g) => g.id === groupId)?.relatedTags || [];
-        const isActive = related.length > 0 && related.every((t) => activeTags.includes(t));
-        button.classList.toggle('active', isActive);
-      });
-
-      // Cards
-      worksElement?.querySelectorAll('[data-tags]').forEach((card) => {
-        const tags = card.dataset.tags?.split(',').filter(Boolean) || [];
-        const visible = activeTags.length === 0 || activeTags.some((tag) => tags.includes(tag));
+      // Cards visibility
+      worksElement?.querySelectorAll('[data-type]').forEach((card) => {
+        const type = card.dataset.type || '';
+        const visible = activeType === 'All' || type === activeType;
         card.classList.toggle('hidden', !visible);
       });
     }
 
-    filterElement?.addEventListener('click', (e) => {
+    typeFilterElement?.addEventListener('click', (e) => {
       const button = e.target?.closest?.('button');
       if (!button) return;
 
-      const tag = button.innerText;
-      activeTags = activeTags.includes(tag)
-        ? activeTags.filter((t) => t !== tag)
-        : [...activeTags, tag];
-
+      activeType = button.dataset.type || 'All';
       updateList();
     });
 
-    groupFilterElement?.addEventListener('click', (e) => {
-      const button = e.target?.closest?.('button');
-      if (!button) return;
-
-      const groupId = button.dataset.groupId;
-      const related = allTagGroups.find((g) => g.id === groupId)?.relatedTags || [];
-      activeTags = [...related];
-
-      updateList();
-    });
+    updateList();
   });
 </script>
 
 <Base title={t('Navbar-3')}>
   <main>
-    <!-- Change #2: align with homepage (use container, and control px via px-4 like homepage) -->
     <div class="container mx-auto">
-      <!-- Change #1: remove subtitle, keep same headline scale as homepage -->
-<Banner>
-  <h1 class="px-4 font-semibold">
-    <span class="block text-3xl md:text-6xl leading-tight">Selected Work</span>
-  </h1>
-</Banner>
+      <!-- Title: aligned with homepage via Banner -->
+      <Banner>
+        <h1 class="px-4 font-semibold">
+          <span class="block text-3xl md:text-6xl leading-tight">Selected Work</span>
+        </h1>
+      </Banner>
 
-
-      <!-- Filters + works -->
+      <!-- Filters + Works -->
+      <!-- 这里 mt-6 是让标题下面内容“跟着一起上提”，你可改 mt-4/mt-8 -->
       <section class="mt-6 px-4 flex flex-col gap-10">
-        <!-- Group filter -->
-        <ul class="flex flex-wrap gap-2" data-group-filter>
-          {allTagGroups.map((group) => (
+        <!-- Project type filter (icon + label) -->
+        <ul class="flex flex-wrap gap-2" data-type-filter>
+          {allProjectTypes.map((type) => (
             <li>
               <button
-                data-group-id={group.id}
-                style={`--themeColor: ${group.themeColor};`}
-                class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
+                data-type={type.id}
                 type="button"
+                class="border-2 py-2 px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition-colors whitespace-nowrap hover:bg-primary-100"
               >
-                <Icon size={22} name={group.icon} />
-                <span class="text-sm md:text-base">
-                  {t(group.id) !== group.id ? t(group.id) : group.label}
-                </span>
+                <Icon size={22} name={type.icon} />
+                <span class="text-sm md:text-base">{type.label}</span>
               </button>
             </li>
           ))}
         </ul>
 
-        <!-- Tag filter -->
-        <ul class="flex flex-wrap gap-2" data-filter>
-          {allProjectTags.map((tag) => (
-            <li>
-              <button
-                class="border-2 py-1 md:py-2 px-2 md:px-4 border-primary-50 rounded-full text-xs lg:text-sm"
-                type="button"
-              >
-                {tag}
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        <!-- Change #3: project layout = left image, right text;
-             mobile order = image first, text second -->
+        <!-- Project list -->
         <ul data-works class="flex flex-col gap-16">
           {sortedProjects.map((project) => {
             const id = String(project.id ?? '');
@@ -220,66 +137,63 @@ export function getStaticPaths() {
               : id.split('/').slice(1).join('/');
 
             const tags = project.data.tags ?? [];
+            const projectType = project.data.type ?? 'Research';
 
-return (
-  <li
-    data-tags={tags.join(',')}
-    class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12 items-stretch"
-  >
-    {/* Left: image */}
-    {project.data.thumbnail ? (
-      <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
-        <img
-          src={project.data.thumbnail}
-          alt={project.data.thumbnailAlt ?? project.data.title}
-          class="h-full w-full object-cover"
-          loading="lazy"
-        />
-      </div>
-    ) : (
-      <div class="w-full aspect-[4/3] rounded-2xl border border-black/10 bg-black/5" />
-    )}
+            return (
+              <li
+                data-type={projectType}
+                data-tags={tags.join(',')}
+                class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12 items-stretch"
+              >
+                {/* Left: image */}
+                {project.data.thumbnail ? (
+                  <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+                    <img
+                      src={project.data.thumbnail}
+                      alt={project.data.thumbnailAlt ?? project.data.title}
+                      class="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div class="w-full aspect-[4/3] rounded-2xl border border-black/10 bg-black/5" />
+                )}
 
-    {/* Right: text + CTA (equal top/bottom spacing on wide screens) */}
-    <div class="flex h-full flex-col md:py-12 py-6">
-      {/* Content pushed down by the top padding above */}
-      <div class="flex flex-col gap-4">
-        <h3 class="text-xl md:text-2xl font-medium leading-snug">
-          {project.data.title}
-          <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
-        </h3>
+                {/* Right: content with equal top/bottom spacing on wide screens */}
+                <div class="flex h-full flex-col md:py-12 py-8">
+                  <div class="flex flex-col gap-4">
+                    <h3 class="text-xl md:text-2xl font-medium leading-snug">
+                      {project.data.title}
+                      <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+                    </h3>
 
-        {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
+                    {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
 
-        <p class="text-base">{project.data.description}</p>
+                    <p class="text-base">{project.data.description}</p>
 
-        {tags.length > 0 && (
-          <div class="flex flex-wrap gap-2 pt-1">
-            {tags.map((tag) => (
-              <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
+                    {tags.length > 0 && (
+                      <div class="flex flex-wrap gap-2 pt-1">
+                        {tags.map((tag) => (
+                          <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-      {/* CTA pinned to bottom; bottom spacing equals top spacing via md:py-12 */}
-<div class="mt-auto pt-6 md:pt-8">
-  <a
-    href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
-    class="highlight text-base md:text-lg font-medium inline-block"
-  >
-    View overview →
-  </a>
-</div>
-
-
-    </div>
-  </li>
-);
-
-
+                  {/* CTA pinned to bottom; with minimum spacing to avoid sticking to tags on narrower widths */}
+                  <div class="mt-auto pt-6 md:pt-8">
+                    <a
+                      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+                      class="highlight text-base md:text-lg font-medium inline-block"
+                    >
+                      View overview →
+                    </a>
+                  </div>
+                </div>
+              </li>
+            );
           })}
         </ul>
       </section>
