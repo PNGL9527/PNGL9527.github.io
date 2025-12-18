@@ -20,6 +20,8 @@ export const collections = {
         title: z.string(),
         description: z.string(),
 
+        type: z.enum(['Research', 'Product', 'Service', 'Strategy', 'Prototype']).optional(),
+
         link: z
           .object({
             url: z.string().optional(),
@@ -34,6 +36,7 @@ export const collections = {
         video: z.array(z.object({ src: z.string(), type: z.string() })).optional(),
         tech: z.array(allowedTechsEnum).default([]),
         tags: z.array(z.string()).default([]),
+        
 
         context: z.string().optional(),
         role: z.string().optional(),
