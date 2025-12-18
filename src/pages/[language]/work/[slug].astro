@@ -87,25 +87,27 @@ const tags = project.data.tags ?? [];
             </div>
           )}
 
-          <div class="flex flex-wrap gap-4 pt-2">
-            {project.data.caseUrl && (
-              <a
-                href={project.data.caseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="highlight text-base md:text-lg font-medium inline-block"
-              >
-                Read full case ↗
-              </a>
-            )}
+<div class="flex flex-wrap gap-4 pt-2">
+  <a
+    href="../"
+    class="highlight text-base md:text-lg font-medium inline-block opacity-80"
+  >
+    ← Back to selected work
+  </a>
 
-            <a
-              href="../"
-              class="highlight text-base md:text-lg font-medium inline-block opacity-80"
-            >
-              ← Back to selected work
-            </a>
-          </div>
+  {project.data.caseUrl && (
+    <a
+      href={project.data.caseUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="highlight text-base md:text-lg font-medium inline-block"
+    >
+      Read full case ↗
+    </a>
+  )}
+</div>
+
+
         </div>
       </div>
     </Banner>
