@@ -113,9 +113,7 @@ export function getStaticPaths() {
 
       worksElement?.querySelectorAll('[data-type]').forEach((card) => {
         const cardType = card.dataset.type || '';
-        const visible =
-          !activeFilter?.relatedType || cardType === activeFilter.relatedType;
-
+        const visible = !activeFilter?.relatedType || cardType === activeFilter.relatedType;
         card.classList.toggle('hidden', !visible);
       });
     }
@@ -142,12 +140,10 @@ export function getStaticPaths() {
     <div class="mx-auto w-full max-w-screen-xl px-6">
       <!-- Header -->
       <section class="pt-[var(--navbar-height)]">
-        <h1 class="text-3xl md:text-5xl font-medium leading-tight">
-          Selected Work
-        </h1>
+        <h1 class="text-3xl md:text-5xl font-medium leading-tight">Selected Work</h1>
       </section>
 
-      <!-- Type filter (保留：图标 + 文字) -->
+      <!-- Type filter -->
       <section class="mt-10">
         <ul class="flex flex-wrap gap-2" data-type-filter>
           {allTypeFilters.map((f) => (
@@ -175,7 +171,6 @@ export function getStaticPaths() {
               ? id.slice(currentLocale.length + 1)
               : id.split('/').slice(1).join('/');
 
-            // Use type for filter; empty type => always visible in "All"
             const projectType = project.data.type ?? '';
 
             return (
@@ -204,48 +199,38 @@ export function getStaticPaths() {
                   ) : null}
                 </div>
 
-                {/* Right: text (保持按钮位置逻辑：窄屏不贴标签，宽屏按钮靠下) */}
-<div class="max-w-prose flex flex-col md:h-full md:py-2">
-  <!-- Top content -->
-  <div class="flex flex-col gap-4">
-    <div class="space-y-3">
-      <h3 class="text-xl md:text-2xl font-medium leading-snug">
-        {project.data.title}
-        <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
-      </h3>
+                {/* Right: text */}
+                <div class="max-w-prose flex flex-col md:h-full md:py-2">
+                  <div class="space-y-3">
+                    <h3 class="text-xl md:text-2xl font-medium leading-snug">
+                      {project.data.title}
+                      <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+                    </h3>
 
-      {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
+                    {project.data.context && (
+                      <p class="text-sm opacity-70">{project.data.context}</p>
+                    )}
 
-      <p class="text-base">{project.data.description}</p>
+                    <p class="text-base">{project.data.description}</p>
 
-{project.data.highlights?.length > 0 && (
-  <ul class="list-disc list-inside text-sm opacity-80">
-    {project.data.highlights.slice(0, 3).map((h) => (
-      <li>
-        {typeof h === 'string'
-          ? h
-          : h.text ?? ''}
-      </li>
-    ))}
-  </ul>
-)}
+                    {project.data.highlights?.length > 0 && (
+                      <ul class="list-disc list-inside text-sm opacity-80">
+                        {project.data.highlights.slice(0, 3).map((h) => (
+                          <li>{typeof h === 'string' ? h : h.text ?? ''}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
 
-    </div>
-  </div>
-
-  <!-- Bottom action: pinned to bottom on md+, spaced on mobile -->
-  <div class="mt-6 md:mt-auto">
-    <a
-      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
-      class="highlight text-lg"
-    >
-      View overview
-    </a>
-  </div>
-</div>
-
-
-                  {/* 注意：这里已经按你的要求删掉了“卡片里的 tag pills” */}
+                  {/* Bottom action: spaced on mobile; pinned to bottom on md+ */}
+                  <div class="mt-6 md:mt-auto">
+                    <a
+                      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+                      class="highlight text-lg"
+                    >
+                      View overview
+                    </a>
+                  </div>
                 </div>
               </li>
             );
