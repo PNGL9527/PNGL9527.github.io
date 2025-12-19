@@ -136,51 +136,55 @@ export function getStaticPaths() {
                 class="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch"
               >
                 <!-- Left: image (defines row height) -->
-                <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black/5">
-                  {project.data.thumbnail && (
-                    typeof project.data.thumbnail === 'string' ? (
-                      <img
-                        src={project.data.thumbnail}
-                        alt={project.data.thumbnailAlt ?? project.data.title}
-                        class="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <Image
-                        src={project.data.thumbnail}
-                        alt={project.data.thumbnailAlt ?? project.data.title}
-                        class="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    )
-                  )}
-                </div>
+<div class="w-full rounded-2xl overflow-hidden bg-black/5 h-[240px] sm:h-[300px] md:h-[340px] lg:h-[380px] xl:h-[420px]">
+  {project.data.thumbnail && (
+    typeof project.data.thumbnail === 'string' ? (
+      <img
+        src={project.data.thumbnail}
+        alt={project.data.thumbnailAlt ?? project.data.title}
+        class="w-full h-full object-cover"
+        loading="lazy"
+      />
+    ) : (
+      <Image
+        src={project.data.thumbnail}
+        alt={project.data.thumbnailAlt ?? project.data.title}
+        class="w-full h-full object-cover"
+        loading="lazy"
+      />
+    )
+  )}
+</div>
+
+
 
                 <!-- Right: text column (forced full height) -->
-                <div class="flex flex-col max-w-prose h-full py-4">
-                  <div class="space-y-3">
-                    <h3 class="text-xl md:text-2xl font-medium">
-                      {project.data.title}
-                      <span class="opacity-60"> — {project.data.publishDate.getFullYear()}</span>
-                    </h3>
+<div class="flex flex-col max-w-prose w-full h-full py-4 md:py-0 md:h-[340px] lg:h-[380px] xl:h-[420px] justify-between">
+  <!-- Top -->
+  <div class="space-y-3 pt-2">
+    <h3 class="text-xl md:text-2xl font-medium">
+      {project.data.title}
+      <span class="opacity-60"> — {project.data.publishDate.getFullYear()}</span>
+    </h3>
 
-                    {project.data.context && (
-                      <p class="text-sm opacity-70">{project.data.context}</p>
-                    )}
+    {project.data.context && (
+      <p class="text-sm opacity-70">{project.data.context}</p>
+    )}
 
-                    <p class="text-base">{project.data.description}</p>
-                  </div>
+    <p class="text-base">{project.data.description}</p>
+  </div>
 
-                  <!-- Button: bottom-aligned on md+, spaced on mobile -->
-                  <div class="mt-6 md:mt-auto">
-                    <a
-                      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
-                      class="highlight text-lg"
-                    >
-                      View overview
-                    </a>
-                  </div>
-                </div>
+  <!-- Bottom -->
+  <div class="pb-2">
+    <a
+      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+      class="highlight text-lg"
+    >
+      Check it out
+    </a>
+  </div>
+</div>
+
               </li>
             );
           })}
