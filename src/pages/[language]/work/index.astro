@@ -35,53 +35,16 @@ type TypeFilter = {
 };
 
 const allTypeFilters: TypeFilter[] = [
-  {
-    id: 'Work-Type-all',
-    label: 'All',
-    icon: 'material-symbols:apps',
-    themeColor: '#171717',
-  },
-  {
-    id: 'Work-Type-Research',
-    label: 'Research',
-    icon: 'material-symbols:science-outline',
-    themeColor: '#1f2a44',
-    relatedType: 'Research',
-  },
-  {
-    id: 'Work-Type-Product',
-    label: 'Product',
-    icon: 'material-symbols:widgets-outline',
-    themeColor: '#2b3a2e',
-    relatedType: 'Product',
-  },
-  {
-    id: 'Work-Type-Service',
-    label: 'Service',
-    icon: 'material-symbols:handshake-outline',
-    themeColor: '#2b2e3a',
-    relatedType: 'Service',
-  },
-  {
-    id: 'Work-Type-Strategy',
-    label: 'Strategy',
-    icon: 'material-symbols:strategy',
-    themeColor: '#3a2b2b',
-    relatedType: 'Strategy',
-  },
-  {
-    id: 'Work-Type-Prototype',
-    label: 'Prototype',
-    icon: 'material-symbols:biotech-outline',
-    themeColor: '#3a3a2b',
-    relatedType: 'Prototype',
-  },
+  { id: 'Work-Type-all', label: 'All', icon: 'material-symbols:apps', themeColor: '#171717' },
+  { id: 'Work-Type-Research', label: 'Research', icon: 'material-symbols:science-outline', themeColor: '#1f2a44', relatedType: 'Research' },
+  { id: 'Work-Type-Product', label: 'Product', icon: 'material-symbols:widgets-outline', themeColor: '#2b3a2e', relatedType: 'Product' },
+  { id: 'Work-Type-Service', label: 'Service', icon: 'material-symbols:handshake-outline', themeColor: '#2b2e3a', relatedType: 'Service' },
+  { id: 'Work-Type-Strategy', label: 'Strategy', icon: 'material-symbols:strategy', themeColor: '#3a2b2b', relatedType: 'Strategy' },
+  { id: 'Work-Type-Prototype', label: 'Prototype', icon: 'material-symbols:biotech-outline', themeColor: '#3a3a2b', relatedType: 'Prototype' },
 ];
 
 export function getStaticPaths() {
-  return Object.keys(languages).map((language) => ({
-    params: { language },
-  }));
+  return Object.keys(languages).map((language) => ({ params: { language } }));
 }
 ---
 
@@ -110,7 +73,6 @@ export function getStaticPaths() {
 
     function updateCards(activeId) {
       const activeFilter = allTypeFilters.find((f) => f.id === activeId);
-
       worksElement?.querySelectorAll('[data-type]').forEach((card) => {
         const cardType = card.dataset.type || '';
         const visible = !activeFilter?.relatedType || cardType === activeFilter.relatedType;
@@ -118,17 +80,14 @@ export function getStaticPaths() {
       });
     }
 
-    // Default state: All
     setActiveButton('Work-Type-all');
     updateCards('Work-Type-all');
 
     typeFilterElement?.addEventListener('click', (e) => {
       const button = e.target?.closest?.('button');
       if (!button) return;
-
       const typeId = button.dataset.typeId;
       if (!typeId) return;
-
       setActiveButton(typeId);
       updateCards(typeId);
     });
@@ -140,7 +99,7 @@ export function getStaticPaths() {
     <div class="mx-auto w-full max-w-screen-xl px-6">
       <!-- Header -->
       <section class="pt-[var(--navbar-height)]">
-        <h1 class="text-3xl md:text-5xl font-medium leading-tight">Selected Work</h1>
+        <h1 class="text-3xl md:text-5xl font-medium">Selected Work</h1>
       </section>
 
       <!-- Type filter -->
@@ -151,10 +110,10 @@ export function getStaticPaths() {
               <button
                 data-type-id={f.id}
                 style={`--themeColor: ${f.themeColor};`}
-                class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
+                class="border-2 px-4 py-2 rounded-full inline-flex items-center gap-3 transition"
                 type="button"
               >
-                <Icon size={24} name={f.icon} />
+                <Icon size={22} name={f.icon} />
                 {f.label}
               </button>
             </li>
@@ -164,47 +123,45 @@ export function getStaticPaths() {
 
       <!-- Project list -->
       <section class="mt-16">
-        <ul data-works class="flex flex-col gap-16">
+        <ul data-works class="flex flex-col gap-20">
           {sortedProjects.map((project) => {
             const id = String(project.id ?? '');
             const normalizedSlug = id.startsWith(`${currentLocale}/`)
               ? id.slice(currentLocale.length + 1)
               : id.split('/').slice(1).join('/');
 
-            const projectType = project.data.type ?? '';
-
             return (
               <li
-                data-type={projectType}
-                class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-stretch"
+                data-type={project.data.type ?? ''}
+                class="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch"
               >
-                {/* Left: image */}
-                <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
-                  {project.data.thumbnail ? (
+                <!-- Left: image (defines row height) -->
+                <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black/5">
+                  {project.data.thumbnail && (
                     typeof project.data.thumbnail === 'string' ? (
                       <img
                         src={project.data.thumbnail}
                         alt={project.data.thumbnailAlt ?? project.data.title}
-                        class="h-full w-full object-cover"
+                        class="w-full h-full object-cover"
                         loading="lazy"
                       />
                     ) : (
                       <Image
                         src={project.data.thumbnail}
                         alt={project.data.thumbnailAlt ?? project.data.title}
-                        class="h-full w-full object-cover"
+                        class="w-full h-full object-cover"
                         loading="lazy"
                       />
                     )
-                  ) : null}
+                  )}
                 </div>
 
-                {/* Right: text */}
-                <div class="max-w-prose flex flex-col md:h-full md:py-2">
+                <!-- Right: text column (forced full height) -->
+                <div class="flex flex-col max-w-prose h-full py-4">
                   <div class="space-y-3">
-                    <h3 class="text-xl md:text-2xl font-medium leading-snug">
+                    <h3 class="text-xl md:text-2xl font-medium">
                       {project.data.title}
-                      <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+                      <span class="opacity-60"> — {project.data.publishDate.getFullYear()}</span>
                     </h3>
 
                     {project.data.context && (
@@ -212,17 +169,9 @@ export function getStaticPaths() {
                     )}
 
                     <p class="text-base">{project.data.description}</p>
-
-                    {project.data.highlights?.length > 0 && (
-                      <ul class="list-disc list-inside text-sm opacity-80">
-                        {project.data.highlights.slice(0, 3).map((h) => (
-                          <li>{typeof h === 'string' ? h : h.text ?? ''}</li>
-                        ))}
-                      </ul>
-                    )}
                   </div>
 
-                  {/* Bottom action: spaced on mobile; pinned to bottom on md+ */}
+                  <!-- Button: bottom-aligned on md+, spaced on mobile -->
                   <div class="mt-6 md:mt-auto">
                     <a
                       href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
@@ -238,7 +187,7 @@ export function getStaticPaths() {
         </ul>
       </section>
 
-      <div class="h-20"></div>
+      <div class="h-24"></div>
     </div>
   </main>
 </Base>
