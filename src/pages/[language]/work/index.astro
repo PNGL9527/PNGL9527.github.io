@@ -82,29 +82,23 @@ const allTypeFilters: TypeFilter[] = [
 ---
 
 <style is:inline>
-  /* 统一用项目的强调色（与 .highlight 的 bg-accent 同源） */
-  :root {
-    --work-accent: rgb(var(--accent-color));
-    --work-accent-bg: rgb(var(--accent-color) / 0.18); /* 浅一点的橙色底 */
-  }
-
-  /* Active（点击后）：不要深色，改成浅橙底 + 橙色字/图标 */
+  /* Active：对齐右上角 Work 按钮的深色 */
   .active[data-type-id] {
-    background-color: var(--work-accent-bg);
-    color: var(--work-accent);
+    background-color: var(--color-primary-900);
+    color: white;
     border-color: transparent;
   }
 
-  /* Hover（未选中）：橙色字 + 橙色描边 */
+  /* Hover（未选中）：轻微强调，用深色文字即可，不做背景 */
   [data-type-id]:hover {
-    color: var(--work-accent);
-    border-color: var(--work-accent);
+    color: var(--color-primary-900);
+    border-color: var(--color-primary-900);
   }
 
-  /* Hover（已选中）：保持 active 的可读性，不再“糊” */
+  /* Hover（已选中）：保持和 active 完全一致 */
   .active[data-type-id]:hover {
-    background-color: var(--work-accent-bg);
-    color: var(--work-accent);
+    background-color: var(--color-primary-900);
+    color: white;
     border-color: transparent;
   }
 </style>
