@@ -78,7 +78,22 @@ const summary = project.data.description ?? project.data.context ?? '';
           {project.data.title}
         </h1>
 
-        <div class="mt-8 overflow-hidden rounded-3xl border border-black/10 bg-black/5">
+        <div
+  class="
+    mt-8
+    w-full
+    overflow-hidden
+    rounded-3xl
+    border border-black/10
+    bg-black/5
+
+    aspect-[4/3]
+    sm:aspect-[16/10]
+    md:aspect-[16/9]
+    lg:aspect-[21/9]
+  "
+>
+
           {cover ? (
             typeof cover === 'string' ? (
               <img
