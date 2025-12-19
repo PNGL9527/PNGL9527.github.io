@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import { Image } from 'astro:assets';
 
 const currentLocale = Astro.currentLocale as LanguageKey;
 const t = useTranslations(currentLocale);
@@ -17,56 +18,63 @@ const sortedProjects = publicCurrentLangProjects.sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
 );
 
-type TagGroupIds =
-  | 'Work-TagGroup-all'
-  | 'Work-TagGroup-Methods'
-  | 'Work-TagGroup-Systems'
-  | 'Work-TagGroup-Mobility'
-  | 'Work-TagGroup-Healthcare';
+type TypeId =
+  | 'Work-Type-all'
+  | 'Work-Type-Research'
+  | 'Work-Type-Product'
+  | 'Work-Type-Service'
+  | 'Work-Type-Strategy'
+  | 'Work-Type-Prototype';
 
-type TagGroup = {
-  id: TagGroupIds;
+type TypeFilter = {
+  id: TypeId;
   label: string;
-  relatedTags: string[];
   icon: string;
   themeColor: string;
+  relatedType?: 'Research' | 'Product' | 'Service' | 'Strategy' | 'Prototype';
 };
 
-const allTagGroups: TagGroup[] = [
+const allTypeFilters: TypeFilter[] = [
   {
-    id: 'Work-TagGroup-all',
+    id: 'Work-Type-all',
     label: 'All',
-    relatedTags: [],
     icon: 'material-symbols:apps',
     themeColor: '#171717',
   },
   {
-    id: 'Work-TagGroup-Methods',
-    label: 'Methods',
-    relatedTags: [],
+    id: 'Work-Type-Research',
+    label: 'Research',
     icon: 'material-symbols:science-outline',
     themeColor: '#1f2a44',
+    relatedType: 'Research',
   },
   {
-    id: 'Work-TagGroup-Systems',
-    label: 'Systems',
-    relatedTags: [],
-    icon: 'material-symbols:account-tree-outline',
+    id: 'Work-Type-Product',
+    label: 'Product',
+    icon: 'material-symbols:widgets-outline',
     themeColor: '#2b3a2e',
+    relatedType: 'Product',
   },
   {
-    id: 'Work-TagGroup-Mobility',
-    label: 'Mobility',
-    relatedTags: [],
-    icon: 'material-symbols:directions-car',
-    themeColor: '#3a2b2b',
-  },
-  {
-    id: 'Work-TagGroup-Healthcare',
-    label: 'Healthcare',
-    relatedTags: [],
-    icon: 'material-symbols:local-hospital-outline',
+    id: 'Work-Type-Service',
+    label: 'Service',
+    icon: 'material-symbols:handshake-outline',
     themeColor: '#2b2e3a',
+    relatedType: 'Service',
+  },
+  {
+    id: 'Work-Type-Strategy',
+    label: 'Strategy',
+    icon: 'material-symbols:strategy',
+    themeColor: '#3a2b2b',
+    relatedType: 'Strategy',
+  },
+  {
+    id: 'Work-Type-Prototype',
+    label: 'Prototype',
+    icon: 'material-symbols:biotech-outline',
+    themeColor: '#3a3a2b',
+    relatedType: 'Prototype',
   },
 ];
 
@@ -78,37 +86,53 @@ export function getStaticPaths() {
 ---
 
 <style is:inline>
-  .active[data-group-id] {
+  .active[data-type-id] {
     background-color: var(--themeColor);
     color: white;
     border-color: transparent;
   }
 
-  [data-group-id]:hover {
+  [data-type-id]:hover {
     color: var(--themeColor);
   }
 </style>
 
-<script is:inline>
+<script is:inline define:vars={{ allTypeFilters }}>
   document.addEventListener('astro:page-load', () => {
-    const groupFilterElement = document.querySelector('[data-group-filter]');
+    const typeFilterElement = document.querySelector('[data-type-filter]');
     const worksElement = document.querySelector('[data-works]');
 
-    groupFilterElement?.addEventListener('click', (e) => {
+    function setActiveButton(activeId) {
+      typeFilterElement?.querySelectorAll('button').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.typeId === activeId);
+      });
+    }
+
+    function updateCards(activeId) {
+      const activeFilter = allTypeFilters.find((f) => f.id === activeId);
+
+      worksElement?.querySelectorAll('[data-type]').forEach((card) => {
+        const cardType = card.dataset.type || '';
+        const visible =
+          !activeFilter?.relatedType || cardType === activeFilter.relatedType;
+
+        card.classList.toggle('hidden', !visible);
+      });
+    }
+
+    // Default state: All
+    setActiveButton('Work-Type-all');
+    updateCards('Work-Type-all');
+
+    typeFilterElement?.addEventListener('click', (e) => {
       const button = e.target?.closest?.('button');
       if (!button) return;
 
-      const groupId = button.dataset.groupId;
+      const typeId = button.dataset.typeId;
+      if (!typeId) return;
 
-      groupFilterElement.querySelectorAll('button').forEach((btn) => {
-        btn.classList.toggle('active', btn === button);
-      });
-
-      worksElement?.querySelectorAll('[data-group]').forEach((card) => {
-        const group = card.getAttribute('data-group');
-        const visible = groupId === 'Work-TagGroup-all' || group === groupId;
-        card.classList.toggle('hidden', !visible);
-      });
+      setActiveButton(typeId);
+      updateCards(typeId);
     });
   });
 </script>
@@ -118,24 +142,24 @@ export function getStaticPaths() {
     <div class="mx-auto w-full max-w-screen-xl px-6">
       <!-- Header -->
       <section class="pt-[var(--navbar-height)]">
-        <h1 class="text-3xl md:text-5xl font-medium">
+        <h1 class="text-3xl md:text-5xl font-medium leading-tight">
           Selected Work
         </h1>
       </section>
 
-      <!-- Filters -->
+      <!-- Type filter (保留：图标 + 文字) -->
       <section class="mt-10">
-        <ul class="flex flex-wrap gap-2" data-group-filter>
-          {allTagGroups.map((group) => (
+        <ul class="flex flex-wrap gap-2" data-type-filter>
+          {allTypeFilters.map((f) => (
             <li>
               <button
-                data-group-id={group.id}
-                style={`--themeColor: ${group.themeColor};`}
-                class="border-2 px-4 py-2 rounded-full inline-flex items-center gap-3 transition"
+                data-type-id={f.id}
+                style={`--themeColor: ${f.themeColor};`}
+                class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
                 type="button"
               >
-                <Icon size={22} name={group.icon} />
-                {group.label}
+                <Icon size={24} name={f.icon} />
+                {f.label}
               </button>
             </li>
           ))}
@@ -144,55 +168,82 @@ export function getStaticPaths() {
 
       <!-- Project list -->
       <section class="mt-16">
-        <ul data-works class="flex flex-col gap-20">
+        <ul data-works class="flex flex-col gap-16">
           {sortedProjects.map((project) => {
             const id = String(project.id ?? '');
             const normalizedSlug = id.startsWith(`${currentLocale}/`)
               ? id.slice(currentLocale.length + 1)
-              : id;
+              : id.split('/').slice(1).join('/');
+
+            // Use type for filter; empty type => always visible in "All"
+            const projectType = project.data.type ?? '';
 
             return (
               <li
-                data-group={project.data.type ? `Work-TagGroup-${project.data.type}` : 'Work-TagGroup-all'}
-                class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start"
+                data-type={projectType}
+                class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-stretch"
               >
-                <!-- Image -->
-                {project.data.thumbnail && (
-                  <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black/5">
-                    <img
-                      src={project.data.thumbnail}
-                      alt={project.data.thumbnailAlt ?? project.data.title}
-                      class="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+                {/* Left: image */}
+                <div class="w-full aspect-[4/3] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+                  {project.data.thumbnail ? (
+                    typeof project.data.thumbnail === 'string' ? (
+                      <img
+                        src={project.data.thumbnail}
+                        alt={project.data.thumbnailAlt ?? project.data.title}
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <Image
+                        src={project.data.thumbnail}
+                        alt={project.data.thumbnailAlt ?? project.data.title}
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    )
+                  ) : null}
+                </div>
+
+                {/* Right: text (保持按钮位置逻辑：窄屏不贴标签，宽屏按钮靠下) */}
+                <div class="max-w-prose flex flex-col gap-4">
+                  <div class="space-y-3">
+                    <h3 class="text-xl md:text-2xl font-medium leading-snug">
+                      {project.data.title}
+                      <time class="opacity-60">
+                        {' '}
+                        — {project.data.publishDate.getFullYear()}
+                      </time>
+                    </h3>
+
+                    {project.data.context && (
+                      <p class="text-sm opacity-70">{project.data.context}</p>
+                    )}
+
+                    <p class="text-base">{project.data.description}</p>
+
+                    {project.data.highlights?.length > 0 && (
+                      <ul class="list-disc list-inside text-sm opacity-80">
+                        {project.data.highlights.slice(0, 3).map((h) => (
+                          <li>
+                            {typeof h === 'string'
+                              ? h
+                              : (() => {
+                                  // 支持 YAML 冒号被解析成对象的情况
+                                  const entries = Object.entries(h ?? {});
+                                  if (entries.length === 1) {
+                                    const [k, v] = entries[0];
+                                    return `${k}: ${String(v)}`;
+                                  }
+                                  return '';
+                                })()}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
-                )}
 
-                <!-- Text -->
-                <div class="flex flex-col gap-4 max-w-prose">
-                  <h2 class="text-xl md:text-2xl font-medium">
-                    {project.data.title}
-                    <span class="opacity-60">
-                      {' '}
-                      — {project.data.publishDate.getFullYear()}
-                    </span>
-                  </h2>
-
-                  {project.data.context && (
-                    <p class="text-sm opacity-70">{project.data.context}</p>
-                  )}
-
-                  <p class="text-base">{project.data.description}</p>
-
-                  {project.data.highlights?.length > 0 && (
-                    <ul class="list-disc list-inside text-sm opacity-80">
-                      {project.data.highlights.slice(0, 3).map((h) => (
-                        <li>{typeof h === 'string' ? h : h.text}</li>
-                      ))}
-                    </ul>
-                  )}
-
-                  <div class="pt-4">
+                  {/* 关键：让按钮在窄屏时与上方内容保持呼吸，在宽屏时自然靠下 */}
+                  <div class="pt-4 md:pt-0 md:mt-auto">
                     <a
                       href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
                       class="highlight text-lg"
@@ -200,6 +251,8 @@ export function getStaticPaths() {
                       View overview
                     </a>
                   </div>
+
+                  {/* 注意：这里已经按你的要求删掉了“卡片里的 tag pills” */}
                 </div>
               </li>
             );
@@ -207,7 +260,7 @@ export function getStaticPaths() {
         </ul>
       </section>
 
-      <div class="h-24"></div>
+      <div class="h-20"></div>
     </div>
   </main>
 </Base>
