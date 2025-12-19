@@ -2,12 +2,12 @@
 import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
-import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import { languages, type LanguageKey, useTranslations } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
 
 /**
  * /[language]/work/[slug]
- * Static paths for GitHub Pages static build
+ * Static paths
  */
 export async function getStaticPaths() {
   const langs = Array.isArray(languages) ? languages : Object.keys(languages);
@@ -17,9 +17,9 @@ export async function getStaticPaths() {
     projects
       .filter((p) => p.id.startsWith(`${language}/`))
       .map((p) => {
-        const normalized = p.id.slice(language.length + 1); // remove "en/"
+        const slug = p.id.slice(language.length + 1);
         return {
-          params: { language, slug: normalized }, // ✅ [slug] expects string
+          params: { language, slug }, // [slug] expects string
         };
       }),
   );
@@ -30,7 +30,6 @@ const t = useTranslations(currentLocale);
 
 const slug = String(Astro.params.slug ?? '');
 
-// Only projects of current language
 const projects = await getCollection(
   'project',
   (p) => !p.data.draft && p.id.startsWith(`${currentLocale}/`),
@@ -42,34 +41,16 @@ if (!project) {
   throw new Error(`Project not found: ${currentLocale}/${slug}`);
 }
 
-/**
- * ✅ Compatible rendering:
- * - If entry supports render() (MD/MDX content collection), show Content
- * - If not (data collection), skip Content section without breaking build
- */
-let RenderedContent: any = null;
-try {
-  if (typeof (project as any).render === 'function') {
-    const rendered = await (project as any).render();
-    RenderedContent = rendered?.Content ?? null;
-  }
-} catch {
-  RenderedContent = null;
-}
-
-// Confirmed mappings
-const typeLabel = project.data.type ?? ''; // e.g. "Research"
+/* -------- Data mapping -------- */
+const typeLabel = project.data.type ?? '';
 const tags: string[] = Array.isArray(project.data.tags) ? project.data.tags : [];
 const caseUrl: string = project.data.caseUrl ?? '';
-const cover = project.data.thumbnail ?? null; // image or string path
+const cover = project.data.thumbnail ?? null;
 const coverAlt = project.data.thumbnailAlt ?? project.data.title;
-
-// Summary text (use description first, then context)
 const summary = project.data.description ?? project.data.context ?? '';
 ---
 
 <style is:inline>
-  /* Tag pills: subtle, editorial */
   .tag-pill {
     border: 1px solid rgba(0, 0, 0, 0.12);
     background: rgba(0, 0, 0, 0.02);
@@ -88,26 +69,31 @@ const summary = project.data.description ?? project.data.context ?? '';
 
 <Base title={project.data.title}>
   <main>
+    <!-- Page container -->
     <div class="mx-auto w-full max-w-screen-xl px-6">
-      <!-- Hero -->
+      <!-- ================= Hero ================= -->
       <section class="pt-[var(--navbar-height)]">
-        <!-- Main type pill (from MDX frontmatter: type) -->
         {typeLabel ? (
           <div class="mb-6">
-            <span class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-medium">
+            <span
+              class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-medium"
+            >
               <Icon name="material-symbols:science-outline" size={18} />
               {typeLabel}
             </span>
           </div>
         ) : null}
 
-        <!-- Title width matches your Sketch-like measure -->
-        <h1 class="max-w-[44rem] text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
+        <h1
+          class="max-w-[44rem] text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight"
+        >
           {project.data.title}
         </h1>
 
-        <!-- Cover image: rounded rectangle -->
-        <div class="mt-8 overflow-hidden rounded-3xl border border-black/10 bg-black/5">
+        <!-- Hero image -->
+        <div
+          class="mt-8 overflow-hidden rounded-3xl border border-black/10 bg-black/5"
+        >
           {cover ? (
             typeof cover === 'string' ? (
               <img
@@ -128,51 +114,53 @@ const summary = project.data.description ?? project.data.context ?? '';
         </div>
       </section>
 
-      <!-- Overview -->
-      <section class="mt-12 grid gap-10 md:grid-cols-[240px_1fr] md:gap-14">
-        <!-- Left column -->
-        <aside class="space-y-8">
-          {tags.length > 0 ? (
-            <div>
-              <div class="mb-3 text-sm font-semibold opacity-70">Tag</div>
-              <div class="flex flex-col gap-2">
-                {tags.map((tag) => (
-                  <span class="tag-pill inline-flex w-fit rounded-lg px-3 py-2 text-sm">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : null}
+      <!-- ================= Overview ================= -->
+      <!-- Reading rail: unified width constraint -->
+      <section class="mt-12">
+        <div class="mx-auto max-w-[64rem]">
+          <div
+            class="grid gap-10 md:grid-cols-[240px_1fr] md:gap-14"
+          >
+            <!-- Left column -->
+            <aside class="space-y-8">
+              {tags.length > 0 ? (
+                <div>
+                  <div class="mb-3 text-sm font-semibold opacity-70">Tag</div>
+                  <div class="flex flex-col gap-2">
+                    {tags.map((tag) => (
+                      <span
+                        class="tag-pill inline-flex w-fit rounded-lg px-3 py-2 text-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
-          {caseUrl ? (
-            <div>
-              <a
-                href={caseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="case-link highlight text-base font-medium"
-              >
-                Read full case <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          ) : null}
-        </aside>
+              {caseUrl ? (
+                <div>
+                  <a
+                    href={caseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="case-link highlight text-base font-medium"
+                  >
+                    Read full case <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              ) : null}
+            </aside>
 
-        <!-- Right column -->
-        <div class="min-w-0">
-          {summary ? (
-            <p class="max-w-[50rem] text-lg leading-relaxed opacity-90">
-              {summary}
-            </p>
-          ) : null}
-
-          {/* Render MD/MDX body only if available */}
-          {RenderedContent ? (
-            <div class="prose prose-zinc mt-8 max-w-[50rem] dark:prose-invert">
-              <RenderedContent />
+            <!-- Right column -->
+            <div class="min-w-0">
+              {summary ? (
+                <p class="text-lg leading-relaxed opacity-90">
+                  {summary}
+                </p>
+              ) : null}
             </div>
-          ) : null}
+          </div>
         </div>
       </section>
 
