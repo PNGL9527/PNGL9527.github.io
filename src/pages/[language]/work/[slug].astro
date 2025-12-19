@@ -1,171 +1,169 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
-import Banner from '@/components/Banner.astro';
-import { getCollection, render } from 'astro:content';
-import { languages, type LanguageKey } from '@/i18n/i18n.ts';
+import { Icon } from 'astro-icon/components';
+import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import { Image } from 'astro:assets';
 
-type Params = { language: LanguageKey; slug: string };
-
+/**
+ * Build all static paths for:
+ * /{language}/work/{...slug}
+ *
+ * Projects are stored with ids like:
+ *   en/some-project
+ *   it/some-project
+ */
 export async function getStaticPaths() {
-  const entries = await getCollection('project', (e) => !e.data.draft);
+  const langs = Array.isArray(languages) ? languages : Object.keys(languages);
 
-  return entries
-    .map((e) => {
-      const id = String(e.id ?? '');
-      const inferredLang = id.split('/')[0] as LanguageKey;
+  const projects = await getCollection('project', (p) => !p.data.draft);
 
-      if (!languages[inferredLang]) return null;
+  const paths: Array<{ params: { language: string; slug: string[] } }> = [];
 
-      const normalizedSlug = id.startsWith(`${inferredLang}/`)
-        ? id.slice(inferredLang.length + 1)
-        : id;
+  for (const lang of langs) {
+    for (const p of projects) {
+      if (!p.id.startsWith(`${lang}/`)) continue;
 
-      if (!normalizedSlug) return null;
+      // normalized slug without language prefix
+      const normalized = p.id.slice(lang.length + 1); // remove "en/"
+      const slugParts = normalized.split('/').filter(Boolean);
 
-      return {
-        params: {
-          language: inferredLang,
-          slug: normalizedSlug,
-        },
-      };
-    })
-    .filter(Boolean);
+      paths.push({
+        params: { language: lang, slug: slugParts },
+      });
+    }
+  }
+
+  return paths;
 }
 
-const { language, slug } = Astro.params as Params;
+const currentLocale = Astro.params.language as LanguageKey;
+const t = useTranslations(currentLocale);
 
-const entries = await getCollection('project', (e) => !e.data.draft);
+const slugParam = Astro.params.slug;
+const slugJoined = Array.isArray(slugParam) ? slugParam.join('/') : String(slugParam ?? '');
 
-const project = entries.find((e) => {
-  const id = String(e.id ?? '');
-  const normalized = id.startsWith(`${language}/`)
-    ? id.slice(language.length + 1)
-    : id;
-  return normalized === slug;
-});
+const projects = await getCollection('project', (p) => !p.data.draft && p.id.startsWith(`${currentLocale}/`));
+const project = projects.find((p) => p.id === `${currentLocale}/${slugJoined}`);
 
 if (!project) {
-  throw new Error(`Project not found: ${language}/${slug}`);
+  throw new Error(`Project not found: ${currentLocale}/${slugJoined}`);
 }
 
-const { Content } = await render(project);
+const { Content } = await project.render();
 
-const tags = project.data.tags ?? [];
+// Data mapping confirmed by you:
+const typeLabel = project.data.type ?? ''; // e.g. "Research"
+const tags: string[] = Array.isArray(project.data.tags) ? project.data.tags : [];
+const caseUrl: string = project.data.caseUrl ?? '';
+const cover = project.data.thumbnail ?? null; // image or string
+const coverAlt = project.data.thumbnailAlt ?? project.data.title;
+
+// Summary text (you can swap to context/description if you prefer)
+const summary = project.data.description ?? project.data.context ?? '';
 ---
+
+<style is:inline>
+  /* Tag pills in left column */
+  .tag-pill {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: rgba(0, 0, 0, 0.02);
+  }
+  :global(.dark) .tag-pill {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+  }
+</style>
 
 <Base title={project.data.title}>
   <main>
-    {/* Header: aligned + same width system as body */}
-    <Banner>
-      <div class="container mx-auto px-4 max-w-6xl">
-        <h1 class="font-semibold">
-          <span class="block text-3xl md:text-6xl leading-tight">
-            {project.data.title}
-          </span>
+    <div class="mx-auto w-full max-w-screen-xl px-6">
+      <!-- Top spacing matches your site navbar system -->
+      <section class="pt-[var(--navbar-height)]">
+        <!-- Type pill (from MDX: type) -->
+        {typeLabel ? (
+          <div class="mb-6">
+            <span class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-medium">
+              <Icon name="material-symbols:science-outline" size={18} />
+              {typeLabel}
+            </span>
+          </div>
+        ) : null}
+
+        <!-- Title: constrain width similar to your Sketch -->
+        <h1 class="max-w-[44rem] text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
+          {project.data.title}
         </h1>
 
-        {/* Description under title (controlled width) */}
-        <p class="mt-6 text-lg opacity-90 max-w-3xl">
-          {project.data.description}
-        </p>
+        <!-- Hero image: rounded rectangle, “to the point” -->
+        <div class="mt-8 overflow-hidden rounded-3xl border border-black/10 bg-black/5">
+          {cover ? (
+            typeof cover === 'string' ? (
+              <img
+                src={cover}
+                alt={coverAlt}
+                class="h-full w-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <Image
+                src={cover}
+                alt={coverAlt}
+                class="h-full w-full object-cover"
+                loading="lazy"
+              />
+            )
+          ) : null}
+        </div>
+      </section>
 
-        {/* Meta blocks */}
-        <div class="mt-6 space-y-6">
-          {/* Highlights with label + robust rendering */}
-          {project.data.highlights?.length > 0 && (
-            <div class="space-y-2">
-              <p class="text-sm font-medium uppercase tracking-wider opacity-60">
-                Highlights
-              </p>
-
-              <ul class="list-disc list-inside">
-                {project.data.highlights.map((h) => {
-                  // Case 1: normal string
-                  if (typeof h === 'string') return <li>{h}</li>;
-
-                  // Case 2: schema-defined object { title?, text?, items? }
-                  if (h && typeof h === 'object') {
-                    const title = 'title' in h ? h.title : undefined;
-                    const text = 'text' in h ? h.text : undefined;
-                    const items = 'items' in h ? h.items : undefined;
-
-                    // Case 3: YAML "Key: Value" mapping becomes { "Key": "Value" }
-                    // Render it as "Key: Value"
-                    if (!title && !text && !items) {
-                      const entries = Object.entries(h);
-                      if (entries.length === 1) {
-                        const [k, v] = entries[0];
-                        return <li>{`${k}: ${String(v)}`}</li>;
-                      }
-                      return <li>{JSON.stringify(h)}</li>;
-                    }
-
-                    // Render structured form if you use it later
-                    return (
-                      <li>
-                        {title ? <strong>{title}</strong> : null}
-                        {title && text ? ': ' : null}
-                        {text ? <span>{text}</span> : null}
-                        {items?.length ? (
-                          <ul class="list-disc list-inside mt-2 opacity-90">
-                            {items.map((it) => <li>{it}</li>)}
-                          </ul>
-                        ) : null}
-                      </li>
-                    );
-                  }
-
-                  return <li>{String(h)}</li>;
-                })}
-              </ul>
+      <!-- Meta + Summary area (Tag column + Content column) -->
+      <section class="mt-12 grid gap-10 md:grid-cols-[240px_1fr] md:gap-14">
+        <!-- Left column: Tags + external CTA -->
+        <aside class="space-y-8">
+          {tags.length > 0 ? (
+            <div>
+              <div class="mb-3 text-sm font-semibold opacity-70">Tag</div>
+              <div class="flex flex-col gap-2">
+                {tags.map((tag) => (
+                  <span class="tag-pill inline-flex w-fit rounded-lg px-3 py-2 text-sm">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-          )}
+          ) : null}
 
-          {/* Tags */}
-          {tags.length > 0 && (
-            <div class="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <span class="border border-primary-100 px-3 py-1 rounded-full text-xs">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Links */}
-          <div class="flex flex-wrap gap-4 pt-2">
-            <a
-              href="../"
-              class="highlight text-base md:text-lg font-medium inline-block opacity-80"
-            >
-              ← Back to selected work
-            </a>
-
-            {project.data.caseUrl && (
+          {caseUrl ? (
+            <div>
               <a
-                href={project.data.caseUrl}
+                href={caseUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="highlight text-base md:text-lg font-medium inline-block"
+                class="highlight inline-flex items-center gap-2 text-base font-medium"
               >
-                Read full case ↗
+                Read full case <span aria-hidden="true">↗</span>
               </a>
-            )}
+            </div>
+          ) : null}
+        </aside>
+
+        <!-- Right column: Summary + MDX body -->
+        <div class="min-w-0">
+          {summary ? (
+            <p class="max-w-[50rem] text-lg leading-relaxed opacity-90">
+              {summary}
+            </p>
+          ) : null}
+
+          <!-- MDX content (optional, but ready) -->
+          <div class="prose prose-zinc mt-8 max-w-[50rem] dark:prose-invert">
+            <Content />
           </div>
         </div>
-      </div>
-    </Banner>
-
-    {/* Body: same width as header container */}
-    <article class="container mx-auto px-4 max-w-6xl">
-      <hr class="my-10 opacity-20" />
-
-      {/* Content only (avoid duplicating title/description in body) */}
-      <section class="prose prose-lg max-w-none">
-        <Content />
       </section>
-    </article>
 
-    <div class="h-20"></div>
+      <div class="h-24"></div>
+    </div>
   </main>
 </Base>
