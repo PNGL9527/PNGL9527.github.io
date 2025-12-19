@@ -82,18 +82,27 @@ const allTypeFilters: TypeFilter[] = [
 ---
 
 <style is:inline>
+  /* 选中态：用 View overview 同款强调色（橙色） */
   .active[data-type-id] {
-    background-color: var(--themeColor);
-    color: white;
+    background-color: var(--highlight);
+    color: #111;              /* 橙底用深色字更清晰 */
     border-color: transparent;
   }
 
-  /* hover：使用 View overview 相同的强调色 */
+  /* 未选中 hover：文字+边框变橙色 */
   [data-type-id]:hover {
     color: var(--highlight);
     border-color: var(--highlight);
   }
+
+  /* 选中态 hover：保持橙色，不再变回深色导致“糊” */
+  .active[data-type-id]:hover {
+    background-color: var(--highlight);
+    color: #111;
+    border-color: transparent;
+  }
 </style>
+
 
 <script is:inline define:vars={{ allTypeFilters }}>
   document.addEventListener('astro:page-load', () => {
