@@ -1,4 +1,3 @@
-```astro
 ---
 import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
@@ -6,10 +5,7 @@ import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
 
-/**
- * Static paths required for dynamic routes like /[language]/work
- * Compatible with languages being either an Array (['en','it']) or an Object ({ en: 'English', it: 'Italiano' }).
- */
+/** Static paths for /[language]/work */
 export function getStaticPaths() {
   const langs = Array.isArray(languages) ? languages : Object.keys(languages);
   return langs.map((language) => ({
@@ -17,7 +13,6 @@ export function getStaticPaths() {
   }));
 }
 
-/** Use route param for dynamic segment */
 const currentLocale = Astro.params.language as LanguageKey;
 const t = useTranslations(currentLocale);
 
@@ -48,12 +43,7 @@ type TypeFilter = {
 };
 
 const allTypeFilters: TypeFilter[] = [
-  {
-    id: 'Work-Type-all',
-    label: 'All',
-    icon: 'material-symbols:apps',
-    themeColor: '#171717',
-  },
+  { id: 'Work-Type-all', label: 'All', icon: 'material-symbols:apps', themeColor: '#171717' },
   {
     id: 'Work-Type-Research',
     label: 'Research',
@@ -98,7 +88,6 @@ const allTypeFilters: TypeFilter[] = [
     color: white;
     border-color: transparent;
   }
-
   [data-type-id]:hover {
     color: var(--themeColor);
   }
@@ -117,7 +106,6 @@ const allTypeFilters: TypeFilter[] = [
 
     function updateCards(activeId) {
       const activeFilter = allTypeFilters.find((f) => f.id === activeId);
-
       worksElement?.querySelectorAll('[data-type]').forEach((card) => {
         const cardType = card.dataset.type || '';
         const visible = !activeFilter?.relatedType || cardType === activeFilter.relatedType;
@@ -125,17 +113,14 @@ const allTypeFilters: TypeFilter[] = [
       });
     }
 
-    // Default state: All
     setActiveButton('Work-Type-all');
     updateCards('Work-Type-all');
 
     typeFilterElement?.addEventListener('click', (e) => {
       const button = e.target?.closest?.('button');
       if (!button) return;
-
       const typeId = button.dataset.typeId;
       if (!typeId) return;
-
       setActiveButton(typeId);
       updateCards(typeId);
     });
@@ -147,10 +132,12 @@ const allTypeFilters: TypeFilter[] = [
     <div class="mx-auto w-full max-w-screen-xl px-6">
       <!-- Header -->
       <section class="pt-[var(--navbar-height)]">
-        <h1 class="text-3xl md:text-5xl font-medium leading-tight">Selected Work</h1>
+        <h1 class="text-3xl md:text-5xl font-medium leading-tight">
+          Selected Work
+        </h1>
       </section>
 
-      <!-- Type filter -->
+      <!-- Filters -->
       <section class="mt-10">
         <ul class="flex flex-wrap gap-2" data-type-filter>
           {allTypeFilters.map((f) => (
@@ -178,31 +165,27 @@ const allTypeFilters: TypeFilter[] = [
               ? id.slice(currentLocale.length + 1)
               : id.split('/').slice(1).join('/');
 
-            const projectType = project.data.type ?? '';
-
-            // Normalize BASE_URL (Astro may include trailing slash)
             const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
             return (
               <li
-                data-type={projectType}
+                data-type={project.data.type ?? ''}
                 class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-stretch"
               >
-                {/* Left: image (width unchanged; height reduced via aspect ratio) */}
+                {/* LEFT: thumbnail — ONLY aspect ratio controls height */}
                 <div
                   class="
                     w-full
                     aspect-[16/9]
-                    md:aspect-[2/1]
-                    xl:aspect-[21/9]
+                    md:aspect-[3/1]
                     overflow-hidden
                     rounded-2xl
                     border border-black/10
                     bg-black/5
                   "
                 >
-                  {project.data.thumbnail ? (
-                    typeof project.data.thumbnail === 'string' ? (
+                  {project.data.thumbnail &&
+                    (typeof project.data.thumbnail === 'string' ? (
                       <img
                         src={project.data.thumbnail}
                         alt={project.data.thumbnailAlt ?? project.data.title}
@@ -216,16 +199,18 @@ const allTypeFilters: TypeFilter[] = [
                         class="h-full w-full object-cover"
                         loading="lazy"
                       />
-                    )
-                  ) : null}
+                    ))}
                 </div>
 
-                {/* Right: text */}
+                {/* RIGHT: text */}
                 <div class="max-w-prose flex flex-col md:h-full md:py-2">
                   <div class="space-y-3">
                     <h3 class="text-xl md:text-2xl font-medium leading-snug">
                       {project.data.title}
-                      <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+                      <time class="opacity-60">
+                        {' '}
+                        — {project.data.publishDate.getFullYear()}
+                      </time>
                     </h3>
 
                     {project.data.context && (
@@ -233,11 +218,8 @@ const allTypeFilters: TypeFilter[] = [
                     )}
 
                     <p class="text-base">{project.data.description}</p>
-
-                    {/* Highlights removed as requested */}
                   </div>
 
-                  {/* Bottom action: spaced on mobile; pinned to bottom on md+ */}
                   <div class="mt-6 md:mt-auto">
                     <a
                       href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
@@ -257,4 +239,3 @@ const allTypeFilters: TypeFilter[] = [
     </div>
   </main>
 </Base>
-```
