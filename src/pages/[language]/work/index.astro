@@ -207,10 +207,7 @@ const allTypeFilters: TypeFilter[] = [
                   <div class="space-y-3">
                     <h3 class="text-xl md:text-2xl font-medium leading-snug">
                       {project.data.title}
-                      <time class="opacity-60">
-                        {' '}
-                        — {project.data.publishDate.getFullYear()}
-                      </time>
+
                     </h3>
 
                     {project.data.context && (
@@ -220,14 +217,15 @@ const allTypeFilters: TypeFilter[] = [
                     <p class="text-base">{project.data.description}</p>
                   </div>
 
-                  <div class="mt-6 md:mt-auto">
-                    <a
-                      href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
-                      class="highlight text-lg"
-                    >
-                      View overview
-                    </a>
-                  </div>
+<div class="mt-6 md:mt-auto md:pt-8">
+  <a
+    href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
+    class="highlight text-lg"
+  >
+    View overview
+  </a>
+</div>
+
                 </div>
               </li>
             );
