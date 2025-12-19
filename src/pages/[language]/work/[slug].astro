@@ -42,7 +42,20 @@ if (!project) {
   throw new Error(`Project not found: ${currentLocale}/${slug}`);
 }
 
-const { Content } = await project.render();
+/**
+ * ✅ Compatible rendering:
+ * - If entry supports render() (MD/MDX content collection), show Content
+ * - If not (data collection), skip Content section without breaking build
+ */
+let RenderedContent: any = null;
+try {
+  if (typeof (project as any).render === 'function') {
+    const rendered = await (project as any).render();
+    RenderedContent = rendered?.Content ?? null;
+  }
+} catch {
+  RenderedContent = null;
+}
 
 // Confirmed mappings
 const typeLabel = project.data.type ?? ''; // e.g. "Research"
@@ -66,7 +79,6 @@ const summary = project.data.description ?? project.data.context ?? '';
     background: rgba(255, 255, 255, 0.04);
   }
 
-  /* External link: keep it clean; highlight underline comes from your global CSS */
   .case-link {
     display: inline-flex;
     align-items: center;
@@ -79,11 +91,10 @@ const summary = project.data.description ?? project.data.context ?? '';
     <div class="mx-auto w-full max-w-screen-xl px-6">
       <!-- Hero -->
       <section class="pt-[var(--navbar-height)]">
-        <!-- Main type pill (from MDX: type) -->
+        <!-- Main type pill (from MDX frontmatter: type) -->
         {typeLabel ? (
           <div class="mb-6">
             <span class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-medium">
-              <!-- Icon is decorative; feel free to swap by type if you want -->
               <Icon name="material-symbols:science-outline" size={18} />
               {typeLabel}
             </span>
@@ -95,7 +106,7 @@ const summary = project.data.description ?? project.data.context ?? '';
           {project.data.title}
         </h1>
 
-        <!-- Cover image: rounded rectangle “to the point” -->
+        <!-- Cover image: rounded rectangle -->
         <div class="mt-8 overflow-hidden rounded-3xl border border-black/10 bg-black/5">
           {cover ? (
             typeof cover === 'string' ? (
@@ -117,7 +128,7 @@ const summary = project.data.description ?? project.data.context ?? '';
         </div>
       </section>
 
-      <!-- Overview (Tags + Summary + Content) -->
+      <!-- Overview -->
       <section class="mt-12 grid gap-10 md:grid-cols-[240px_1fr] md:gap-14">
         <!-- Left column -->
         <aside class="space-y-8">
@@ -156,10 +167,12 @@ const summary = project.data.description ?? project.data.context ?? '';
             </p>
           ) : null}
 
-          <!-- MDX body -->
-          <div class="prose prose-zinc mt-8 max-w-[50rem] dark:prose-invert">
-            <Content />
-          </div>
+          {/* Render MD/MDX body only if available */}
+          {RenderedContent ? (
+            <div class="prose prose-zinc mt-8 max-w-[50rem] dark:prose-invert">
+              <RenderedContent />
+            </div>
+          ) : null}
         </div>
       </section>
 
