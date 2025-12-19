@@ -218,24 +218,18 @@ export function getStaticPaths() {
 
       <p class="text-base">{project.data.description}</p>
 
-      {project.data.highlights?.length > 0 && (
-        <ul class="list-disc list-inside text-sm opacity-80">
-          {project.data.highlights.slice(0, 3).map((h) => (
-            <li>
-              {typeof h === 'string'
-                ? h
-                : (() => {
-                    const entries = Object.entries(h ?? {});
-                    if (entries.length === 1) {
-                      const [k, v] = entries[0];
-                      return `${k}: ${String(v)}`;
-                    }
-                    return '';
-                  })()}
-            </li>
-          ))}
-        </ul>
-      )}
+{project.data.highlights?.length > 0 && (
+  <ul class="list-disc list-inside text-sm opacity-80">
+    {project.data.highlights.slice(0, 3).map((h) => (
+      <li>
+        {typeof h === 'string'
+          ? h
+          : h.text ?? ''}
+      </li>
+    ))}
+  </ul>
+)}
+
     </div>
   </div>
 
