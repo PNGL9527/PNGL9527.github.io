@@ -36,15 +36,47 @@ type TypeFilter = {
 
 const allTypeFilters: TypeFilter[] = [
   { id: 'Work-Type-all', label: 'All', icon: 'material-symbols:apps', themeColor: '#171717' },
-  { id: 'Work-Type-Research', label: 'Research', icon: 'material-symbols:science-outline', themeColor: '#1f2a44', relatedType: 'Research' },
-  { id: 'Work-Type-Product', label: 'Product', icon: 'material-symbols:widgets-outline', themeColor: '#2b3a2e', relatedType: 'Product' },
-  { id: 'Work-Type-Service', label: 'Service', icon: 'material-symbols:handshake-outline', themeColor: '#2b2e3a', relatedType: 'Service' },
-  { id: 'Work-Type-Strategy', label: 'Strategy', icon: 'material-symbols:strategy', themeColor: '#3a2b2b', relatedType: 'Strategy' },
-  { id: 'Work-Type-Prototype', label: 'Prototype', icon: 'material-symbols:biotech-outline', themeColor: '#3a3a2b', relatedType: 'Prototype' },
+  {
+    id: 'Work-Type-Research',
+    label: 'Research',
+    icon: 'material-symbols:science-outline',
+    themeColor: '#1f2a44',
+    relatedType: 'Research',
+  },
+  {
+    id: 'Work-Type-Product',
+    label: 'Product',
+    icon: 'material-symbols:widgets-outline',
+    themeColor: '#2b3a2e',
+    relatedType: 'Product',
+  },
+  {
+    id: 'Work-Type-Service',
+    label: 'Service',
+    icon: 'material-symbols:handshake-outline',
+    themeColor: '#2b2e3a',
+    relatedType: 'Service',
+  },
+  {
+    id: 'Work-Type-Strategy',
+    label: 'Strategy',
+    icon: 'material-symbols:strategy',
+    themeColor: '#3a2b2b',
+    relatedType: 'Strategy',
+  },
+  {
+    id: 'Work-Type-Prototype',
+    label: 'Prototype',
+    icon: 'material-symbols:biotech-outline',
+    themeColor: '#3a3a2b',
+    relatedType: 'Prototype',
+  },
 ];
 
 export function getStaticPaths() {
-  return Object.keys(languages).map((language) => ({ params: { language } }));
+  return Object.keys(languages).map((language) => ({
+    params: { language },
+  }));
 }
 ---
 
@@ -54,7 +86,6 @@ export function getStaticPaths() {
     color: white;
     border-color: transparent;
   }
-
   [data-type-id]:hover {
     color: var(--themeColor);
   }
@@ -73,6 +104,7 @@ export function getStaticPaths() {
 
     function updateCards(activeId) {
       const activeFilter = allTypeFilters.find((f) => f.id === activeId);
+
       worksElement?.querySelectorAll('[data-type]').forEach((card) => {
         const cardType = card.dataset.type || '';
         const visible = !activeFilter?.relatedType || cardType === activeFilter.relatedType;
@@ -80,6 +112,7 @@ export function getStaticPaths() {
       });
     }
 
+    // Default: All
     setActiveButton('Work-Type-all');
     updateCards('Work-Type-all');
 
@@ -88,6 +121,7 @@ export function getStaticPaths() {
       if (!button) return;
       const typeId = button.dataset.typeId;
       if (!typeId) return;
+
       setActiveButton(typeId);
       updateCards(typeId);
     });
@@ -99,10 +133,10 @@ export function getStaticPaths() {
     <div class="mx-auto w-full max-w-screen-xl px-6">
       <!-- Header -->
       <section class="pt-[var(--navbar-height)]">
-        <h1 class="text-3xl md:text-5xl font-medium">Selected Work</h1>
+        <h1 class="text-3xl md:text-5xl font-medium leading-tight">Selected Work</h1>
       </section>
 
-      <!-- Type filter -->
+      <!-- Type filter (图标 + 文字) -->
       <section class="mt-10">
         <ul class="flex flex-wrap gap-2" data-type-filter>
           {allTypeFilters.map((f) => (
@@ -110,10 +144,10 @@ export function getStaticPaths() {
               <button
                 data-type-id={f.id}
                 style={`--themeColor: ${f.themeColor};`}
-                class="border-2 px-4 py-2 rounded-full inline-flex items-center gap-3 transition"
+                class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
                 type="button"
               >
-                <Icon size={22} name={f.icon} />
+                <Icon size={24} name={f.icon} />
                 {f.label}
               </button>
             </li>
@@ -123,75 +157,77 @@ export function getStaticPaths() {
 
       <!-- Project list -->
       <section class="mt-16">
-        <ul data-works class="flex flex-col gap-20">
+        <ul data-works class="flex flex-col gap-16">
           {sortedProjects.map((project) => {
             const id = String(project.id ?? '');
             const normalizedSlug = id.startsWith(`${currentLocale}/`)
               ? id.slice(currentLocale.length + 1)
               : id.split('/').slice(1).join('/');
 
+            const projectType = project.data.type ?? '';
+
             return (
               <li
-                data-type={project.data.type ?? ''}
-                class="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch"
+                data-type={projectType}
+                class="
+                  grid grid-cols-1 gap-10
+                  md:grid-cols-2 md:gap-12
+                  items-start md:items-stretch
+                  [--cardH:260px] sm:[--cardH:320px] md:[--cardH:360px] lg:[--cardH:400px] xl:[--cardH:440px]
+                "
               >
-                <!-- Left: image (defines row height) -->
-<div class="w-full rounded-2xl overflow-hidden bg-black/5 h-[240px] sm:h-[300px] md:h-[340px] lg:h-[380px] xl:h-[420px]">
-  {project.data.thumbnail && (
-    typeof project.data.thumbnail === 'string' ? (
-      <img
-        src={project.data.thumbnail}
-        alt={project.data.thumbnailAlt ?? project.data.title}
-        class="w-full h-full object-cover"
-        loading="lazy"
-      />
-    ) : (
-      <Image
-        src={project.data.thumbnail}
-        alt={project.data.thumbnailAlt ?? project.data.title}
-        class="w-full h-full object-cover"
-        loading="lazy"
-      />
-    )
-  )}
-</div>
+                <!-- Left: image (固定为 cardH) -->
+                <div class="w-full h-[var(--cardH)] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+                  {project.data.thumbnail ? (
+                    typeof project.data.thumbnail === 'string' ? (
+                      <img
+                        src={project.data.thumbnail}
+                        alt={project.data.thumbnailAlt ?? project.data.title}
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <Image
+                        src={project.data.thumbnail}
+                        alt={project.data.thumbnailAlt ?? project.data.title}
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    )
+                  ) : null}
+                </div>
 
+                <!-- Right: text (同高 cardH，并把按钮推到最底) -->
+                <div class="w-full max-w-prose h-[var(--cardH)] flex flex-col justify-between">
+                  <!-- Top block -->
+                  <div class="pt-2 space-y-3">
+                    <h3 class="text-xl md:text-2xl font-medium leading-snug">
+                      {project.data.title}
+                      <span class="opacity-60"> — {project.data.publishDate.getFullYear()}</span>
+                    </h3>
 
+                    {project.data.context && <p class="text-sm opacity-70">{project.data.context}</p>}
 
-                <!-- Right: text column (forced full height) -->
-<div class="flex flex-col max-w-prose w-full h-full py-4 md:py-0 md:h-[340px] lg:h-[380px] xl:h-[420px] justify-between">
-  <!-- Top -->
-  <div class="space-y-3 pt-2">
-    <h3 class="text-xl md:text-2xl font-medium">
-      {project.data.title}
-      <span class="opacity-60"> — {project.data.publishDate.getFullYear()}</span>
-    </h3>
+                    <p class="text-base">{project.data.description}</p>
+                  </div>
 
-    {project.data.context && (
-      <p class="text-sm opacity-70">{project.data.context}</p>
-    )}
-
-    <p class="text-base">{project.data.description}</p>
-  </div>
-
-  <!-- Bottom -->
-  <div class="pb-2">
-    <a
-      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
-      class="highlight text-lg"
-    >
-      Check it out
-    </a>
-  </div>
-</div>
-
+                  <!-- Bottom action (贴到 card 底部) -->
+                  <div class="pb-2">
+                    <a
+                      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+                      class="highlight text-lg"
+                    >
+                      View overview
+                    </a>
+                  </div>
+                </div>
               </li>
             );
           })}
         </ul>
       </section>
 
-      <div class="h-24"></div>
+      <div class="h-20"></div>
     </div>
   </main>
 </Base>
