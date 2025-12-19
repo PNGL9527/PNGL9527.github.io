@@ -5,7 +5,6 @@ import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
 
-/** Static paths for /[language]/work */
 export function getStaticPaths() {
   const langs = Array.isArray(languages) ? languages : Object.keys(languages);
   return langs.map((language) => ({
@@ -88,8 +87,11 @@ const allTypeFilters: TypeFilter[] = [
     color: white;
     border-color: transparent;
   }
+
+  /* hover：使用 View overview 相同的强调色 */
   [data-type-id]:hover {
-    color: var(--themeColor);
+    color: var(--highlight);
+    border-color: var(--highlight);
   }
 </style>
 
@@ -106,6 +108,7 @@ const allTypeFilters: TypeFilter[] = [
 
     function updateCards(activeId) {
       const activeFilter = allTypeFilters.find((f) => f.id === activeId);
+
       worksElement?.querySelectorAll('[data-type]').forEach((card) => {
         const cardType = card.dataset.type || '';
         const visible = !activeFilter?.relatedType || cardType === activeFilter.relatedType;
@@ -130,14 +133,12 @@ const allTypeFilters: TypeFilter[] = [
 <Base title={t('Navbar-3')}>
   <main>
     <div class="mx-auto w-full max-w-screen-xl px-6">
-      <!-- Header -->
       <section class="pt-[var(--navbar-height)]">
         <h1 class="text-3xl md:text-5xl font-medium leading-tight">
           Selected Work
         </h1>
       </section>
 
-      <!-- Filters -->
       <section class="mt-10">
         <ul class="flex flex-wrap gap-2" data-type-filter>
           {allTypeFilters.map((f) => (
@@ -156,7 +157,6 @@ const allTypeFilters: TypeFilter[] = [
         </ul>
       </section>
 
-      <!-- Project list -->
       <section class="mt-16">
         <ul data-works class="flex flex-col gap-16">
           {sortedProjects.map((project) => {
@@ -172,12 +172,11 @@ const allTypeFilters: TypeFilter[] = [
                 data-type={project.data.type ?? ''}
                 class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-stretch"
               >
-                {/* LEFT: thumbnail — ONLY aspect ratio controls height */}
                 <div
                   class="
                     w-full
                     aspect-[16/9]
-                    md:aspect-[16/9]
+                    md:aspect-[5/2]
                     overflow-hidden
                     rounded-2xl
                     border border-black/10
@@ -202,12 +201,10 @@ const allTypeFilters: TypeFilter[] = [
                     ))}
                 </div>
 
-                {/* RIGHT: text */}
                 <div class="max-w-prose flex flex-col md:h-full md:py-2">
                   <div class="space-y-3">
                     <h3 class="text-xl md:text-2xl font-medium leading-snug">
                       {project.data.title}
-
                     </h3>
 
                     {project.data.context && (
@@ -217,15 +214,14 @@ const allTypeFilters: TypeFilter[] = [
                     <p class="text-base">{project.data.description}</p>
                   </div>
 
-<div class="mt-6 md:mt-auto md:pt-8">
-  <a
-    href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
-    class="highlight text-lg"
-  >
-    View overview
-  </a>
-</div>
-
+                  <div class="mt-6 md:mt-auto md:pt-8">
+                    <a
+                      href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
+                      class="highlight text-lg"
+                    >
+                      View overview
+                    </a>
+                  </div>
                 </div>
               </li>
             );
