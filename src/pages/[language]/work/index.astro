@@ -1,3 +1,4 @@
+```astro
 ---
 import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
@@ -5,7 +6,19 @@ import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
 
-const currentLocale = Astro.currentLocale as LanguageKey;
+/**
+ * Static paths required for dynamic routes like /[language]/work
+ * Compatible with languages being either an Array (['en','it']) or an Object ({ en: 'English', it: 'Italiano' }).
+ */
+export function getStaticPaths() {
+  const langs = Array.isArray(languages) ? languages : Object.keys(languages);
+  return langs.map((language) => ({
+    params: { language },
+  }));
+}
+
+/** Use route param for dynamic segment */
+const currentLocale = Astro.params.language as LanguageKey;
 const t = useTranslations(currentLocale);
 
 const publicCurrentLangProjects = await getCollection('project', (project) => {
@@ -77,12 +90,6 @@ const allTypeFilters: TypeFilter[] = [
     relatedType: 'Prototype',
   },
 ];
-
-export function getStaticPaths() {
-  return Object.keys(languages).map((language) => ({
-    params: { language },
-  }));
-}
 ---
 
 <style is:inline>
@@ -173,13 +180,27 @@ export function getStaticPaths() {
 
             const projectType = project.data.type ?? '';
 
+            // Normalize BASE_URL (Astro may include trailing slash)
+            const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
             return (
               <li
                 data-type={projectType}
                 class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-stretch"
               >
-                {/* Left: image */}
-                <div class="w-full aspect-[16/9] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+                {/* Left: image (width unchanged; height reduced via aspect ratio) */}
+                <div
+                  class="
+                    w-full
+                    aspect-[16/9]
+                    md:aspect-[2/1]
+                    xl:aspect-[21/9]
+                    overflow-hidden
+                    rounded-2xl
+                    border border-black/10
+                    bg-black/5
+                  "
+                >
                   {project.data.thumbnail ? (
                     typeof project.data.thumbnail === 'string' ? (
                       <img
@@ -213,19 +234,13 @@ export function getStaticPaths() {
 
                     <p class="text-base">{project.data.description}</p>
 
-                    {project.data.highlights?.length > 0 && (
-                      <ul class="list-disc list-inside text-sm opacity-80">
-                        {project.data.highlights.slice(0, 3).map((h) => (
-                          <li>{typeof h === 'string' ? h : h.text ?? ''}</li>
-                        ))}
-                      </ul>
-                    )}
+                    {/* Highlights removed as requested */}
                   </div>
 
                   {/* Bottom action: spaced on mobile; pinned to bottom on md+ */}
                   <div class="mt-6 md:mt-auto">
                     <a
-                      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+                      href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
                       class="highlight text-lg"
                     >
                       View overview
@@ -242,3 +257,4 @@ export function getStaticPaths() {
     </div>
   </main>
 </Base>
+```
