@@ -6,65 +6,57 @@ import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
 
 /**
- * Build all static paths for:
- * /{language}/work/{...slug}
- *
- * Projects are stored with ids like:
- *   en/some-project
- *   it/some-project
+ * /[language]/work/[slug]
+ * Static paths for GitHub Pages static build
  */
 export async function getStaticPaths() {
   const langs = Array.isArray(languages) ? languages : Object.keys(languages);
-
   const projects = await getCollection('project', (p) => !p.data.draft);
 
-  const paths: Array<{ params: { language: string; slug: string[] } }> = [];
-
-  for (const lang of langs) {
-    for (const p of projects) {
-      if (!p.id.startsWith(`${lang}/`)) continue;
-
-      // normalized slug without language prefix
-      const normalized = p.id.slice(lang.length + 1); // remove "en/"
-      const slugParts = normalized.split('/').filter(Boolean);
-
-      paths.push({
-        params: { language: lang, slug: slugParts },
-      });
-    }
-  }
-
-  return paths;
+  return langs.flatMap((language) =>
+    projects
+      .filter((p) => p.id.startsWith(`${language}/`))
+      .map((p) => {
+        const normalized = p.id.slice(language.length + 1); // remove "en/"
+        return {
+          params: { language, slug: normalized }, // ✅ [slug] expects string
+        };
+      }),
+  );
 }
 
 const currentLocale = Astro.params.language as LanguageKey;
 const t = useTranslations(currentLocale);
 
-const slugParam = Astro.params.slug;
-const slugJoined = Array.isArray(slugParam) ? slugParam.join('/') : String(slugParam ?? '');
+const slug = String(Astro.params.slug ?? '');
 
-const projects = await getCollection('project', (p) => !p.data.draft && p.id.startsWith(`${currentLocale}/`));
-const project = projects.find((p) => p.id === `${currentLocale}/${slugJoined}`);
+// Only projects of current language
+const projects = await getCollection(
+  'project',
+  (p) => !p.data.draft && p.id.startsWith(`${currentLocale}/`),
+);
+
+const project = projects.find((p) => p.id === `${currentLocale}/${slug}`);
 
 if (!project) {
-  throw new Error(`Project not found: ${currentLocale}/${slugJoined}`);
+  throw new Error(`Project not found: ${currentLocale}/${slug}`);
 }
 
 const { Content } = await project.render();
 
-// Data mapping confirmed by you:
+// Confirmed mappings
 const typeLabel = project.data.type ?? ''; // e.g. "Research"
 const tags: string[] = Array.isArray(project.data.tags) ? project.data.tags : [];
 const caseUrl: string = project.data.caseUrl ?? '';
-const cover = project.data.thumbnail ?? null; // image or string
+const cover = project.data.thumbnail ?? null; // image or string path
 const coverAlt = project.data.thumbnailAlt ?? project.data.title;
 
-// Summary text (you can swap to context/description if you prefer)
+// Summary text (use description first, then context)
 const summary = project.data.description ?? project.data.context ?? '';
 ---
 
 <style is:inline>
-  /* Tag pills in left column */
+  /* Tag pills: subtle, editorial */
   .tag-pill {
     border: 1px solid rgba(0, 0, 0, 0.12);
     background: rgba(0, 0, 0, 0.02);
@@ -73,29 +65,37 @@ const summary = project.data.description ?? project.data.context ?? '';
     border-color: rgba(255, 255, 255, 0.14);
     background: rgba(255, 255, 255, 0.04);
   }
+
+  /* External link: keep it clean; highlight underline comes from your global CSS */
+  .case-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 </style>
 
 <Base title={project.data.title}>
   <main>
     <div class="mx-auto w-full max-w-screen-xl px-6">
-      <!-- Top spacing matches your site navbar system -->
+      <!-- Hero -->
       <section class="pt-[var(--navbar-height)]">
-        <!-- Type pill (from MDX: type) -->
+        <!-- Main type pill (from MDX: type) -->
         {typeLabel ? (
           <div class="mb-6">
             <span class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-sm font-medium">
+              <!-- Icon is decorative; feel free to swap by type if you want -->
               <Icon name="material-symbols:science-outline" size={18} />
               {typeLabel}
             </span>
           </div>
         ) : null}
 
-        <!-- Title: constrain width similar to your Sketch -->
+        <!-- Title width matches your Sketch-like measure -->
         <h1 class="max-w-[44rem] text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
           {project.data.title}
         </h1>
 
-        <!-- Hero image: rounded rectangle, “to the point” -->
+        <!-- Cover image: rounded rectangle “to the point” -->
         <div class="mt-8 overflow-hidden rounded-3xl border border-black/10 bg-black/5">
           {cover ? (
             typeof cover === 'string' ? (
@@ -117,9 +117,9 @@ const summary = project.data.description ?? project.data.context ?? '';
         </div>
       </section>
 
-      <!-- Meta + Summary area (Tag column + Content column) -->
+      <!-- Overview (Tags + Summary + Content) -->
       <section class="mt-12 grid gap-10 md:grid-cols-[240px_1fr] md:gap-14">
-        <!-- Left column: Tags + external CTA -->
+        <!-- Left column -->
         <aside class="space-y-8">
           {tags.length > 0 ? (
             <div>
@@ -140,7 +140,7 @@ const summary = project.data.description ?? project.data.context ?? '';
                 href={caseUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="highlight inline-flex items-center gap-2 text-base font-medium"
+                class="case-link highlight text-base font-medium"
               >
                 Read full case <span aria-hidden="true">↗</span>
               </a>
@@ -148,7 +148,7 @@ const summary = project.data.description ?? project.data.context ?? '';
           ) : null}
         </aside>
 
-        <!-- Right column: Summary + MDX body -->
+        <!-- Right column -->
         <div class="min-w-0">
           {summary ? (
             <p class="max-w-[50rem] text-lg leading-relaxed opacity-90">
@@ -156,7 +156,7 @@ const summary = project.data.description ?? project.data.context ?? '';
             </p>
           ) : null}
 
-          <!-- MDX content (optional, but ready) -->
+          <!-- MDX body -->
           <div class="prose prose-zinc mt-8 max-w-[50rem] dark:prose-invert">
             <Content />
           </div>
