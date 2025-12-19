@@ -51,19 +51,31 @@ const summary = project.data.description ?? project.data.context ?? '';
     background: rgba(255, 255, 255, 0.04);
   }
 
-  .case-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+  /* Touch-friendly CTA button (Sportly-like pill) */
+  .case-btn {
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(6px);
+  }
+  :global(.dark) .case-btn {
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  /* Details summary aesthetics (mobile tags at the end) */
+  .details-summary {
+    list-style: none;
+  }
+  .details-summary::-webkit-details-marker {
+    display: none;
   }
 </style>
 
 <Base title={project.data.title}>
   <main>
-    <!-- ✅ Content rail: STATIC class so Tailwind definitely generates it -->
-    <!-- You can adjust ONE number: max-w-[56rem] -->
+    <!-- Content rail -->
     <div class="mx-auto w-full max-w-[56rem] px-6">
-      <!-- =============== Hero =============== -->
+      <!-- ================= Hero ================= -->
       <section class="pt-[var(--navbar-height)]">
         {typeLabel ? (
           <div class="mb-6">
@@ -78,22 +90,16 @@ const summary = project.data.description ?? project.data.context ?? '';
           {project.data.title}
         </h1>
 
+        <!-- Cover image: responsive aspect ratios (Sportly-like strategy) -->
         <div
-  class="
-    mt-8
-    w-full
-    overflow-hidden
-    rounded-3xl
-    border border-black/10
-    bg-black/5
-
-    aspect-[4/3]
-    sm:aspect-[16/10]
-    md:aspect-[16/9]
-    lg:aspect-[21/9]
-  "
->
-
+          class="
+            mt-8 w-full overflow-hidden rounded-3xl border border-black/10 bg-black/5
+            aspect-[4/3]
+            sm:aspect-[16/10]
+            md:aspect-[16/9]
+            lg:aspect-[21/9]
+          "
+        >
           {cover ? (
             typeof cover === 'string' ? (
               <img
@@ -114,12 +120,14 @@ const summary = project.data.description ?? project.data.context ?? '';
         </div>
       </section>
 
-      <!-- =============== Overview =============== -->
+      <!-- ================= Overview ================= -->
       <section class="mt-12">
         <div class="grid gap-10 md:grid-cols-[240px_1fr] md:gap-14">
+          <!-- Left column (desktop only tags) -->
           <aside class="space-y-8">
+            {/* Desktop/Tablet: show tags in left column */}
             {tags.length > 0 ? (
-              <div>
+              <div class="hidden md:block">
                 <div class="mb-3 text-sm font-semibold opacity-70">Tag</div>
                 <div class="flex flex-col gap-2">
                   {tags.map((tag) => (
@@ -131,13 +139,22 @@ const summary = project.data.description ?? project.data.context ?? '';
               </div>
             ) : null}
 
+            {/* CTA: button, mobile full width; desktop auto width */}
             {caseUrl ? (
               <div>
                 <a
                   href={caseUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="case-link highlight text-base font-medium"
+                  class="
+                    case-btn
+                    inline-flex items-center justify-center gap-2
+                    rounded-full
+                    px-6 py-4
+                    font-semibold
+                    w-full
+                    md:w-auto
+                  "
                 >
                   Read full case <span aria-hidden="true">↗</span>
                 </a>
@@ -145,6 +162,7 @@ const summary = project.data.description ?? project.data.context ?? '';
             ) : null}
           </aside>
 
+          <!-- Right column -->
           <div class="min-w-0">
             {summary ? (
               <p class="text-lg leading-relaxed opacity-90">
@@ -153,6 +171,26 @@ const summary = project.data.description ?? project.data.context ?? '';
             ) : null}
           </div>
         </div>
+
+        {/* Mobile: move tags to the end (Sportly-like), collapsed by default */}
+        {tags.length > 0 ? (
+          <div class="mt-12 md:hidden">
+            <details class="rounded-2xl border border-black/10 bg-black/5 p-4">
+              <summary class="details-summary flex cursor-pointer items-center justify-between">
+                <span class="text-sm font-semibold opacity-80">Tags</span>
+                <span class="opacity-60" aria-hidden="true">+</span>
+              </summary>
+
+              <div class="mt-4 flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <span class="tag-pill inline-flex rounded-lg px-3 py-2 text-sm">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </details>
+          </div>
+        ) : null}
       </section>
 
       <div class="h-24"></div>
