@@ -2,14 +2,12 @@
 import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
-import { useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import { Image } from 'astro:assets';
 
 const currentLocale = Astro.currentLocale as LanguageKey;
 const t = useTranslations(currentLocale);
 
-/**
- * 读取当前语言的公开项目
- */
 const publicCurrentLangProjects = await getCollection('project', (project) => {
   const isPublicProject = !project.data.draft;
   const isCurrentLangProject = project.id.startsWith(currentLocale);
@@ -20,179 +18,227 @@ const sortedProjects = publicCurrentLangProjects.sort(
   (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
 );
 
-/**
- * 筛选：用 URL query 参数控制，比如：
- * /en/work?filter=research
- */
-type FilterId = 'all' | 'research' | 'product' | 'service' | 'strategy' | 'prototype';
+type TypeId =
+  | 'Work-Type-all'
+  | 'Work-Type-Research'
+  | 'Work-Type-Product'
+  | 'Work-Type-Service'
+  | 'Work-Type-Strategy'
+  | 'Work-Type-Prototype';
 
-const FILTERS: Array<{ id: FilterId; label: string; icon: string }> = [
-  { id: 'all', label: 'All', icon: 'tabler:dots' },
-  { id: 'research', label: 'Research', icon: 'tabler:flask' },
-  { id: 'product', label: 'Product', icon: 'tabler:box' },
-  { id: 'service', label: 'Service', icon: 'tabler:link' },
-  { id: 'strategy', label: 'Strategy', icon: 'tabler:arrows-diagonal' },
-  { id: 'prototype', label: 'Prototype', icon: 'tabler:tool' },
+type TypeFilter = {
+  id: TypeId;
+  label: string;
+  icon: string;
+  themeColor: string;
+  relatedType?: 'Research' | 'Product' | 'Service' | 'Strategy' | 'Prototype';
+};
+
+const allTypeFilters: TypeFilter[] = [
+  {
+    id: 'Work-Type-all',
+    label: 'All',
+    icon: 'material-symbols:apps',
+    themeColor: '#171717',
+  },
+  {
+    id: 'Work-Type-Research',
+    label: 'Research',
+    icon: 'material-symbols:science-outline',
+    themeColor: '#1f2a44',
+    relatedType: 'Research',
+  },
+  {
+    id: 'Work-Type-Product',
+    label: 'Product',
+    icon: 'material-symbols:widgets-outline',
+    themeColor: '#2b3a2e',
+    relatedType: 'Product',
+  },
+  {
+    id: 'Work-Type-Service',
+    label: 'Service',
+    icon: 'material-symbols:handshake-outline',
+    themeColor: '#2b2e3a',
+    relatedType: 'Service',
+  },
+  {
+    id: 'Work-Type-Strategy',
+    label: 'Strategy',
+    icon: 'material-symbols:strategy',
+    themeColor: '#3a2b2b',
+    relatedType: 'Strategy',
+  },
+  {
+    id: 'Work-Type-Prototype',
+    label: 'Prototype',
+    icon: 'material-symbols:biotech-outline',
+    themeColor: '#3a3a2b',
+    relatedType: 'Prototype',
+  },
 ];
 
-const selectedFilter = (Astro.url.searchParams.get('filter') || 'all') as FilterId;
-const activeFilter: FilterId = FILTERS.some((f) => f.id === selectedFilter) ? selectedFilter : 'all';
-
-/**
- * 项目类型字段兼容：
- * - 推荐你在 content collection 里用：project.data.type: string[] 或 string
- * - 也兼容：project.data.tags: string[]（如果你把类型放 tags 里）
- */
-function normalizeTypes(project: any): string[] {
-  const type = project?.data?.type;
-  const tags = project?.data?.tags;
-
-  const arr: string[] = [];
-  if (Array.isArray(type)) arr.push(...type);
-  else if (typeof type === 'string') arr.push(type);
-
-  if (Array.isArray(tags)) arr.push(...tags);
-
-  return arr
-    .filter(Boolean)
-    .map((s) => String(s).trim().toLowerCase());
-}
-
-const filteredProjects =
-  activeFilter === 'all'
-    ? sortedProjects
-    : sortedProjects.filter((p) => normalizeTypes(p).includes(activeFilter));
-
-/**
- * 生成项目详情链接：
- * - 如果你的 slug 已经是语言无关（例如 "co-driving-pleasure"），直接用即可
- * - 如果你的 slug 带语言前缀（例如 "en/co-driving-pleasure"），这里会剥离掉
- */
-function getProjectHref(project: any) {
-  const raw = project?.slug ?? project?.id ?? '';
-  const cleaned = String(raw).replace(`${currentLocale}/`, '');
-  return `/${currentLocale}/work/${cleaned}/`;
-}
-
-function getYear(project: any): string | null {
-  // 兼容 year 字段，或者从 publishDate 推断年份
-  if (project?.data?.year) return String(project.data.year);
-  if (project?.data?.publishDate instanceof Date) return String(project.data.publishDate.getFullYear());
-  return null;
-}
-
-function getCover(project: any): string {
-  // 你项目里封面字段若不是 cover，请在这里改：
-  // e.g. return project.data.heroImage ?? project.data.thumbnail ?? ''
-  return project?.data?.cover ?? '';
-}
-
-function getSummary(project: any): string {
-  // 你项目里摘要字段若不是 summary，请在这里改：
-  return project?.data?.summary ?? '';
+export function getStaticPaths() {
+  return Object.keys(languages).map((language) => ({
+    params: { language },
+  }));
 }
 ---
 
-<Base>
-  <main class="container mx-auto px-6">
-    <!-- 页面标题 -->
-    <section class="pt-20 md:pt-24">
-      <h1 class="text-5xl md:text-6xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-        Selected Work
-      </h1>
+<style is:inline>
+  .active[data-type-id] {
+    background-color: var(--themeColor);
+    color: white;
+    border-color: transparent;
+  }
 
-      <!-- 筛选 pills -->
-      <nav class="mt-10 flex flex-wrap gap-3">
-        {FILTERS.map((f) => {
-          const isActive = f.id === activeFilter;
-          const href =
-            f.id === 'all'
-              ? `/${currentLocale}/work/`
-              : `/${currentLocale}/work/?filter=${encodeURIComponent(f.id)}`;
+  [data-type-id]:hover {
+    color: var(--themeColor);
+  }
+</style>
 
-          return (
-            <a
-              href={href}
-              class:list={[
-                'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition',
-                'border-zinc-200 bg-white/60 text-zinc-800 hover:bg-white',
-                'dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-200 dark:hover:bg-zinc-950/70',
-                isActive &&
-                  'border-zinc-900 bg-zinc-900 text-white hover:bg-zinc-900 dark:border-zinc-50 dark:bg-zinc-50 dark:text-zinc-900',
-              ]}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              <Icon name={f.icon} class="h-4 w-4" />
-              {f.label}
-            </a>
-          );
-        })}
-      </nav>
-    </section>
+<script is:inline define:vars={{ allTypeFilters }}>
+  document.addEventListener('astro:page-load', () => {
+    const typeFilterElement = document.querySelector('[data-type-filter]');
+    const worksElement = document.querySelector('[data-works]');
 
-    <!-- 项目列表 -->
-    <section class="mt-16 md:mt-20 pb-24">
-      <div class="flex flex-col gap-16 md:gap-20">
-        {filteredProjects.map((project) => {
-          const href = getProjectHref(project);
-          const year = getYear(project);
-          const cover = getCover(project);
-          const summary = getSummary(project);
+    function setActiveButton(activeId) {
+      typeFilterElement?.querySelectorAll('button').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.typeId === activeId);
+      });
+    }
 
-          return (
-            <article class="rounded-3xl">
-              <div class="grid gap-10 lg:grid-cols-[560px_1fr] items-stretch">
-                {/* 左侧：图片大卡片（高度随断点变化） */}
-                <a
-                  href={href}
-                  class="block overflow-hidden rounded-3xl bg-zinc-100 dark:bg-zinc-900
-                         h-64 sm:h-72 md:h-80 lg:h-[340px] xl:h-[380px]"
-                  aria-label={`Open ${project.data.title}`}
-                >
-                  {/* 说明：
-                      - 这里用 <img> 是为了与你当前“raw <img>”一致
-                      - 如果你后续改用 Astro Image，再替换这里即可 */}
-                  <img
-                    src={cover}
-                    alt={project.data.title}
-                    class="h-full w-full object-cover transition duration-300 hover:scale-[1.02]"
-                    loading="lazy"
-                  />
-                </a>
+    function updateCards(activeId) {
+      const activeFilter = allTypeFilters.find((f) => f.id === activeId);
 
-                {/* 右侧：文字区（按钮贴底） */}
-                <div class="flex h-full flex-col">
-                  <div>
-                    <h2 class="text-3xl md:text-4xl font-semibold leading-tight text-zinc-900 dark:text-zinc-50">
+      worksElement?.querySelectorAll('[data-type]').forEach((card) => {
+        const cardType = card.dataset.type || '';
+        const visible = !activeFilter?.relatedType || cardType === activeFilter.relatedType;
+        card.classList.toggle('hidden', !visible);
+      });
+    }
+
+    // Default state: All
+    setActiveButton('Work-Type-all');
+    updateCards('Work-Type-all');
+
+    typeFilterElement?.addEventListener('click', (e) => {
+      const button = e.target?.closest?.('button');
+      if (!button) return;
+
+      const typeId = button.dataset.typeId;
+      if (!typeId) return;
+
+      setActiveButton(typeId);
+      updateCards(typeId);
+    });
+  });
+</script>
+
+<Base title={t('Navbar-3')}>
+  <main>
+    <div class="mx-auto w-full max-w-screen-xl px-6">
+      <!-- Header -->
+      <section class="pt-[var(--navbar-height)]">
+        <h1 class="text-3xl md:text-5xl font-medium leading-tight">Selected Work</h1>
+      </section>
+
+      <!-- Type filter -->
+      <section class="mt-10">
+        <ul class="flex flex-wrap gap-2" data-type-filter>
+          {allTypeFilters.map((f) => (
+            <li>
+              <button
+                data-type-id={f.id}
+                style={`--themeColor: ${f.themeColor};`}
+                class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
+                type="button"
+              >
+                <Icon size={24} name={f.icon} />
+                {f.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Project list -->
+      <section class="mt-16">
+        <ul data-works class="flex flex-col gap-16">
+          {sortedProjects.map((project) => {
+            const id = String(project.id ?? '');
+            const normalizedSlug = id.startsWith(`${currentLocale}/`)
+              ? id.slice(currentLocale.length + 1)
+              : id.split('/').slice(1).join('/');
+
+            const projectType = project.data.type ?? '';
+
+            return (
+              <li
+                data-type={projectType}
+                class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-stretch"
+              >
+                {/* Left: image */}
+                <div class="w-full aspect-[16/9] overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+                  {project.data.thumbnail ? (
+                    typeof project.data.thumbnail === 'string' ? (
+                      <img
+                        src={project.data.thumbnail}
+                        alt={project.data.thumbnailAlt ?? project.data.title}
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <Image
+                        src={project.data.thumbnail}
+                        alt={project.data.thumbnailAlt ?? project.data.title}
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    )
+                  ) : null}
+                </div>
+
+                {/* Right: text */}
+                <div class="max-w-prose flex flex-col md:h-full md:py-2">
+                  <div class="space-y-3">
+                    <h3 class="text-xl md:text-2xl font-medium leading-snug">
                       {project.data.title}
-                      {year ? <span class="text-zinc-400"> — {year}</span> : null}
-                    </h2>
+                      <time class="opacity-60"> — {project.data.publishDate.getFullYear()}</time>
+                    </h3>
 
-                    {summary ? (
-                      <p class="mt-4 max-w-2xl text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
-                        {summary}
-                      </p>
-                    ) : null}
+                    {project.data.context && (
+                      <p class="text-sm opacity-70">{project.data.context}</p>
+                    )}
+
+                    <p class="text-base">{project.data.description}</p>
+
+                    {project.data.highlights?.length > 0 && (
+                      <ul class="list-disc list-inside text-sm opacity-80">
+                        {project.data.highlights.slice(0, 3).map((h) => (
+                          <li>{typeof h === 'string' ? h : h.text ?? ''}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
-                  {/* View overview：强制贴底 */}
-                  <div class="mt-auto pt-10">
+                  {/* Bottom action: spaced on mobile; pinned to bottom on md+ */}
+                  <div class="mt-6 md:mt-auto">
                     <a
-                      href={href}
-                      class="inline-flex items-center gap-2 text-base font-medium text-zinc-900 underline underline-offset-4
-                             hover:text-zinc-700
-                             dark:text-zinc-50 dark:hover:text-zinc-200"
+                      href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/${currentLocale}/work/${normalizedSlug}/`}
+                      class="highlight text-lg"
                     >
                       View overview
-                      <Icon name="tabler:arrow-right" class="h-4 w-4" />
                     </a>
                   </div>
                 </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-    </section>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      <div class="h-20"></div>
+    </div>
   </main>
 </Base>
