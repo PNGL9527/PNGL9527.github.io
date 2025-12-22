@@ -5,6 +5,10 @@ import { Icon } from 'astro-icon/components';
 import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
 
+/**
+ * Static paths required for dynamic routes like /[language]/work
+ * Compatible with languages being either an Array (['en','it']) or an Object ({ en: 'English', it: 'Italiano' }).
+ */
 export function getStaticPaths() {
   const langs = Array.isArray(languages) ? languages : Object.keys(languages);
   return langs.map((language) => ({
@@ -12,6 +16,7 @@ export function getStaticPaths() {
   }));
 }
 
+/** Use route param for dynamic segment */
 const currentLocale = Astro.params.language as LanguageKey;
 const t = useTranslations(currentLocale);
 
@@ -43,91 +48,69 @@ type TypeFilter = {
 
 const allTypeFilters: TypeFilter[] = [
   { id: 'Work-Type-all', label: 'All', icon: 'material-symbols:apps', themeColor: '#171717' },
-  {
-    id: 'Work-Type-Research',
-    label: 'Research',
-    icon: 'material-symbols:science-outline',
-    themeColor: '#1f2a44',
-    relatedType: 'Research',
-  },
-  {
-    id: 'Work-Type-Product',
-    label: 'Product',
-    icon: 'material-symbols:widgets-outline',
-    themeColor: '#2b3a2e',
-    relatedType: 'Product',
-  },
-  {
-    id: 'Work-Type-Service',
-    label: 'Service',
-    icon: 'material-symbols:handshake-outline',
-    themeColor: '#2b2e3a',
-    relatedType: 'Service',
-  },
-  {
-    id: 'Work-Type-Strategy',
-    label: 'Strategy',
-    icon: 'material-symbols:strategy',
-    themeColor: '#3a2b2b',
-    relatedType: 'Strategy',
-  },
-  {
-    id: 'Work-Type-Prototype',
-    label: 'Prototype',
-    icon: 'material-symbols:biotech-outline',
-    themeColor: '#3a3a2b',
-    relatedType: 'Prototype',
-  },
+  { id: 'Work-Type-Research', label: 'Research', icon: 'material-symbols:science-outline', themeColor: '#1f2a44', relatedType: 'Research' },
+  { id: 'Work-Type-Product', label: 'Product', icon: 'material-symbols:widgets-outline', themeColor: '#2b3a2e', relatedType: 'Product' },
+  { id: 'Work-Type-Service', label: 'Service', icon: 'material-symbols:handshake-outline', themeColor: '#2b2e3a', relatedType: 'Service' },
+  { id: 'Work-Type-Strategy', label: 'Strategy', icon: 'material-symbols:strategy', themeColor: '#3a2b2b', relatedType: 'Strategy' },
+  { id: 'Work-Type-Prototype', label: 'Prototype', icon: 'material-symbols:biotech-outline', themeColor: '#3a3a2b', relatedType: 'Prototype' },
 ];
 ---
 
 <style is:inline>
-  /* Pill button system (match navbar style) */
-  :root {
-    /* Same “light gray” feel as navbar inactive pill */
-    --pill-hover-bg: rgba(0, 0, 0, 0.08);
-    --pill-active-bg: #111315; /* near-black like your Work button */
-    --pill-text: #111315;
-    --pill-active-text: #ffffff;
-  }
-
-  /* Base pill button (filter + CTA share the same style) */
-  .pill {
-    border: none;
+  /* ===== Filter pill behavior (navbar-like) ===== */
+  .filter-btn[data-type-id] {
+    border-color: transparent;
     background: transparent;
-    color: var(--pill-text);
-    border-radius: 9999px;
-    transition: background-color 160ms ease, color 160ms ease;
-    -webkit-tap-highlight-color: transparent;
   }
 
-  /* Hover: light gray pill */
-  .pill:hover {
-    background: var(--pill-hover-bg);
+  .filter-btn[data-type-id]:hover {
+    background: rgba(0, 0, 0, 0.08); /* same "grey pill" feel as navbar hover */
+    border-color: transparent;
   }
 
-  /* Active (selected filter): black pill */
-  .pill.is-active,
-  .pill.active[data-type-id] {
-    background: var(--pill-active-bg);
-    color: var(--pill-active-text);
+  .filter-btn.active[data-type-id] {
+    background: #111315;
+    color: #fff;
+    border-color: transparent;
   }
 
-  /* Ensure hover does NOT change active contrast */
-  .pill.is-active:hover,
-  .pill.active[data-type-id]:hover {
-    background: var(--pill-active-bg);
-    color: var(--pill-active-text);
+  .filter-btn.active[data-type-id]:hover {
+    background: #111315; /* keep selected solid */
+    color: #fff;
   }
 
-  /* Icon color follows text color */
-  .pill svg {
+  /* Make icon inherit currentColor */
+  .filter-btn :global(svg) {
     color: currentColor;
   }
+
+  /* ===== CTA button (Check it out) =====
+     - Desktop: transparent, hover -> black
+     - Mobile: default -> black (no hover semantics)
+  */
+  .cta-btn {
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    background: transparent;
+    transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+
+  @media (hover: hover) {
+    .cta-btn:hover {
+      background: #111315;
+      color: #fff;
+      border-color: #111315;
+    }
+  }
+
+  /* Mobile default: already "hovered" (dark) */
+  @media (max-width: 767px) {
+    .cta-btn {
+      background: #111315;
+      color: #fff;
+      border-color: #111315;
+    }
+  }
 </style>
-
-
-
 
 <script is:inline define:vars={{ allTypeFilters }}>
   document.addEventListener('astro:page-load', () => {
@@ -150,14 +133,17 @@ const allTypeFilters: TypeFilter[] = [
       });
     }
 
+    // Default state: All
     setActiveButton('Work-Type-all');
     updateCards('Work-Type-all');
 
     typeFilterElement?.addEventListener('click', (e) => {
       const button = e.target?.closest?.('button');
       if (!button) return;
+
       const typeId = button.dataset.typeId;
       if (!typeId) return;
+
       setActiveButton(typeId);
       updateCards(typeId);
     });
@@ -167,23 +153,29 @@ const allTypeFilters: TypeFilter[] = [
 <Base title={t('Navbar-3')}>
   <main>
     <div class="mx-auto w-full max-w-screen-xl px-6">
+      <!-- Header -->
       <section class="pt-[var(--navbar-height)]">
-        <h1 class="text-3xl md:text-5xl font-semibold leading-tight">
-          Selected Work
-        </h1>
+        <h1 class="text-3xl md:text-5xl font-semibold leading-tight">Selected Work</h1>
       </section>
 
+      <!-- Type filter -->
       <section class="mt-10">
         <ul class="flex flex-wrap gap-2" data-type-filter>
           {allTypeFilters.map((f) => (
             <li>
               <button
                 data-type-id={f.id}
-                style={`--themeColor: ${f.themeColor};`}
-                class="pill py-1.5 md:py-2 px-4 md:px-5 inline-flex items-center gap-3"
+                class="
+                  filter-btn
+                  rounded-full
+                  inline-flex items-center gap-3
+                  px-5 py-3
+                  text-sm
+                  transition
+                "
                 type="button"
               >
-                <Icon size={24} name={f.icon} />
+                <Icon size={22} name={f.icon} />
                 {f.label}
               </button>
             </li>
@@ -191,6 +183,7 @@ const allTypeFilters: TypeFilter[] = [
         </ul>
       </section>
 
+      <!-- Project list -->
       <section class="mt-16">
         <ul data-works class="flex flex-col gap-16">
           {sortedProjects.map((project) => {
@@ -199,13 +192,13 @@ const allTypeFilters: TypeFilter[] = [
               ? id.slice(currentLocale.length + 1)
               : id.split('/').slice(1).join('/');
 
+            const projectType = project.data.type ?? '';
             const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+            const href = `${base}/${currentLocale}/work/${normalizedSlug}/`;
 
             return (
-              <li
-                data-type={project.data.type ?? ''}
-                class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-stretch"
-              >
+              <li data-type={projectType} class="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 items-stretch">
+                {/* Left: image */}
                 <div
                   class="
                     w-full
@@ -217,8 +210,8 @@ const allTypeFilters: TypeFilter[] = [
                     bg-black/5
                   "
                 >
-                  {project.data.thumbnail &&
-                    (typeof project.data.thumbnail === 'string' ? (
+                  {project.data.thumbnail ? (
+                    typeof project.data.thumbnail === 'string' ? (
                       <img
                         src={project.data.thumbnail}
                         alt={project.data.thumbnailAlt ?? project.data.title}
@@ -232,31 +225,41 @@ const allTypeFilters: TypeFilter[] = [
                         class="h-full w-full object-cover"
                         loading="lazy"
                       />
-                    ))}
+                    )
+                  ) : null}
                 </div>
 
+                {/* Right: text */}
                 <div class="max-w-prose flex flex-col md:h-full md:py-2">
-                  <div class="space-y-3">
+                  <div class="space-y-4">
                     <h3 class="text-xl md:text-2xl font-semibold leading-snug">
                       {project.data.title}
                     </h3>
 
-                    {project.data.context && (
-                      <p class="text-sm opacity-70">{project.data.context}</p>
+                    {project.data.description && (
+                      <p class="text-lg leading-relaxed text-[rgba(0,0,0,0.62)]">
+                        {project.data.description}
+                      </p>
                     )}
-
-                    <p class="text-base text-primary-600">{project.data.description}</p>
                   </div>
 
-                  <div class="mt-6 md:mt-auto md:pt-8">
-<a
-  href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
-  class="btn-pill text-sm md:text-base"
->
-  Check it out
-</a>
-
-
+                  {/* CTA: desktop keeps natural width; mobile full width + dark */}
+                  <div class="mt-6 md:mt-auto">
+                    <a
+                      href={href}
+                      class="
+                        cta-btn
+                        inline-flex items-center justify-center
+                        rounded-full
+                        px-6 py-4
+                        text-base
+                        font-medium
+                        w-full
+                        md:w-auto
+                      "
+                    >
+                      Check it out
+                    </a>
                   </div>
                 </div>
               </li>
