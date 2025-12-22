@@ -215,19 +215,12 @@ const { Content } = await render(project);
             {/* CTA button */}
             {caseUrl ? (
               <div>
-                <a
-                  href={caseUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="
-                    case-btn
-                    inline-flex items-center justify-center gap-3
-                    rounded-full
-                    px-6 py-4
-                    font-semibold
-                    w-full
-                  "
-                >
+<a
+  href={caseUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="btn-pill w-full gap-2"
+>
                   Read full case
                   <span aria-hidden="true" class="inline-flex">
                     <svg
