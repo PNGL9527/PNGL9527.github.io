@@ -130,27 +130,36 @@
     font-family: var(--font-sans-serif);
   }
 
-/* Shared pill CTA button (used by Check it out & Read full case) */
+/* Shared pill CTA button */
 .btn-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
 
-  padding: 1rem 1.5rem; /* = py-4 px-6 */
+  padding: 1rem 1.5rem; /* 和 Read full case / Check it out 高度一致 */
   border-radius: 9999px;
 
   font-weight: 500;
   line-height: 1;
+  white-space: nowrap;
 
-  border: 1px solid #e5e5e5; /* 细边框，颜色 = hover 底色 */
+  color: #111; /* 默认文字黑 */
   background-color: transparent;
 
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  border: 1px solid #111; /* 细黑边 */
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .btn-pill:hover {
-  background-color: #e5e5e5; /* navbar 同款灰 */
+  background-color: #111; /* hover 变黑 */
+  color: #fff;
+  border-color: #111;
 }
+
 
   /* ---------------------------------------------------------------------- */
   /*  Highlight underline (kept; remove texture background if you want)       */
