@@ -5,6 +5,7 @@ import { Icon } from 'astro-icon/components';
 import { languages, type LanguageKey, useTranslations } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
 
+/* ---------------- getStaticPaths ---------------- */
 export async function getStaticPaths() {
   const langs = Array.isArray(languages) ? languages : Object.keys(languages);
   const projects = await getCollection('project', (p) => !p.data.draft);
@@ -12,13 +13,16 @@ export async function getStaticPaths() {
   return langs.flatMap((language) =>
     projects
       .filter((p) => p.id.startsWith(`${language}/`))
-      .map((p) => {
-        const slug = p.id.slice(language.length + 1);
-        return { params: { language, slug } };
-      }),
+      .map((p) => ({
+        params: {
+          language,
+          slug: p.id.slice(language.length + 1),
+        },
+      })),
   );
 }
 
+/* ---------------- Page data ---------------- */
 const currentLocale = Astro.params.language as LanguageKey;
 const t = useTranslations(currentLocale);
 
@@ -32,113 +36,8 @@ const projects = await getCollection(
 const project = projects.find((p) => p.id === `${currentLocale}/${slug}`);
 if (!project) throw new Error(`Project not found: ${currentLocale}/${slug}`);
 
-/* Data mapping */
+/* ---------------- Mapping ---------------- */
 const typeLabel = project.data.type ?? '';
-const tags: string[] = Array.isArray(project.data.tags) ? project.data.tags : [];
-const caseUrl: string = project.data.caseUrl ?? '';
-const cover = project.data.thumbnail ?? null;
-const coverAlt = project.data.thumbnailAlt ?? project.data.title;
-const summary = project.data.description ?? project.data.context ?? '';
-
-/** Highlights: accept string[] or {text:string}[] */
-const highlightsRaw = Array.isArray(project.data.highlights) ? project.data.highlights : [];
-const highlights = highlightsRaw
-  .map((h: any) => (typeof h === 'string' ? h : h?.text ?? ''))
-  .filter(Boolean);
-
-const { Content } = await render(project);
----
-
-<style is:inline>
-  /* --- Tag: Twitter-like hashtag (pure text, one per line) --- */
-  .tag-hash {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.35rem;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    line-height: 1.35;
-  }
-  .tag-hash .hash {
-    opacity: 0.55;
-  }
-
-  /* --- CTA pill button (desktop hover; mobile default "hovered") --- */
-  .btn-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 9999px;
-    padding: 1rem 1.5rem; /* height close to your previous Read full case */
-    gap: 0.5rem;
-    width: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.18);
-    background: transparent;
-    color: inherit;
-    transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
-  }
-
-  .btn-pill:hover {
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    border-color: rgba(0, 0, 0, 0.9);
-  }
-
-  /* Mobile has no hover: show the "hovered" dark style by default */
-  @media (max-width: 767px) {
-    .btn-pill {
-      background: rgba(0, 0, 0, 0.9);
-      color: white;
-      border-color: rgba(0, 0, 0, 0.9);
-    }
-  }
-
-  /* Details summary aesthetics */
-  .details-summary {
-    list-style: none;
-  }
-  .details-summary::-webkit-details-marker {
-    display: none;
-  }
-
-  /* Make ALL images/figures in MDX match cover style */
-  :global(.case-prose figure),
-  :global(.case-prose img),
-  :global(.case-prose video),
-  :global(.case-prose iframe) {
-    border-radius: 1.5rem; /* ≈ rounded-3xl */
-  }
-
-  :global(.case-prose figure),
-  :global(.case-prose img) {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background: rgba(0, 0, 0, 0.02);
-  }
-
-  :global(.dark .case-prose figure),
-  :global(.dark .case-prose img) {
-    border-color: rgba(255, 255, 255, 0.14);
-    background: rgba(255, 255, 255, 0.03);
-  }
-
-  :global(.case-prose img) {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-</style>
-
-<Base title={project.data.title}>
-  <main>
-    <div class="mx-auto w-full max-w-[56rem] px-6">
-      <!-- ================= Hero ================= -->
-      <section class="pt-[var(--navbar-height)]">
-        {typeLabel ? (
-          <div class="mb-6">
-            <span class="inline-flex items-center gap-2 text-sm font-normal text-primary-900">
-              ---
-/* 放在 frontmatter 里：project 找到之后、typeLabel 定义附近即可 */
 
 const typeToIcon: Record<string, string> = {
   Research: 'material-symbols:science-outline',
@@ -149,17 +48,82 @@ const typeToIcon: Record<string, string> = {
 };
 
 const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
+
+/* ---------------- Content ---------------- */
+const tags: string[] = Array.isArray(project.data.tags) ? project.data.tags : [];
+const caseUrl: string = project.data.caseUrl ?? '';
+const cover = project.data.thumbnail ?? null;
+const coverAlt = project.data.thumbnailAlt ?? project.data.title;
+const summary = project.data.description ?? project.data.context ?? '';
+
+const highlightsRaw = Array.isArray(project.data.highlights)
+  ? project.data.highlights
+  : [];
+const highlights = highlightsRaw
+  .map((h: any) => (typeof h === 'string' ? h : h?.text ?? ''))
+  .filter(Boolean);
+
+const { Content } = await render(project);
 ---
 
+<style is:inline>
+  /* ---------- Tag (Twitter-like text) ---------- */
+  .tag-text {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.875rem;
+  }
+
+  /* ---------- CTA buttons ---------- */
+  .case-btn {
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    background: transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  @media (hover: hover) {
+    .case-btn:hover {
+      background: #111;
+      color: white;
+    }
+  }
+
+  @media (hover: none) {
+    .case-btn {
+      background: #111;
+      color: white;
+    }
+  }
+
+  /* ---------- MDX media ---------- */
+  :global(.case-prose img),
+  :global(.case-prose figure),
+  :global(.case-prose video),
+  :global(.case-prose iframe) {
+    border-radius: 1.5rem;
+    width: 100%;
+    display: block;
+  }
+</style>
+
+<Base title={project.data.title}>
+  <main>
+    <div class="mx-auto w-full max-w-[56rem] px-6">
+      <!-- ================= Hero ================= -->
+      <section class="pt-[var(--navbar-height)]">
+        {typeLabel && (
+          <div class="mb-6">
+            <span class="inline-flex items-center gap-2 text-sm font-normal text-primary-900">
+              <Icon name={typeIcon} size={18} />
+              {typeLabel}
             </span>
           </div>
-        ) : null}
+        )}
 
         <h1 class="text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
           {project.data.title}
         </h1>
 
-        <!-- Cover image: responsive aspect ratios -->
+        <!-- Cover -->
         <div
           class="
             mt-8 w-full overflow-hidden rounded-3xl border border-black/10 bg-black/5
@@ -169,174 +133,104 @@ const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
             lg:aspect-[21/9]
           "
         >
-          {cover ? (
-            typeof cover === 'string' ? (
-              <img src={cover} alt={coverAlt} class="h-full w-full object-cover" loading="lazy" />
+          {cover &&
+            (typeof cover === 'string' ? (
+              <img src={cover} alt={coverAlt} class="h-full w-full object-cover" />
             ) : (
-              <Image src={cover} alt={coverAlt} class="h-full w-full object-cover" loading="lazy" />
-            )
-          ) : null}
+              <Image src={cover} alt={coverAlt} class="h-full w-full object-cover" />
+            ))}
         </div>
       </section>
 
-      <!-- ================= Overview (two-column) ================= -->
+      <!-- ================= Overview ================= -->
       <section class="mt-12">
-        <div class="grid gap-10 md:grid-cols-[1fr_240px] md:gap-14 items-start">
-          <!-- Left: description + highlight -->
-          <div class="min-w-0">
-            {summary ? <p class="text-lg leading-relaxed opacity-90">{summary}</p> : null}
+        <div class="grid gap-10 md:grid-cols-[1fr_240px] md:gap-14">
+          <!-- Left -->
+          <div>
+            {summary && (
+              <p class="text-lg leading-relaxed text-primary-700">
+                {summary}
+              </p>
+            )}
 
-            {highlights.length > 0 ? (
+            {highlights.length > 0 && (
               <div class="mt-10">
                 <div class="text-base font-semibold">Highlight</div>
-                <ul class="mt-4 space-y-2 text-sm opacity-90">
+                <ul class="mt-4 space-y-2 text-sm text-primary-700">
                   {highlights.map((h) => (
                     <li class="flex gap-3">
-                      <span class="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-black/40"></span>
+                      <span class="mt-2 h-1.5 w-1.5 rounded-full bg-black/40"></span>
                       <span>{h}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            ) : null}
+            )}
           </div>
 
-          <!-- Right: tags + CTA (desktop only) -->
-          <aside class="space-y-6">
-            {tags.length > 0 ? (
-              <div class="hidden md:block">
-                <div class="mb-3 text-sm font-semibold opacity-70">Tag</div>
-                <ul class="flex flex-col gap-2 text-base">
+          <!-- Right (desktop) -->
+          <aside class="space-y-6 hidden md:block">
+            {tags.length > 0 && (
+              <div>
+                <div class="mb-3 text-sm font-semibold opacity-70">Tags</div>
+                <div class="flex flex-col gap-1">
                   {tags.map((tag) => (
-                    <li class="tag-hash">
-                      <span class="hash text-primary-600">#</span>
-                      <span class="label text-primary-900">{tag}</span>
-                    </li>
+                    <span class="tag-text">#{tag}</span>
                   ))}
-                </ul>
+                </div>
               </div>
-            ) : null}
+            )}
 
-            {/* Desktop CTA stays here */}
-            {caseUrl ? (
-              <div class="hidden md:block">
-                <a
-                  href={caseUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn-pill"
-                >
-                  Read full case
-                  <span aria-hidden="true" class="inline-flex">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M14 5H19V10"
-                        stroke="currentColor"
-                        stroke-width="2.4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M10 14L19 5"
-                        stroke="currentColor"
-                        stroke-width="2.4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M19 14V19H5V5H10"
-                        stroke="currentColor"
-                        stroke-width="2.4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </a>
-              </div>
-            ) : null}
+            {caseUrl && (
+              <a
+                href={caseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="case-btn inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold"
+              >
+                Read full case
+                <Icon name="material-symbols:open-in-new-rounded" size={18} />
+              </a>
+            )}
           </aside>
         </div>
       </section>
 
       <!-- ================= Body ================= -->
       <section class="mt-12">
-        <div class="case-prose prose prose-zinc max-w-none dark:prose-invert">
+        <div class="case-prose prose prose-zinc max-w-none">
           <Content />
         </div>
 
-        <!-- Mobile: Tags at the end (collapsed) + Mobile CTA AFTER tags -->
-        {tags.length > 0 ? (
-          <div class="mt-12 md:hidden">
-            <details class="rounded-2xl border border-black/10 bg-black/5 p-4">
-              <summary class="details-summary flex cursor-pointer items-center justify-between">
-                <span class="text-sm font-semibold opacity-80">Tags</span>
-                <span class="opacity-60" aria-hidden="true">+</span>
-              </summary>
+        <!-- Mobile: tags + CTA at bottom -->
+        {(tags.length > 0 || caseUrl) && (
+          <div class="mt-12 md:hidden space-y-8">
+            {tags.length > 0 && (
+              <details class="rounded-2xl border border-black/10 bg-black/5 p-4">
+                <summary class="flex cursor-pointer justify-between text-sm font-semibold">
+                  Tags <span>+</span>
+                </summary>
+                <div class="mt-4 flex flex-col gap-1">
+                  {tags.map((tag) => (
+                    <span class="tag-text">#{tag}</span>
+                  ))}
+                </div>
+              </details>
+            )}
 
-              {/* IMPORTANT: hashtag list, not pills */}
-              <ul class="mt-4 flex flex-col gap-2 text-base">
-                {tags.map((tag) => (
-                  <li class="tag-hash">
-                    <span class="hash text-primary-600">#</span>
-                    <span class="label text-primary-900">{tag}</span>
-                  </li>
-                ))}
-              </ul>
-            </details>
+            {caseUrl && (
+              <a
+                href={caseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="case-btn inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-5 font-semibold"
+              >
+                Read full case
+                <Icon name="material-symbols:open-in-new-rounded" size={18} />
+              </a>
+            )}
           </div>
-        ) : null}
-
-        {/* Mobile CTA goes here (end of page content) */}
-        {caseUrl ? (
-          <div class="mt-8 md:hidden">
-            <a
-              href={caseUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn-pill"
-            >
-              Read full case
-              <span aria-hidden="true" class="inline-flex">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M14 5H19V10"
-                    stroke="currentColor"
-                    stroke-width="2.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M10 14L19 5"
-                    stroke="currentColor"
-                    stroke-width="2.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M19 14V19H5V5H10"
-                    stroke="currentColor"
-                    stroke-width="2.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-            </a>
-          </div>
-        ) : null}
+        )}
       </section>
 
       <div class="h-24"></div>
