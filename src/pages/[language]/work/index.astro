@@ -82,26 +82,50 @@ const allTypeFilters: TypeFilter[] = [
 ---
 
 <style is:inline>
-  /* Active：对齐右上角 Work 按钮的深色 */
-  .active[data-type-id] {
-    background-color: var(--color-primary-900);
-    color: white;
-    border-color: transparent;
+  /* Pill button system (match navbar style) */
+  :root {
+    /* Same “light gray” feel as navbar inactive pill */
+    --pill-hover-bg: rgba(0, 0, 0, 0.08);
+    --pill-active-bg: #111315; /* near-black like your Work button */
+    --pill-text: #111315;
+    --pill-active-text: #ffffff;
   }
 
-  /* Hover（未选中）：轻微强调，用深色文字即可，不做背景 */
-  [data-type-id]:hover {
-    color: var(--color-primary-900);
-    border-color: var(--color-primary-900);
+  /* Base pill button (filter + CTA share the same style) */
+  .pill {
+    border: none;
+    background: transparent;
+    color: var(--pill-text);
+    border-radius: 9999px;
+    transition: background-color 160ms ease, color 160ms ease;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  /* Hover（已选中）：保持和 active 完全一致 */
-  .active[data-type-id]:hover {
-    background-color: var(--color-primary-900);
-    color: white;
-    border-color: transparent;
+  /* Hover: light gray pill */
+  .pill:hover {
+    background: var(--pill-hover-bg);
+  }
+
+  /* Active (selected filter): black pill */
+  .pill.is-active,
+  .pill.active[data-type-id] {
+    background: var(--pill-active-bg);
+    color: var(--pill-active-text);
+  }
+
+  /* Ensure hover does NOT change active contrast */
+  .pill.is-active:hover,
+  .pill.active[data-type-id]:hover {
+    background: var(--pill-active-bg);
+    color: var(--pill-active-text);
+  }
+
+  /* Icon color follows text color */
+  .pill svg {
+    color: currentColor;
   }
 </style>
+
 
 
 
@@ -156,7 +180,7 @@ const allTypeFilters: TypeFilter[] = [
               <button
                 data-type-id={f.id}
                 style={`--themeColor: ${f.themeColor};`}
-                class="border-2 py-1 md:py-2 px-3 md:px-4 border-primary-50 rounded-full inline-flex items-center gap-3 transition"
+                class="pill py-1.5 md:py-2 px-4 md:px-5 inline-flex items-center gap-3"
                 type="button"
               >
                 <Icon size={24} name={f.icon} />
@@ -227,19 +251,11 @@ const allTypeFilters: TypeFilter[] = [
                   <div class="mt-6 md:mt-auto md:pt-8">
 <a
   href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
-  class="
-    inline-flex items-center gap-2
-    rounded-full
-    border border-black/10
-    bg-white/60
-    px-5 py-2.5
-    text-sm font-medium
-    transition
-    hover:bg-black/90 hover:text-white hover:border-black/90
-  "
+  class="pill inline-flex items-center justify-center px-5 py-2 text-sm md:text-base"
 >
   Check it out
 </a>
+
 
                   </div>
                 </div>
