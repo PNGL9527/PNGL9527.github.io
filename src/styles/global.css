@@ -130,6 +130,15 @@
     font-family: var(--font-sans-serif);
   }
 
+  /* Ensure inline links use the same Inter font as surrounding text */
+.prose a,
+a:not(.pill):not(.button) {
+  font-family: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+}
+
+
   /* ---------------------------------------------------------------------- */
   /*  Highlight underline (kept; remove texture background if you want)       */
   /* ---------------------------------------------------------------------- */
