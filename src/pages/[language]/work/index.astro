@@ -225,12 +225,22 @@ const allTypeFilters: TypeFilter[] = [
                   </div>
 
                   <div class="mt-6 md:mt-auto md:pt-8">
-                    <a
-                      href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
-                      class="highlight text-lg"
-                    >
-                      View overview
-                    </a>
+<a
+  href={`${base}/${currentLocale}/work/${normalizedSlug}/`}
+  class="
+    inline-flex items-center gap-2
+    rounded-full
+    border border-black/10
+    bg-white/60
+    px-5 py-2.5
+    text-sm font-medium
+    transition
+    hover:bg-black/90 hover:text-white hover:border-black/90
+  "
+>
+  View overview
+</a>
+
                   </div>
                 </div>
               </li>
