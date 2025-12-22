@@ -209,14 +209,18 @@
     @apply -skew-x-3;
     height: 80%;
   }
-  /* Fix: highlighted inline links should inherit surrounding typography (font + weight) */
+/* Fix: highlighted inline links should inherit surrounding typography (font + weight)
+   BUT allow Tailwind text-* utilities to control size on CTA links. */
 .highlight,
 .highlight a {
   font-family: inherit !important;
-  font-weight: inherit !important;
   font-style: inherit !important;
-  font-size: inherit !important;
-  line-height: inherit !important;
 }
+
+/* 仅保留“默认继承字重”的倾向，但不要用 !important 锁死 */
+.highlight a {
+  font-weight: inherit;
+}
+
 
 }
