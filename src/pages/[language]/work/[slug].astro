@@ -137,8 +137,20 @@ const { Content } = await render(project);
         {typeLabel ? (
           <div class="mb-6">
             <span class="inline-flex items-center gap-2 text-sm font-normal text-primary-900">
-              <Icon name="material-symbols:science-outline" size={18} />
-              {typeLabel}
+              ---
+/* 放在 frontmatter 里：project 找到之后、typeLabel 定义附近即可 */
+
+const typeToIcon: Record<string, string> = {
+  Research: 'material-symbols:science-outline',
+  Product: 'material-symbols:widgets-outline',
+  Service: 'material-symbols:handshake-outline',
+  Strategy: 'material-symbols:strategy',
+  Prototype: 'material-symbols:biotech-outline',
+};
+
+const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
+---
+
             </span>
           </div>
         ) : null}
