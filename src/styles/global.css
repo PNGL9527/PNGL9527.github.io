@@ -160,6 +160,32 @@
   border-color: #111;
 }
 
+  .hero-cta {
+  display: inline-block;
+  margin-top: 1.25rem;
+
+  font-size: 1.125rem;        /* 比正文大一档 */
+  font-weight: 600;           /* semibold */
+  line-height: 1.4;
+
+  color: var(--color-primary, #111);
+  text-decoration: none;
+
+  position: relative;
+}
+
+/* 保留你现在的黄色 underline / highlight 语义 */
+.hero-cta::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0.1em;
+  width: 100%;
+  height: 0.35em;
+  background: rgba(250, 204, 21, 0.7); /* 你现在的黄色 */
+  z-index: -1;
+}
+
 
   /* ---------------------------------------------------------------------- */
   /*  Highlight underline (kept; remove texture background if you want)       */
