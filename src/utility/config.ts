@@ -17,7 +17,7 @@ export const globalOgImage = {
 };
 
 export const website = {
-  name: 'PengWeb',
+  name: 'Peng Lu',
   email: 'lupeng95@hotmail.com',
   emojiStatus: '📷',
 
