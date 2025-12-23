@@ -1,3 +1,5 @@
+import LightboxImage from '@/components/LightboxImage.astro';
+
 ---
 title: "BookHero: Service Design for better library system."
 description: "Redesigning a library system for Anhui Jianzhu University to enhance discoverability, participation, and resource utilization."
@@ -93,6 +95,11 @@ BookHero proposes a redesigned UX system that enables discovery, participation, 
   className="rounded-2xl w-full block"
 />
 
+<LightboxImage
+  src={`${import.meta.env.BASE_URL}assets/projects/bookhero/bookhero_hero.jpg``}
+  alt="BookHero user journey"
+  className="rounded-2xl w-full block"
+/>
 ---
 
 ## Key Outcomes
