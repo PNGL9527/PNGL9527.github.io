@@ -1,43 +1,100 @@
 ---
-const { src, alt = '', className = '' } = Astro.props;
+/**
+ * LightboxImage.astro
+ * Usage (in MDX):
+ *   import LightboxImage from '@/components/LightboxImage.astro';
+ *   <LightboxImage
+ *     src={`${import.meta.env.BASE_URL}assets/projects/bookhero/image-1.png`}
+ *     alt="Book service system"
+ *     className="rounded-2xl w-full"
+ *     caption="Book service system"
+ *   />
+ */
+
+const {
+  src,
+  alt = '',
+  className = '',
+  caption = '',
+} = Astro.props;
 ---
 
-<div class="relative">
+<figure class="m-0">
+  <!-- Thumbnail -->
   <img
     src={src}
     alt={alt}
-    class={`cursor-zoom-in ${className}`}
     loading="lazy"
-    data-lightbox-image
+    class={`block w-full cursor-zoom-in ${className}`}
+    data-lightbox-thumb
   />
 
-  <!-- overlay -->
+  {caption ? (
+    <figcaption class="mt-2 text-sm text-neutral-500">
+      {caption}
+    </figcaption>
+  ) : null}
+
+  <!-- Overlay (hidden by default) -->
   <div
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4"
+    aria-hidden="true"
     data-lightbox-overlay
   >
-    <img
-      src={src}
-      alt={alt}
-      class="max-h-[90vh] max-w-[90vw] rounded-xl"
-    />
+    <div class="relative">
+      <!-- Large image -->
+      <img
+        src={src}
+        alt={alt}
+        class="max-h-[90vh] max-w-[90vw] rounded-2xl"
+        data-lightbox-large
+      />
+
+      <!-- Optional close hint (click anywhere to close) -->
+      <div class="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 text-xs text-white/70">
+        Click anywhere to close · Press ESC
+      </div>
+    </div>
   </div>
-</div>
+</figure>
 
 <script>
-  const root = document.currentScript.parentElement;
-  const image = root.querySelector('[data-lightbox-image]');
-  const overlay = root.querySelector('[data-lightbox-overlay]');
+  const root = document.currentScript.closest('figure');
+  const thumb = root?.querySelector('[data-lightbox-thumb]');
+  const overlay = root?.querySelector('[data-lightbox-overlay]');
 
-  image.addEventListener('click', () => {
-    overlay.classList.remove('hidden');
-    overlay.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-  });
+  if (!thumb || !overlay) {
+    console.warn('[LightboxImage] Missing elements.');
+  } else {
+    const open = () => {
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
 
-  overlay.addEventListener('click', () => {
-    overlay.classList.add('hidden');
-    overlay.classList.remove('flex');
-    document.body.style.overflow = '';
-  });
+    const close = () => {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') close();
+    };
+
+    thumb.addEventListener('click', open);
+
+    // Click on overlay closes (including clicking the large image)
+    overlay.addEventListener('click', close);
+
+    // ESC closes
+    document.addEventListener('keydown', onKeyDown);
+
+    // Cleanup if Astro swaps/rehydrates (safe no-op in most cases)
+    window.addEventListener('beforeunload', () => {
+      document.removeEventListener('keydown', onKeyDown);
+    });
+  }
 </script>
