@@ -241,18 +241,20 @@ const backToWorkHref = `/${currentLocale}/work`;
         <!-- Mobile: tags + CTA at bottom -->
         {(tags.length > 0 || caseUrl) && (
           <div class="mt-12 md:hidden space-y-8">
-            {tags.length > 0 && (
-              <details class="rounded-2xl border border-black/10 bg-black/5 p-4">
-                <summary class="flex cursor-pointer justify-between text-sm font-semibold">
-                  Tags <span>+</span>
-                </summary>
-                <div class="mt-4 flex flex-col gap-1">
-                  {tags.map((tag) => (
-                    <span class="tag-text">#{tag}</span>
-                  ))}
-                </div>
-              </details>
-            )}
+{tags.length > 0 && (
+  <details class="rounded-2xl border border-black/10 bg-black/5 p-4">
+    <summary class="flex cursor-pointer justify-between text-sm font-semibold">
+      Tags <span>+</span>
+    </summary>
+
+    <ul class="mt-4 list-disc pl-4 space-y-1 text-neutral-600">
+      {tags.map((tag) => (
+        <li>{tag}</li>
+      ))}
+    </ul>
+  </details>
+)}
+
 
             {caseUrl && (
               <a
