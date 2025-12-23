@@ -48,10 +48,12 @@ const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
   <!-- ---------- Thumbnail ---------- -->
   <div
     class="
-      relative
+      w-full
+      aspect-[16/9]
+      md:aspect-[16/9]
       overflow-hidden
-      rounded-t-3xl
-      aspect-[4/3]
+      rounded-2xl
+      border border-black/10
       bg-black/5
     "
   >
@@ -60,16 +62,19 @@ const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
         <img
           src={thumbnail}
           alt={thumbnailAlt}
-          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          class="h-full w-full object-cover object-left"
+          loading="lazy"
         />
       ) : (
         <Image
           src={thumbnail}
           alt={thumbnailAlt}
-          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          class="h-full w-full object-cover object-left"
+          loading="lazy"
         />
       ))}
   </div>
+
 
   <!-- ---------- Content ---------- -->
   <div class="px-5 py-4">
