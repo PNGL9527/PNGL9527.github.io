@@ -273,14 +273,17 @@ const backToWorkHref = `/${currentLocale}/work`;
       {relatedProjects.length > 0 && (
         <section class="mt-16 md:mt-20">
           <div class="flex items-start justify-between gap-6">
-            <h2 class="text-base font-semibold tracking-tight">More selected work</h2>
+            <h2 class="text-xl sm:text-2xl font-semibold tracking-tight">
+  Continue exploring
+</h2>
+
 
             <!-- Desktop button: on the right, “Read full case” style logic -->
             <a
               href={backToWorkHref}
               class="case-btn hidden md:inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold"
             >
-              Back to Selected work
+              View all projects
             </a>
           </div>
 
@@ -296,7 +299,7 @@ const backToWorkHref = `/${currentLocale}/work`;
     href={backToWorkHref}
     class="case-btn inline-flex w-full items-center justify-center rounded-full px-6 py-5 font-semibold"
   >
-    Back to Selected work
+    View all projects
   </a>
 </div>
 
