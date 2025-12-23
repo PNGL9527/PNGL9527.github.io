@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import type { LanguageKey } from '@/i18n/i18n.ts';
+
+interface Props {
+  project: CollectionEntry<'project'>;
+  currentLocale: LanguageKey;
+}
+
+const { project, currentLocale } = Astro.props;
+
+// -------- data mapping --------
+const title = project.data.title;
+const typeLabel = project.data.type ?? '';
+const slug = project.id.split('/').slice(1).join('/');
+
+const href = `/${currentLocale}/work/${slug}`;
+
+const thumbnail = project.data.thumbnail ?? null;
+const thumbnailAlt = project.data.thumbnailAlt ?? title;
+
+// icon mapping（与你在 [slug].astro 里保持一致）
+const typeToIcon: Record<string, string> = {
+  Research: 'material-symbols:science-outline',
+  Product: 'material-symbols:widgets-outline',
+  Service: 'material-symbols:handshake-outline',
+  Strategy: 'material-symbols:strategy',
+  Prototype: 'material-symbols:biotech-outline',
+};
+
+const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
+---
+
+<a
+  href={href}
+  class="
+    group
+    block
+    rounded-3xl
+    border border-black/10
+    bg-white
+    transition
+    hover:bg-black/5
+  "
+>
+  <!-- ---------- Thumbnail ---------- -->
+  <div
+    class="
+      relative
+      overflow-hidden
+      rounded-t-3xl
+      aspect-[4/3]
+      bg-black/5
+    "
+  >
+    {thumbnail &&
+      (typeof thumbnail === 'string' ? (
+        <img
+          src={thumbnail}
+          alt={thumbnailAlt}
+          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+        />
+      ) : (
+        <Image
+          src={thumbnail}
+          alt={thumbnailAlt}
+          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+        />
+      ))}
+  </div>
+
+  <!-- ---------- Content ---------- -->
+  <div class="px-5 py-4">
+    {typeLabel && (
+      <div class="mb-2 inline-flex items-center gap-2 text-sm text-black/60">
+        <Icon name={typeIcon} size={16} />
+        <span>{typeLabel}</span>
+      </div>
+    )}
+
+    <h3 class="text-base font-semibold leading-snug tracking-tight">
+      {title}
+    </h3>
+  </div>
+</a>
