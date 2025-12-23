@@ -209,11 +209,11 @@ const backToWorkHref = `/${currentLocale}/work`;
             {tags.length > 0 && (
               <div>
                 <div class="mb-3 text-sm font-semibold opacity-70">Tags</div>
-                <div class="flex flex-col gap-1">
-                  {tags.map((tag) => (
-                    <span class="tag-text">#{tag}</span>
-                  ))}
-                </div>
+                      <ul class="list-disc pl-4 space-y-1 text-neutral-600">
+        {tags.map((tag) => (
+          <li>{tag}</li>
+        ))}
+      </ul>
               </div>
             )}
 
