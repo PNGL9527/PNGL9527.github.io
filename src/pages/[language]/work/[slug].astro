@@ -4,6 +4,11 @@ import Base from '@/layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
 import { languages, type LanguageKey, useTranslations } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
+import ProjectCard from '@/components/work/ProjectCard.astro';
+
+ *
+ * 然后把下面 JSX 里的 <ProjectCard ... /> 名字也对应改掉即可。
+
 
 /* ---------------- getStaticPaths ---------------- */
 export async function getStaticPaths() {
@@ -64,6 +69,31 @@ const highlights = highlightsRaw
   .filter(Boolean);
 
 const { Content } = await render(project);
+
+/* ---------------- More selected work (logic) ---------------- */
+const currentType = typeLabel || null;
+const currentId = project.id;
+
+const pool = projects.filter((p) => p.id !== currentId);
+
+const getType = (p: any) => (p?.data?.type ?? null);
+
+const sameType = currentType ? pool.filter((p) => getType(p) === currentType) : [];
+const otherType = currentType ? pool.filter((p) => getType(p) !== currentType) : pool;
+
+const byDateDesc = (a: any, b: any) => {
+  const ad = a.data?.publishDate ? new Date(a.data.publishDate).getTime() : 0;
+  const bd = b.data?.publishDate ? new Date(b.data.publishDate).getTime() : 0;
+  return bd - ad;
+};
+
+sameType.sort(byDateDesc);
+otherType.sort(byDateDesc);
+
+const relatedProjects = [...sameType, ...otherType].slice(0, 2);
+
+// 返回到 Selected work 列表页
+const backToWorkHref = `/${currentLocale}/work`;
 ---
 
 <style is:inline>
@@ -120,22 +150,21 @@ const { Content } = await render(project);
         )}
 
         <h1
-  class="
-    text-3xl
-    sm:text-4xl
-    md:text-5xl
-    lg:text-6xl
-    font-semibold
-    leading-[1.25]
-    sm:leading-[1.2]
-    md:leading-[1.15]
-    lg:leading-[1.1]
-    tracking-tight
-  "
->
-  {project.data.title}
-</h1>
-
+          class="
+            text-3xl
+            sm:text-4xl
+            md:text-5xl
+            lg:text-6xl
+            font-semibold
+            leading-[1.25]
+            sm:leading-[1.2]
+            md:leading-[1.15]
+            lg:leading-[1.1]
+            tracking-tight
+          "
+        >
+          {project.data.title}
+        </h1>
 
         <!-- Cover -->
         <div
@@ -161,11 +190,7 @@ const { Content } = await render(project);
         <div class="grid gap-10 md:grid-cols-[1fr_240px] md:gap-14">
           <!-- Left -->
           <div>
-            {summary && (
-              <p class="text-lg leading-relaxed text-primary-700">
-                {summary}
-              </p>
-            )}
+            {summary && <p class="text-lg leading-relaxed text-primary-700">{summary}</p>}
 
             {highlights.length > 0 && (
               <div class="mt-10">
@@ -246,6 +271,39 @@ const { Content } = await render(project);
           </div>
         )}
       </section>
+
+      <!-- ================= More selected work ================= -->
+      {relatedProjects.length > 0 && (
+        <section class="mt-16 md:mt-20">
+          <div class="flex items-start justify-between gap-6">
+            <h2 class="text-base font-semibold tracking-tight">More selected work</h2>
+
+            <!-- Desktop button: on the right, “Read full case” style logic -->
+            <a
+              href={backToWorkHref}
+              class="case-btn hidden md:inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold"
+            >
+              Back to Selected work
+            </a>
+          </div>
+
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {relatedProjects.map((p) => (
+              <ProjectCard project={p} currentLocale={currentLocale} />
+            ))}
+          </div>
+
+          <!-- Mobile button: text-width button placed AFTER the two cards -->
+          <div class="mt-6 md:hidden">
+            <a
+              href={backToWorkHref}
+              class="case-btn inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold"
+            >
+              Back to Selected work
+            </a>
+          </div>
+        </section>
+      )}
 
       <div class="h-24"></div>
     </div>
