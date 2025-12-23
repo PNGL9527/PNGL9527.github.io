@@ -1,0 +1,23 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 100 24"
+  width="100%"
+  height="24"
+  preserveAspectRatio="none"
+>
+  <!-- Left line -->
+  <line x1="0" y1="12" x2="44" y2="12" stroke="rgba(0,0,0,0.12)" stroke-width="1"/>
+
+  <!-- Logo mark -->
+  <image
+    href="/assets/global/logo-mark.svg"
+    x="46"
+    y="4"
+    height="16"
+    opacity="0.4"
+    preserveAspectRatio="xMidYMid meet"
+  />
+
+  <!-- Right line -->
+  <line x1="56" y1="12" x2="100" y2="12" stroke="rgba(0,0,0,0.12)" stroke-width="1"/>
+</svg>
