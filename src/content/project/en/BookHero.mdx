@@ -32,7 +32,7 @@ import LightboxImage from '@/components/LightboxImage.astro';
 
 Library resources in Anhui Jianzhu University are often underutilized, not due to lack of content, but due to how users perceive, access, and engage with institutional systems.
 
-<div className="mt-6 grid gap-6 md:grid-cols-2">
+<div className="mt-4 grid gap-4 md:grid-cols-2">
 
   <figure>
     <img
@@ -40,7 +40,7 @@ Library resources in Anhui Jianzhu University are often underutilized, not due t
       alt="Some books may be ignored by students and teachers."
       className="rounded-2xl w-full block"
     />
-    <figcaption className="mt-2 text-sm text-neutral-500">
+    <figcaption className="mt-1 text-sm text-neutral-500 leading-snug">
       Some books may be ignored by students and teachers.
     </figcaption>
   </figure>
@@ -51,7 +51,7 @@ Library resources in Anhui Jianzhu University are often underutilized, not due t
       alt="Large annual investments."
       className="rounded-2xl w-full block"
     />
-    <figcaption className="mt-2 text-sm text-neutral-500">
+    <figcaption className="mt-1 text-sm text-neutral-500 leading-snug">
       Large investments would be spent to construct the library resource annually.
     </figcaption>
   </figure>
@@ -64,16 +64,18 @@ I conducted a set of three research methods:
 - Top 200 student borrowing numbers analysis;
 - Existing library system and user touchpoints mapping.
 
-As a results, three key issues of the current system has been identified:
+As a results, three key issues of the current system based on the User Journey Map can be identified:
 
-### Issue 1 - Missed opportunities for co-construction
+<LightboxImage
+  src={`${import.meta.env.BASE_URL}assets/projects/bookhero/UJM_Prima.jpg`}
+  alt="BookHero user journey"
+  className="rounded-2xl w-full block"
+  caption="The User Journey Map of the current library system."
+/>
 
-
-### Issue 2 - Lack of ownership and participation
-
-
-### Issue 3 - Fragmented user journeys
-
+- Information Lag: Users struggle to get timely information of book resources (newly arrived & extant ones availability).
+- Locational Friction: Users cannot quickly find a book's exact shelf position.
+- Social Void: Lack of tools for sharing, rating, and peer-reviewing books.
 
 ## Design Opportunities
 
@@ -82,6 +84,7 @@ As such, three key opportunities were identified:
 - Support resource discovery beyond keyword search
 - Enable users to actively curate and share resources
 - Reframe the library as a participatory knowledge space
+
 ---
 
 ## The Solution
@@ -94,12 +97,7 @@ BookHero proposes a redesigned UX system that enables discovery, participation, 
   className="rounded-2xl w-full block"
 />
 
-<LightboxImage
-  src={`${import.meta.env.BASE_URL}assets/projects/bookhero/UJM_Prima.jpg`}
-  alt="BookHero user journey"
-  className="rounded-2xl w-full block"
-  caption="The User Journey Map of the current library system."
-/>
+
 
   
 ---
