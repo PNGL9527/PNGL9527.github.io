@@ -1,6 +1,6 @@
 ---
 title: "a.wear: App & Service Design for Teenager's Smart Wearables"
-description: "For Anhui Jianzhu University, improve usage of books in the library and make it easier for users to participate in the construction of library resources."
+description: "Smart wearable app service design with an interaction prototype focused on daily guidance and feedback loops."
 publishDate: 2025-01-01
 draft: false
 
@@ -33,70 +33,124 @@ caseUrl: "https://penglu.notion.site/a-wear-Smart-Wearable-App-Service-Design-2a
 
 ---
 
-## Why this project matters
+import LightboxImage from '@/components/LightboxImage.astro';
 
-### Current focus in automated mobility
-- Safety
-- Efficiency
-- Control
-- System performance
+## Overview
 
-### What is often overlooked
-- Lived experience
-- Pleasure
-- Human–vehicle relations
-- Contextual meaning
+One–two sentences: what the app does, who it is for, and what the prototype proves.
 
-![Problem framing diagram](/images/work/co-driving-pleasure/problem/problem-framing.webp)
+- **Goal:** …
+- **Users:** …
+- **Platform:** iOS / Android
+- **Prototype fidelity:** high-fidelity clickable prototype
 
----
+## Prototype
 
-## Research lens & approach
+**Primary CTA:** View interactive prototype  
+- Prototype link: (Figma / Framer / Marvel / etc.)
+- Optional: short note about recommended device / flow
 
-![Research lens and method structure](/images/work/co-driving-pleasure/research/research-lens.webp)
+### Prototype Walkthrough (60–90s)
 
-- **Theoretical lens**: Phenomenology and Technological Mediation  
-- **Methods**: Trip Experience Sampling and Phenomenological Interviews  
-- **Analytical focus**: Lived experience, co-driving patterns, and pleasure formation
+Embed a short video/GIF demo (optional but very effective).
 
----
+<div className="not-prose my-6">
+  <!-- Replace with your own video file / YouTube / Vimeo -->
+  <video className="w-full rounded-2xl" controls playsInline>
+    <source src={import.meta.env.BASE_URL + "assets/projects/a-wear/demo.mp4"} type="video/mp4" />
+  </video>
+</div>
 
-## Key insights
+## Key Flows
 
-### Pleasure is relational, not functional
-Co-driving pleasure does not arise from isolated vehicle features, but from the dynamic relationship between human intentions and vehicle agency.
+A prototype-first page should expose 3–5 “task stories” that a reviewer can scan fast.
 
-### Trust acts as a threshold for co-driving pleasure
-Pleasure only emerges when trust in the vehicle’s behavior is established and sustained over time.
+1. **Onboarding → device pairing → personalization**
+2. **Daily check-in → recommendation → action**
+3. **Real-time feedback → alert → resolution**
+4. **History → insights → behavior loop**
+5. **Settings → privacy / data control**
 
-### Pleasure takes multiple forms in co-driving
-Two major forms and five sub-types of pleasure were identified across different co-driving situations and contexts.
+For each flow, include 1–2 supporting screens (or one mini storyboard).
 
-![Key insights overview](/images/work/co-driving-pleasure/insights/key-insights.webp)
+<div className="not-prose mt-4 grid gap-3 md:grid-cols-2">
+  <figure className="m-0">
+    <LightboxImage
+      src={import.meta.env.BASE_URL + "assets/projects/a-wear/flow-1.png"}
+      alt="Flow 1 overview"
+      className="rounded-2xl w-full block"
+      caption="Flow 1: onboarding and personalization"
+    />
+  </figure>
+  <figure className="m-0">
+    <LightboxImage
+      src={import.meta.env.BASE_URL + "assets/projects/a-wear/flow-2.png"}
+      alt="Flow 2 overview"
+      className="rounded-2xl w-full block"
+      caption="Flow 2: daily loop and feedback"
+    />
+  </figure>
+</div>
 
----
+## Interaction Model
 
-## Design frameworks & models
+这一段是你要“强调交互原型”的核心：不是讲过程，而是讲你做出的交互决策。
 
-### Human–Vehicle Relation (HVR) Framework
+### Navigation & IA
 
-![Human–Vehicle Relation Framework](/images/work/co-driving-pleasure/frameworks/hvr-framework.webp)
+- Primary navigation: tabs / bottom nav / progressive disclosure
+- Key objects: device, plan, check-in, insights, alerts
 
-A conceptual framework describing how human intentions, vehicle agency, and contextual factors interact to shape different forms of human–vehicle relations in co-driving situations.
+### Feedback & States
 
----
+- Loading / empty / error states
+- Success confirmations
+- Critical alerts escalation
 
-### Co-Driving Pleasure Model
+### Microinteractions (Optional)
 
-![Co-Driving Pleasure Model](/images/work/co-driving-pleasure/frameworks/pleasure-model.webp)
+- Haptics, motion, progressive feedback, gestures
 
-A design-oriented model translating experiential insights into actionable levers that influence the emergence and quality of co-driving pleasure.
+## Design Rationale (Short)
 
----
+只写“为什么这样设计”，不要写“我做了哪些步骤”。
 
-## Design implications
+- Why the loop is structured this way …
+- Why feedback is shown as …
+- Why notifications are …
 
-- Designing *with* vehicle agency rather than against it  
-- Supporting negotiated control instead of binary automation  
-- Attending to experiential continuity across driving situations  
-- Treating pleasure as an experiential quality shaped over time, not a momentary feature
+## System Context (Minimal)
+
+用最小篇幅交代这个 app 在服务系统中的位置（如果你想保留 service design 的底色）。
+
+- Actors: user / wearable / service provider
+- Data flow: what is sensed → what is computed → what is shown
+- Constraints: privacy, battery, compliance, etc.
+
+(可放 1 张系统图)
+
+<div className="not-prose my-6 flex justify-center">
+  <img
+    src={import.meta.env.BASE_URL + "assets/projects/a-wear/system-map.png"}
+    alt="Service system overview"
+    style="display:block; width:100%; max-width:640px; border-radius:16px;"
+  />
+</div>
+
+## Prototype Coverage
+
+说明原型“覆盖到什么程度”，让面试官知道你做得有多完整。
+
+- Covered: onboarding, daily loop, insights, alerts, settings
+- Not covered: edge cases X/Y, account recovery, etc.
+
+## Outcome
+
+- Deliverable: interactive prototype + UI kit + flow specs
+- What this prototype demonstrates: …
+- Next step if continued: usability test / pilot / iteration
+
+## Credits & Tools
+
+- Tools: Figma, etc.
+- My contribution: interaction design, prototyping, UI, content, etc.
