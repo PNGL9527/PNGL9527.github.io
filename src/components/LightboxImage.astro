@@ -1,8 +1,8 @@
 ---
 const { src, alt = "", className = "", caption = "" } = Astro.props;
 
-// 为每个实例生成唯一 id，避免多图时选择器串台
-const id = `lb-${crypto.randomUUID()}`;
+// 生成一个足够唯一的 id（服务于同页多张图）
+const id = `lb-${Math.random().toString(36).slice(2, 10)}`;
 ---
 
 <figure class="m-0" data-lightbox-root={id}>
@@ -29,16 +29,13 @@ const id = `lb-${crypto.randomUUID()}`;
       src={src}
       alt={alt}
       class="max-h-[90vh] max-w-[90vw] rounded-2xl"
-      data-lightbox-large={id}
     />
   </div>
 </figure>
 
-<script>
-  // 用 IIFE 包裹，避免顶层 return
+<!-- IMPORTANT: use define:vars to pass id into the script -->
+<script define:vars={{ id }}>
   (() => {
-    const id = {JSON.stringify(id)};
-
     const thumb = document.querySelector(`[data-lightbox-thumb="${id}"]`);
     const overlay = document.querySelector(`[data-lightbox-overlay="${id}"]`);
 
