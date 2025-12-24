@@ -1,67 +1,69 @@
 ---
-const {
-  src,
-  alt = '',
-  className = '',
-  caption = '',
-} = Astro.props;
+const { src, alt = "", className = "", caption = "" } = Astro.props;
+
+// 为每个实例生成唯一 id，避免多图时选择器串台
+const id = `lb-${crypto.randomUUID()}`;
 ---
 
-<figure class="m-0" data-lightbox-root>
+<figure class="m-0" data-lightbox-root={id}>
   <!-- Thumbnail -->
   <img
     src={src}
     alt={alt}
     loading="lazy"
     class={`block w-full cursor-zoom-in ${className}`}
-    data-lightbox-thumb
+    data-lightbox-thumb={id}
   />
 
-  {caption && (
-    <figcaption class="mt-2 text-sm text-neutral-500">
-      {caption}
-    </figcaption>
-  )}
+  {caption ? (
+    <figcaption class="mt-2 text-sm text-neutral-500">{caption}</figcaption>
+  ) : null}
 
   <!-- Overlay -->
   <div
     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4"
-    data-lightbox-overlay
+    aria-hidden="true"
+    data-lightbox-overlay={id}
   >
     <img
       src={src}
       alt={alt}
       class="max-h-[90vh] max-w-[90vw] rounded-2xl"
+      data-lightbox-large={id}
     />
   </div>
 </figure>
 
 <script>
-  // IMPORTANT: do NOT use document.currentScript
-  const root = document.querySelector('[data-lightbox-root]:last-of-type');
-  if (!root) return;
+  // 用 IIFE 包裹，避免顶层 return
+  (() => {
+    const id = {JSON.stringify(id)};
 
-  const thumb = root.querySelector('[data-lightbox-thumb]');
-  const overlay = root.querySelector('[data-lightbox-overlay]');
+    const thumb = document.querySelector(`[data-lightbox-thumb="${id}"]`);
+    const overlay = document.querySelector(`[data-lightbox-overlay="${id}"]`);
 
-  if (!thumb || !overlay) return;
+    if (!thumb || !overlay) return;
 
-  const open = () => {
-    overlay.classList.remove('hidden');
-    overlay.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-  };
+    const open = () => {
+      overlay.classList.remove("hidden");
+      overlay.classList.add("flex");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    };
 
-  const close = () => {
-    overlay.classList.add('hidden');
-    overlay.classList.remove('flex');
-    document.body.style.overflow = '';
-  };
+    const close = () => {
+      overlay.classList.add("hidden");
+      overlay.classList.remove("flex");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
 
-  thumb.addEventListener('click', open);
-  overlay.addEventListener('click', close);
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") close();
+    };
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') close();
-  });
+    thumb.addEventListener("click", open);
+    overlay.addEventListener("click", close);
+    document.addEventListener("keydown", onKeyDown);
+  })();
 </script>
