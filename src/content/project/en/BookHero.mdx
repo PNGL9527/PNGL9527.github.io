@@ -30,31 +30,34 @@ import LightboxImage from '@/components/LightboxImage.astro';
 
 ## The Problem
 
-Library resources in Anhui Jianzhu University are often underutilized, not due to lack of content, but due to how users perceive, access, and engage with institutional systems.
+<p className="mb-4">
+  Library resources in Anhui Jianzhu University are often underutilized, not due to lack of content, but due to how users perceive, access, and engage with institutional systems.
+</p>
 
-<div className="mt-4 grid gap-4 md:grid-cols-2">
-  <figure>
+<div className="not-prose mt-0 grid gap-3 md:grid-cols-2">
+  <figure className="m-0">
     <img
-      src={`${import.meta.env.BASE_URL}assets/projects/bookhero/current_situation.jpg`}
+      src={import.meta.env.BASE_URL + "assets/projects/bookhero/current_situation.jpg"}
       alt="Some books may be ignored by students and teachers."
-      className="rounded-2xl w-full block"
+      className="block w-full rounded-2xl"
     />
-    <figcaption className="mt-1 text-sm text-neutral-500 leading-snug">
+    <figcaption className="mt-1 text-sm leading-snug text-neutral-500">
       Some books may be ignored by students and teachers.
     </figcaption>
   </figure>
 
-  <figure>
+  <figure className="m-0">
     <img
-      src={`${import.meta.env.BASE_URL}assets/projects/bookhero/construction_process.jpg`}
+      src={import.meta.env.BASE_URL + "assets/projects/bookhero/construction_process.jpg"}
       alt="Large annual investments."
-      className="rounded-2xl w-full block"
+      className="block w-full rounded-2xl"
     />
-    <figcaption className="mt-1 text-sm text-neutral-500 leading-snug">
+    <figcaption className="mt-1 text-sm leading-snug text-neutral-500">
       Large investments would be spent to construct the library resource annually.
     </figcaption>
   </figure>
 </div>
+
 
 ## Research Insights
 
