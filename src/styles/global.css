@@ -6,6 +6,10 @@
 /*  Make sure you have loaded the fonts (e.g. via Google Fonts <link> tags).   */
 /* -------------------------------------------------------------------------- */
 
+/* ADD THIS */
+@source "../../src/content/**/*.{md,mdx}";
+/* (可选) 如果你的 mdx 不在 src/content，而在别处，按实际路径改 */
+
 @theme inline {
   --font-*: initial;
 
