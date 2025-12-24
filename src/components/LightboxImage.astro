@@ -1,16 +1,4 @@
 ---
-/**
- * LightboxImage.astro
- * Usage (in MDX):
- *   import LightboxImage from '@/components/LightboxImage.astro';
- *   <LightboxImage
- *     src={`${import.meta.env.BASE_URL}assets/projects/bookhero/image-1.png`}
- *     alt="Book service system"
- *     className="rounded-2xl w-full"
- *     caption="Book service system"
- *   />
- */
-
 const {
   src,
   alt = '',
@@ -19,7 +7,7 @@ const {
 } = Astro.props;
 ---
 
-<figure class="m-0">
+<figure class="m-0" data-lightbox-root>
   <!-- Thumbnail -->
   <img
     src={src}
@@ -29,72 +17,51 @@ const {
     data-lightbox-thumb
   />
 
-  {caption ? (
+  {caption && (
     <figcaption class="mt-2 text-sm text-neutral-500">
       {caption}
     </figcaption>
-  ) : null}
+  )}
 
-  <!-- Overlay (hidden by default) -->
+  <!-- Overlay -->
   <div
     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4"
-    aria-hidden="true"
     data-lightbox-overlay
   >
-    <div class="relative">
-      <!-- Large image -->
-      <img
-        src={src}
-        alt={alt}
-        class="max-h-[90vh] max-w-[90vw] rounded-2xl"
-        data-lightbox-large
-      />
-
-      <!-- Optional close hint (click anywhere to close) -->
-      <div class="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 text-xs text-white/70">
-        Click anywhere to close · Press ESC
-      </div>
-    </div>
+    <img
+      src={src}
+      alt={alt}
+      class="max-h-[90vh] max-w-[90vw] rounded-2xl"
+    />
   </div>
 </figure>
 
 <script>
-  const root = document.currentScript.closest('figure');
-  const thumb = root?.querySelector('[data-lightbox-thumb]');
-  const overlay = root?.querySelector('[data-lightbox-overlay]');
+  // IMPORTANT: do NOT use document.currentScript
+  const root = document.querySelector('[data-lightbox-root]:last-of-type');
+  if (!root) return;
 
-  if (!thumb || !overlay) {
-    console.warn('[LightboxImage] Missing elements.');
-  } else {
-    const open = () => {
-      overlay.classList.remove('hidden');
-      overlay.classList.add('flex');
-      overlay.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    };
+  const thumb = root.querySelector('[data-lightbox-thumb]');
+  const overlay = root.querySelector('[data-lightbox-overlay]');
 
-    const close = () => {
-      overlay.classList.add('hidden');
-      overlay.classList.remove('flex');
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    };
+  if (!thumb || !overlay) return;
 
-    const onKeyDown = (e) => {
-      if (e.key === 'Escape') close();
-    };
+  const open = () => {
+    overlay.classList.remove('hidden');
+    overlay.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  };
 
-    thumb.addEventListener('click', open);
+  const close = () => {
+    overlay.classList.add('hidden');
+    overlay.classList.remove('flex');
+    document.body.style.overflow = '';
+  };
 
-    // Click on overlay closes (including clicking the large image)
-    overlay.addEventListener('click', close);
+  thumb.addEventListener('click', open);
+  overlay.addEventListener('click', close);
 
-    // ESC closes
-    document.addEventListener('keydown', onKeyDown);
-
-    // Cleanup if Astro swaps/rehydrates (safe no-op in most cases)
-    window.addEventListener('beforeunload', () => {
-      document.removeEventListener('keydown', onKeyDown);
-    });
-  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
 </script>
