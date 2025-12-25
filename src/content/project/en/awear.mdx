@@ -127,62 +127,87 @@ To deliver on this principle, a.wear was conceived as a **Product-Service System
 
 A prototype-first page should expose 3–5 “task stories” that a reviewer can scan fast.
 
-1. **Onboarding → device pairing → personalization**
+<div
+  style={{
+    display: "grid",
+    gap: "32px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+    margin: "2rem 0",
+  }}
+>
+  {/* Flow 1 */}
+  <div style={{ textAlign: "center" }}>
+    <p style={{ fontWeight: 600 }}>
+      1. Onboarding → device pairing → personalization
+    </p>
+    <img
+      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_1.gif"}
+      alt="Key Flow: onboarding"
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth: "360px",
+        margin: "1rem auto 0",
+        borderRadius: "16px",
+      }}
+    />
+  </div>
 
-<div style="margin: 1.5rem 0; display:flex; justify-content:center;">
-  <img
-    src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_1.gif"}
-    alt="Key Flow: onboarding"
-    style="
-      display:block;
-      width:100%;
-      max-width: min(360px, 92vw);
-      border-radius:16px;"
-  />
+  {/* Flow 2 */}
+  <div style={{ textAlign: "center" }}>
+    <p style={{ fontWeight: 600 }}>
+      2. Real-time feedback → alert → resolution
+    </p>
+    <img
+      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_2.gif"}
+      alt="Key Flow: real-time feedback"
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth: "360px",
+        margin: "1rem auto 0",
+        borderRadius: "16px",
+      }}
+    />
+  </div>
+
+  {/* Flow 3 */}
+  <div style={{ textAlign: "center" }}>
+    <p style={{ fontWeight: 600 }}>
+      3. Interactive Cloud → insights → behavior loop
+    </p>
+    <img
+      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_3.gif"}
+      alt="Key Flow: interactive cloud"
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth: "360px",
+        margin: "1rem auto 0",
+        borderRadius: "16px",
+      }}
+    />
+  </div>
+
+  {/* Flow 4 */}
+  <div style={{ textAlign: "center" }}>
+    <p style={{ fontWeight: 600 }}>
+      4. Settings → privacy / data control
+    </p>
+    <img
+      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_4.gif"}
+      alt="Key Flow: settings"
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth: "360px",
+        margin: "1rem auto 0",
+        borderRadius: "16px",
+      }}
+    />
+  </div>
 </div>
 
-
-2. **Real-time feedback → alert → resolution**
-
-<div style="margin: 1.5rem 0; display:flex; justify-content:center;">
-  <img
-    src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_2.gif"}
-    alt="Key Flow: real-time feedback"
-    style="
-      display:block;
-      width:100%;
-      max-width: min(360px, 92vw);
-      border-radius:16px;"
-  />
-</div>
-
-3. **Interactive Cloud → insights → behavior loop**
-
-<div style="margin: 1.5rem 0; display:flex; justify-content:center;">
-  <img
-    src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_3.gif"}
-    alt="Key Flow: interactive cloud"
-    style="
-      display:block;
-      width:100%;
-      max-width: min(360px, 92vw);
-      border-radius:16px;"
-  />
-</div>
-
-4. **Settings → privacy / data control**
-
-<div style="margin: 1.5rem 0; display:flex; justify-content:center;">
-  <img
-    src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_4.gif"}
-    alt="Key Flow: Settings"
-    style="
-      display:block;
-      width:100%;
-      max-width: min(360px, 92vw);
-      border-radius:16px;"
-  />
-</div>
 
 ## Design Rationale (Short)
 
@@ -192,10 +217,7 @@ A prototype-first page should expose 3–5 “task stories” that a reviewer ca
 - Why feedback is shown as …
 - Why notifications are …
 
-### Prototype Coverage
 
-- Covered: onboarding, daily loop, insights, alerts, viberator settings, system settings
-- Not covered: edge cases, account recovery, etc.
 
 ---
 
