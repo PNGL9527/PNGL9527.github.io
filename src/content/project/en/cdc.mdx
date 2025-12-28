@@ -175,18 +175,18 @@ With the service toolkit, CdC can offer training for small businesses with 4 dir
   </figcaption>
 </figure>
 
-
 <div className="mt-6 space-y-3">
-  <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+  <div className="w-full overflow-hidden rounded-2xl border border-black/10 bg-black/5">
     <iframe
-      src={`${import.meta.env.BASE_URL}assets/projects/cdc/cdc_blueprint.pdf#view=FitH`}
-      className="h-full w-full"
+      src={new URL("assets/projects/cdc/cdc_blueprint.pdf#view=FitH", import.meta.env.BASE_URL).toString()}
+      className="h-[70vh] w-full"
       title="Service Blueprint"
+      allowfullscreen
     />
   </div>
 
   <a
-    href={`${import.meta.env.BASE_URL}assets/projects/cdc/cdc_blueprint.pdf`}
+    href={new URL("assets/projects/cdc/cdc_blueprint.pdf", import.meta.env.BASE_URL).toString()}
     target="_blank"
     rel="noopener noreferrer"
     className="case-btn inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold"
@@ -194,6 +194,7 @@ With the service toolkit, CdC can offer training for small businesses with 4 dir
     Open PDF
   </a>
 </div>
+
 
 ---
 
