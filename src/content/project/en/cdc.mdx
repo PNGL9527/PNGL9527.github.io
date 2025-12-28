@@ -36,7 +36,7 @@ This project explores the renewal of the Milan Chamber of Commerce (CdC) through
     alt="The Renewal Concept of the Milan Chamber of Commerce"
     className="rounded-2xl w-full block"
   />
-  <figcaption class="mt-2 text-sm leading-snug text-neutral-500">
+  <figcaption class="mt-2 text-sm leading-snug text-neutral-500  text-center">
     The Renewal Concept of the Milan Chamber of Commerce.
   </figcaption>
 </figure>
@@ -49,7 +49,7 @@ This project explores the renewal of the Milan Chamber of Commerce (CdC) through
       alt="Some rendering of interor renewal."
       className="block w-full rounded-2xl"
     />
-    <figcaption className="mt-2 text-sm leading-snug text-neutral-500">
+    <figcaption className="mt-2 text-sm leading-snug text-neutral-500  text-center">
       Some rendering of interor renewal.
     </figcaption>
   </figure>
@@ -60,7 +60,7 @@ This project explores the renewal of the Milan Chamber of Commerce (CdC) through
     alt="Map of renewal concept of the Salone del Futuro."
     className="rounded-2xl w-full block"
   />
-  <figcaption class="mt-2 text-sm leading-snug text-neutral-500">
+  <figcaption class="mt-2 text-sm leading-snug text-neutral-500  text-center">
     Map of renewal concept of the Salone del Futuro.
   </figcaption>
 </figure>
@@ -109,7 +109,7 @@ The program aims to develop more resilient small and micro enterprises, offering
     alt="The creation part of the proposed new roles of the CdC"
     className="rounded-2xl w-full block"
   />
-  <figcaption class="mt-2 text-sm leading-snug text-neutral-500">
+  <figcaption class="mt-2 text-sm leading-snug text-neutral-500  text-center">
     CdC's new role of creation.
   </figcaption>
 </figure>
@@ -152,7 +152,7 @@ In our design concept, CdC also offers the training service for small businesses
     alt="The service kits part of the proposed new roles of the CdC"
     className="rounded-2xl w-full block"
   />
-  <figcaption class="mt-2 text-sm leading-snug text-neutral-500">
+  <figcaption class="mt-2 text-sm leading-snug text-neutral-500  text-center">
     The service toolkit facilitating the Service role of the CdC.
   </figcaption>
 </figure>
@@ -171,10 +171,30 @@ With the service toolkit, CdC can offer training for small businesses with 4 dir
     alt="The service app part of the proposed new roles of the CdC"
     className="rounded-2xl w-full block"
   />
-  <figcaption class="mt-2 text-sm leading-snug text-neutral-500">
+  <figcaption class="mt-2 text-sm leading-snug text-neutral-500  text-center">
     The service app coordinating the training service offer by the CdC.
   </figcaption>
 </figure>
+
+
+<div className="mt-6 space-y-3">
+  <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/5">
+    <iframe
+      src={`${import.meta.env.BASE_URL}assets/projects/cdc/delivery-map.pdf#view=FitH`}
+      className="h-full w-full"
+      title="Service Blueprint"
+    />
+  </div>
+
+  <a
+    href={`${import.meta.env.BASE_URL}assets/projects/cdc/cdc_blueprint.pdf`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="case-btn inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold"
+  >
+    Open PDF (full screen)
+  </a>
+</div>
 
 ---
 
