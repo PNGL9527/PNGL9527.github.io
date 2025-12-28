@@ -1,0 +1,245 @@
+---
+title: "a.wear: App & Service Design for Teenager's Smart Wearables"
+description: "Smart wearable app service design with an interaction prototype focused on daily guidance and feedback loops."
+publishDate: 2025-01-01
+draft: ture
+
+thumbnail: /assets/projects/awear/cover.jpg
+thumbnailAlt: Cover image for awear
+
+type: Service
+
+tags:
+  - Smart Wearable
+  - UX/UI Design
+  - Prototype
+
+
+highlights:
+  - "Context: smart wearable + daily self-management"
+  - "Design focus: interaction prototype for guidance and feedback"
+  - "Outcome: high-fidelity clickable app prototype"
+
+caseUrl: "https://penglu.notion.site/a-wear-Smart-Wearable-App-Service-Design-2a9813165f488063b47fd70be164c8c1"
+
+---
+
+import LightboxImage from '@/components/LightboxImage.astro';
+
+
+
+## The Project Context
+
+The project's vision was to promote ***Uniqueness and Self-Acceptance*** by enabling teenagers *to feel more comfortable with the physiological changes they experience*.
+
+To solve this, we moved beyond just a product and defined a customized service strategy to help teenagers:
+1. Understand and love their bodies better.
+2. Focus on self-improvement through physical activity and regular feedback.
+
+### System Overview: Bridging Biometrics and Emotional Well-being
+
+To deliver on this principle, a.wear was conceived as a **Product-Service System (PSS)** that translates physical change into actionable, positive digital feedback.
+
+<LightboxImage
+  src={`${import.meta.env.BASE_URL}assets/projects/awear/awear_system.jpg`}
+  alt="System Overview of a.wear"
+  className="rounded-2xl w-full block"
+  caption="System Overview of a.wear."
+/>
+
+### Why an App?
+
+<LightboxImage
+  src={`${import.meta.env.BASE_URL}assets/projects/awear/awear_app.jpg`}
+  alt="The a.wear App"
+  className="rounded-2xl w-full block"
+  caption="The a.wear App."
+/>
+
+- **Continuous interaction:** The problem unfolds across the day, not at a single moment  
+- **Personalized feedback loops:** Data interpretation and guidance require contextual adaptation  
+- **Coordination hub:** The app mediates between wearable sensing, user reflection, and action  
+
+---
+
+## Prototype
+
+<div className="not-prose my-8">
+  <div
+    style={{
+      display: "grid",
+      gap: "24px",
+      gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+      alignItems: "start",
+    }}
+  >
+    {/* Prototype A */}
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "420px",
+        margin: "0 auto",
+        borderRadius: "16px",
+        overflow: "hidden",
+        border: "1px solid rgba(0,0,0,0.10)",
+        aspectRatio: "9 / 16",
+        background: "#fff",
+      }}
+    >
+      <iframe
+        src="https://cloud.protopie.io/p/cv3ZUTKQv5k/"
+        title="a-wear ProtoPie Prototype – Flow A"
+        style={{ width: "100%", height: "100%", border: "0" }}
+        loading="lazy"
+        allow="fullscreen; clipboard-read; clipboard-write"
+        allowFullScreen
+      />
+    </div>
+
+    {/* Prototype B */}
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "420px",
+        margin: "0 auto",
+        borderRadius: "16px",
+        overflow: "hidden",
+        border: "1px solid rgba(0,0,0,0.10)",
+        aspectRatio: "9 / 16",
+        background: "#fff",
+      }}
+    >
+      <iframe
+        src="https://cloud.protopie.io/p/6nbrAGkYh9e/"
+        title="a-wear ProtoPie Prototype – Flow B"
+        style={{ width: "100%", height: "100%", border: "0" }}
+        loading="lazy"
+        allow="fullscreen; clipboard-read; clipboard-write"
+        allowFullScreen
+      />
+    </div>
+  </div>
+</div>
+
+
+#### Prototype Coverage
+
+- Covered: onboarding, daily loop, insights, alerts, vibrator setting, system settings
+- Not covered: edge cases, account recovery, battery charging, etc.
+
+---
+
+## Key Flows
+
+<div
+  style={{
+    display: "grid",
+    gap: "32px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+    margin: "2rem 0",
+  }}
+>
+  {/* Flow 1 */}
+  <div style={{ textAlign: "left" }}>
+    <p style={{ fontWeight: 600 }}>
+      **1. Onboarding → device pairing → personalization**
+    </p>
+    <img
+      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_1.gif"}
+      alt="Key Flow: onboarding"
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth: "360px",
+        margin: "1rem auto 0",
+        borderRadius: "16px",
+      }}
+    />
+  </div>
+
+  {/* Flow 2 */}
+  <div style={{ textAlign: "left" }}>
+    <p style={{ fontWeight: 600 }}>
+      **2. Real-time feedback → alert → resolution**
+    </p>
+    <img
+      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_2.gif"}
+      alt="Key Flow: real-time feedback"
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth: "360px",
+        margin: "1rem auto 0",
+        borderRadius: "16px",
+      }}
+    />
+  </div>
+
+  {/* Flow 3 */}
+  <div style={{ textAlign: "left" }}>
+    <p style={{ fontWeight: 600 }}>
+      **3. Interactive Cloud → insights → behavior loop**
+    </p>
+    <img
+      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_3.gif"}
+      alt="Key Flow: interactive cloud"
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth: "360px",
+        margin: "1rem auto 0",
+        borderRadius: "16px",
+      }}
+    />
+  </div>
+
+  {/* Flow 4 */}
+  <div style={{ textAlign: "left" }}>
+    <p style={{ fontWeight: 600 }}>
+      **4. Settings → privacy / data control**
+    </p>
+    <img
+      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_4.gif"}
+      alt="Key Flow: settings"
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth: "360px",
+        margin: "1rem auto 0",
+        borderRadius: "16px",
+      }}
+    />
+  </div>
+</div>
+
+---
+
+## Design Rationale
+
+- **Data-to-Action Feedback Loop:** Eliminating Friction
+- **Gamification & Novel Interaction:** Expressive & Playful Visual Language
+- **Sensitive Data Configuration:** Designing with Empathy
+
+---
+
+## Outcome
+
+- Successfully translated a sensitive emotional issue (teen body image pressure) into an empathetic, actionable app experience.
+- Dual-mode feedback (immediate alerts vs. casual cloud prompts) balanced guidance, autonomy, and non-judgmental interaction.
+- Expressive, gamified UI elements proved effective in building trust, engagement, and a youth-oriented brand identity.
+
+---
+
+## Reflection
+- Designing for health-sensitive contexts requires low-friction, conversational feedback rather than metric-heavy, didactic UI.
+- Integrating app UX with physical hardware highlighted the importance of simple, on-demand control over complex configurations.
+- Limited time restricted iterative testing with teenage users, especially for fine-tuning emotional tone and alert phrasing.
+
+---
+
+## Credits & Tools
+
+- Tools: Sketch, ProtoPie, etc.
+- My contribution: interaction design, prototyping, UI, content, etc.
+
+---
