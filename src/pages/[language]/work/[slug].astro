@@ -244,19 +244,29 @@ const backToWorkHref = `/${currentLocale}/work`;
         )}
 
         <!-- Read full case: moved to the very end of the body -->
-        {caseUrl && (
-          <div class="mt-12 flex justify-center">
-            <a
-              href={caseUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="case-btn inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-2 font-semibold md:w-auto"
-            >
-              Read full case
-              <Icon name="material-symbols:open-in-new-rounded" size={18} />
-            </a>
-          </div>
-        )}
+
+{caseUrl && (
+  <div class="mt-12 flex flex-col items-center gap-4 text-center">
+    <p class="max-w-[36rem] text-sm leading-relaxed text-neutral-500">
+      <em>
+        This page presents a curated overview of the project.
+        The full case includes detailed research, design iterations,
+        and reflections.
+      </em>
+    </p>
+
+    <a
+      href={caseUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="case-btn inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold md:w-auto w-full"
+    >
+      Read full case
+      <Icon name="material-symbols:open-in-new-rounded" size={18} />
+    </a>
+  </div>
+)}
+
       </section>
 
       <!-- ================= More selected work ================= -->
