@@ -176,10 +176,11 @@ const backToWorkHref = `/${currentLocale}/work`;
             ))}
         </div>
       </section>
-
-      <!-- ================= Overview ================= -->
+   
+<!-- ================= Overview ================= -->
       <section class="mt-12">
         <div class="space-y-10">
+          <div>
             {summary && <p class="text-lg leading-relaxed text-primary-700">{summary}</p>}
 
             {highlights.length > 0 && (
@@ -194,8 +195,11 @@ const backToWorkHref = `/${currentLocale}/work`;
                   ))}
                 </ul>
               </div>
+            )}
+          </div>
         </div>
       </section>
+
 
       <!-- ================= Body ================= -->
       <section class="mt-12">
