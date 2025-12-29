@@ -52,7 +52,7 @@ const typeToIcon: Record<string, string> = {
 const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
 
 /* ---------------- Content ---------------- */
-const tags: string[] = Array.isArray(project.data.tags) ? project.data.tags : [];
+
 const caseUrl: string = project.data.caseUrl ?? '';
 const cover = project.data.thumbnail ?? null;
 const coverAlt = project.data.thumbnailAlt ?? project.data.title;
@@ -94,11 +94,6 @@ const backToWorkHref = `/${currentLocale}/work`;
 ---
 
 <style is:inline>
-  /* ---------- Tag (Twitter-like text) ---------- */
-  .tag-text {
-    color: rgba(0, 0, 0, 0.6);
-    font-size: 0.875rem;
-  }
 
   /* ---------- CTA buttons ---------- */
   .case-btn {
@@ -184,9 +179,7 @@ const backToWorkHref = `/${currentLocale}/work`;
 
       <!-- ================= Overview ================= -->
       <section class="mt-12">
-        <div class="grid gap-10 md:grid-cols-[1fr_240px] md:gap-14">
-          <!-- Left -->
-          <div>
+        <div class="space-y-10">
             {summary && <p class="text-lg leading-relaxed text-primary-700">{summary}</p>}
 
             {highlights.length > 0 && (
@@ -201,22 +194,6 @@ const backToWorkHref = `/${currentLocale}/work`;
                   ))}
                 </ul>
               </div>
-            )}
-          </div>
-
-          <!-- Right (desktop) -->
-          <aside class="space-y-6 hidden md:block">
-            {tags.length > 0 && (
-              <div>
-                <div class="mb-3 text-sm font-semibold opacity-70">Tags</div>
-                <ul class="list-disc pl-4 space-y-1 text-neutral-600">
-                  {tags.map((tag) => (
-                    <li>{tag}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </aside>
         </div>
       </section>
 
@@ -225,23 +202,6 @@ const backToWorkHref = `/${currentLocale}/work`;
         <div class="case-prose prose prose-zinc max-w-none">
           <Content />
         </div>
-
-        <!-- Mobile: tags at bottom -->
-        {tags.length > 0 && (
-          <div class="mt-12 md:hidden space-y-8">
-            <details class="rounded-2xl border border-black/10 bg-black/5 p-4">
-              <summary class="flex cursor-pointer justify-between text-sm font-semibold">
-                Tags <span>+</span>
-              </summary>
-
-              <ul class="mt-4 list-disc pl-4 space-y-1 text-neutral-600">
-                {tags.map((tag) => (
-                  <li>{tag}</li>
-                ))}
-              </ul>
-            </details>
-          </div>
-        )}
 
         <!-- Read full case: moved to the very end of the body -->
 
