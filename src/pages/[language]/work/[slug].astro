@@ -209,24 +209,12 @@ const backToWorkHref = `/${currentLocale}/work`;
             {tags.length > 0 && (
               <div>
                 <div class="mb-3 text-sm font-semibold opacity-70">Tags</div>
-                      <ul class="list-disc pl-4 space-y-1 text-neutral-600">
-        {tags.map((tag) => (
-          <li>{tag}</li>
-        ))}
-      </ul>
+                <ul class="list-disc pl-4 space-y-1 text-neutral-600">
+                  {tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
               </div>
-            )}
-
-            {caseUrl && (
-              <a
-                href={caseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="case-btn inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 font-semibold"
-              >
-                Read full case
-                <Icon name="material-symbols:open-in-new-rounded" size={18} />
-              </a>
             )}
           </aside>
         </div>
@@ -238,35 +226,35 @@ const backToWorkHref = `/${currentLocale}/work`;
           <Content />
         </div>
 
-        <!-- Mobile: tags + CTA at bottom -->
-        {(tags.length > 0 || caseUrl) && (
+        <!-- Mobile: tags at bottom -->
+        {tags.length > 0 && (
           <div class="mt-12 md:hidden space-y-8">
-{tags.length > 0 && (
-  <details class="rounded-2xl border border-black/10 bg-black/5 p-4">
-    <summary class="flex cursor-pointer justify-between text-sm font-semibold">
-      Tags <span>+</span>
-    </summary>
+            <details class="rounded-2xl border border-black/10 bg-black/5 p-4">
+              <summary class="flex cursor-pointer justify-between text-sm font-semibold">
+                Tags <span>+</span>
+              </summary>
 
-    <ul class="mt-4 list-disc pl-4 space-y-1 text-neutral-600">
-      {tags.map((tag) => (
-        <li>{tag}</li>
-      ))}
-    </ul>
-  </details>
-)}
+              <ul class="mt-4 list-disc pl-4 space-y-1 text-neutral-600">
+                {tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+            </details>
+          </div>
+        )}
 
-
-            {caseUrl && (
-              <a
-                href={caseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="case-btn inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-5 font-semibold"
-              >
-                Read full case
-                <Icon name="material-symbols:open-in-new-rounded" size={18} />
-              </a>
-            )}
+        <!-- Read full case: moved to the very end of the body -->
+        {caseUrl && (
+          <div class="mt-12 flex justify-center">
+            <a
+              href={caseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="case-btn inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-2 font-semibold md:w-auto"
+            >
+              Read full case
+              <Icon name="material-symbols:open-in-new-rounded" size={18} />
+            </a>
           </div>
         )}
       </section>
@@ -276,11 +264,10 @@ const backToWorkHref = `/${currentLocale}/work`;
         <section class="mt-16 md:mt-20">
           <div class="flex items-start justify-between gap-6">
             <h2 class="text-xl sm:text-2xl font-semibold tracking-tight">
-  Continue exploring
-</h2>
+              Continue exploring
+            </h2>
 
-
-            <!-- Desktop button: on the right, “Read full case” style logic -->
+            <!-- Desktop button: on the right -->
             <a
               href={backToWorkHref}
               class="case-btn hidden md:inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold"
@@ -295,16 +282,15 @@ const backToWorkHref = `/${currentLocale}/work`;
             ))}
           </div>
 
-          <!-- Mobile button: text-width button placed AFTER the two cards -->
-<div class="mt-6 md:hidden">
-  <a
-    href={backToWorkHref}
-    class="case-btn inline-flex w-full items-center justify-center rounded-full px-6 py-5 font-semibold"
-  >
-    View all projects
-  </a>
-</div>
-
+          <!-- Mobile button: full-width button AFTER the two cards -->
+          <div class="mt-6 md:hidden">
+            <a
+              href={backToWorkHref}
+              class="case-btn inline-flex w-full items-center justify-center rounded-full px-6 py-5 font-semibold"
+            >
+              View all projects
+            </a>
+          </div>
         </section>
       )}
 
