@@ -32,10 +32,14 @@ import LightboxImage from '@/components/LightboxImage.astro';
 
 ---
 
-## Problem
+## Context
+BookHero is a UX & Service Design project addressing usability issues in the university library system. The goal was to improve how students discover, borrow, and interact with library resources across digital and physical touchpoints.
 
 
-Library resources in Anhui Jianzhu University are often underutilized, not due to lack of content, but due to how users perceive, access, and engage with institutional systems.
+
+## Problem Statement
+
+The existing library experience presented multiple friction points: unclear book discovery pathways, inconsistent information across digital and physical interfaces, and fragmented checkout processes. These issues caused confusion, longer task times, and poor perceived usefulness of the library system.
 
 
   <figure className="m-0">
@@ -54,8 +58,9 @@ Library resources in Anhui Jianzhu University are often underutilized, not due t
 *How might we "save" these ignored books and cut down unnecessary waste investments?*
 
 
-## Research Strategy & Methods
+## Users & Methods
 
+I conducted contextual user research involving 10+ library users through interviews and walk-along observations. The goals were to understand how users seek books, navigate library spaces, and engage with existing digital systems.
 
 <LightboxImage
   src={`${import.meta.env.BASE_URL}assets/projects/bookhero/bookhero_method.jpg`}
@@ -72,7 +77,7 @@ This parallel structure ensured that both institutional constraints and user beh
 
 These methods informed the following key insights that underpinned the design opportunities below.
 
-## Key Insights
+## Key UX Insights
 
 Following this research strategy, we identified three core issues of the current library system:
 
@@ -83,13 +88,13 @@ Following this research strategy, we identified three core issues of the current
   caption="Current User Journey Map (As-Is)"
 />
 
-- **Information Lag:** Users struggle to get timely information on book resources (newly arrived & extant ones' availability).
-- **Locational Friction:** Users cannot quickly find a book's exact shelf position.
-- **Social Void:** Lack of tools for sharing, rating, and peer-reviewing books.
+- **Information Lag:** Users experienced frustration when the expected book status did not match the on-shelf reality.
+- **Locational Friction:** The transition between digital search and physical location guidance was discontinuous. Users cannot quickly find a book's exact shelf position.
+- **Social Void:** The extant system lacks tools for sharing, rating, and peer-reviewing books.
 
-## Design Opportunities
+## UX Problem Prioritization & Design Opportunities
 
-As such, three key opportunities were identified:
+Based on severity and frequency, we prioritized the problems that had the largest negative impact on users’ primary goals. As such, three key opportunities were identified:
 
 #### Design Opportunity #1: Eliminating Information Acquisition Friction
 
@@ -143,9 +148,12 @@ The BookHero App redesign is structured around four interconnected modules—Sea
 
 ---
 
-## Selected Screens: Responding to Design Opportunities
+## The Selected Artifacts: Responding to Design Opportunities
 
 ### Opportunity #1: Eliminating Information Acquisition Friction
+
+#### Interaction Flow
+User starts at homepage → enters keyword → filter results → selects a book → receives map directions  / books the resource / makes comments / shares the book.
 
 <LightboxImage
   src={`${import.meta.env.BASE_URL}assets/projects/bookhero/bookhero_op1.jpg`}
@@ -155,6 +163,10 @@ The BookHero App redesign is structured around four interconnected modules—Sea
 />
 
 ### Opportunity #2: Enabling Low-Friction Resource Acquisition
+
+#### Interaction Flow
+
+User selects a book → receives map directions → goes to shelf → checks out.
 
 <LightboxImage
   src={`${import.meta.env.BASE_URL}assets/projects/bookhero/bookhero_op2.jpg`}
