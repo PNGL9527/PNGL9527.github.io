@@ -13,14 +13,35 @@ export const collections = {
     loader: glob({ pattern: '**/[^_]*.mdx', base: './src/content/project' }),
 
     // ✅ IMPORTANT: image() comes from this function parameter
-    schema: ({ image }) =>
+    schema: () =>
       z.object({
         draft: z.boolean().default(false),
         hasContainerized: z.boolean().optional(),
         title: z.string(),
         description: z.string(),
 
-        type: z.enum(['Research', 'Product', 'Service', 'Strategy', 'Prototype']).optional(),
+        type: z
+          .enum([
+            'Research',
+            'Tool',
+            'Product',
+            'Service',
+            'Strategy',
+            'Prototype',
+            'Spatial',
+            'Teaching',
+            'Experiment',
+          ])
+          .optional(),
+        section: z
+          .enum(['research-tools', 'design-practice', 'teaching-experiments'])
+          .default('design-practice'),
+        year: z.string().optional(),
+        status: z.enum(['completed', 'ongoing', 'prototype']).default('completed'),
+        featured: z.boolean().default(false),
+        featuredOrder: z.number().int().nonnegative().default(999),
+        contribution: z.string().optional(),
+        collaborators: z.array(z.string()).default([]),
 
         link: z
           .object({
@@ -100,6 +121,7 @@ export const collections = {
       ),
       skills: z.array(
         z.object({
+          title: z.string().optional(),
           developments: z.array(z.string()),
         }),
       ),

@@ -34,7 +34,7 @@ const id = `lb-${Math.random().toString(36).slice(2, 10)}`;
 </figure>
 
 <!-- IMPORTANT: use define:vars to pass id into the script -->
-<script define:vars={{ id }}>
+<script is:inline define:vars={{ id }}>
   (() => {
     const thumb = document.querySelector(`[data-lightbox-thumb="${id}"]`);
     const overlay = document.querySelector(`[data-lightbox-overlay="${id}"]`);

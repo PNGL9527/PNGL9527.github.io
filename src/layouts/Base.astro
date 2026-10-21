@@ -3,7 +3,7 @@ import { SEO } from 'astro-seo';
 import '@/styles/global.css';
 import Navbar from '@/components/Navbar.astro';
 import Footer from '@/components/Footer.astro';
-import { regionTags, useTranslations, type LanguageKey, languageTags, defaultLocale, prefixDefaultLocale } from '@/i18n/i18n.ts';
+import { useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { favicons, globalOgImage, website } from '@/utility/config.ts';
 import { ClientRouter } from "astro:transitions";
 
@@ -21,7 +21,7 @@ const globalDescription = `${
   description || t('Head-3')
 }`;
 const globalOgImageAlt = t('Head-4');
-const currentLocale = Astro.currentLocale as LanguageKey;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
 // Custom View Transition Animation
 const anim = {
@@ -43,15 +43,12 @@ const customTransition = {
   backwards: anim,
 };
 
-function getPathnameWithoutLocale(pathname: string) {
-  return pathname.replace(`/${Astro.currentLocale}`, '').replace(/\/?$/, '/');
-}
 ---
 
 <!DOCTYPE html>
 <html style={
   `--globalHighlightTextureImage: url(${website.globalHighlightTextureImage})`
-} class="font-sans-serif text-primary-900 selection:bg-accent/40 selection:text-black" lang={languageTags[currentLocale]} translate="no">
+} class="font-sans-serif text-primary-900 selection:bg-accent/40 selection:text-black" lang="en" translate="no">
   <head>
     <SEO
     charset="UTF-8"
@@ -79,41 +76,7 @@ function getPathnameWithoutLocale(pathname: string) {
     extend={{
       link: [
         { rel: 'manifest', href: '/manifest.webmanifest' },
-          // Default Language Alternates
-          {
-            rel: "alternate",
-            hreflang: "x-default",
-            href: new URL(
-              defaultLocale + 
-            getPathnameWithoutLocale(Astro.url.pathname) ,
-              Astro.site
-            ).toString()
-          },
-
-          // Language Alternates - Region
-          ...(Object.keys(regionTags) as Array<keyof typeof regionTags>).map(tag => {
-            const regionMap = {
-              zh: 'zh-tw' 
-            }
-            return ({
-            rel: "alternate",
-            hreflang: tag,
-            href: new URL(regionMap[tag] + getPathnameWithoutLocale(Astro.url.pathname),
-              Astro.site
-            ).toString()
-          })}),
-
-          // Language Alternates - Countries
-          ...Object.keys(languageTags).map(tag => ({
-            rel: "alternate",
-            hreflang: tag,
-            href: new URL(prefixDefaultLocale 
-                ? tag + getPathnameWithoutLocale(Astro.url.pathname) 
-                : Astro.url.pathname,
-              Astro.site
-            ).toString()
-          })),
-        
+        { rel: 'canonical', href: canonicalUrl },
       ],
       meta: [
         {

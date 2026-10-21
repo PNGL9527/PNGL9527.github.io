@@ -14,26 +14,26 @@ describe('useTranslations', () => {
 
   it('should fallback to English translation if the target language is not found', () => {
     const t = useTranslations();
-    expect(t('Debug-1')).toBe('你好世界繁體中文');
+    expect(t('Debug-1')).toBe('Hello, World');
   });
 });
 
 describe('changeLanguage', () => {
-  it('should change the language prefix in the path to the target locale', () => {
+  it('should remove a legacy language prefix for the unprefixed English locale', () => {
     const path = '/zh-cn/about';
     const newPath = changeLanguage('en', path);
-    expect(newPath).toBe('/en/about');
+    expect(newPath).toBe('/about');
   });
 
-  it('should add the language prefix to the path if prefixDefaultLocale is true', () => {
+  it('should add the English prefix when explicitly requested', () => {
     const path = '/about';
-    const newPath = changeLanguage('zh-tw', path, true);
-    expect(newPath).toBe('/zh-tw/about');
+    const newPath = changeLanguage('en', path, true);
+    expect(newPath).toBe('/en/about');
   });
 
   it('should not add the language prefix to the path if prefixDefaultLocale is false and targetLocale is defaultLocale', () => {
     const path = '/zh-tw/about';
-    const newPath = changeLanguage('zh-tw', path);
+    const newPath = changeLanguage('en', path);
     expect(newPath).toBe('/about');
   });
 });

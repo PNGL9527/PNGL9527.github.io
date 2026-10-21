@@ -1,0 +1,22 @@
+---
+import Base from '@/layouts/Base.astro';
+
+import { useTranslations } from '@/i18n/i18n.ts';
+
+const t = useTranslations('en');
+---
+
+<script is:inline>
+  if (window.location.pathname === '/en' || window.location.pathname.startsWith('/en/')) {
+    const destination = window.location.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
+    window.location.replace(`${destination}${window.location.search}${window.location.hash}`);
+  }
+</script>
+
+<Base title={t('404-1')}>
+  <main class="text-center min-h-screen flex items-center justify-center flex-col">
+    <h1 class="text-8xl font-black">404</h1>
+    <p class="text-lg mb-8">{t('404-1')}</p>
+    <a class="underline" href="/">{t('404-2')}</a>
+  </main>
+</Base>

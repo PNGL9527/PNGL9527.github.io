@@ -7,17 +7,9 @@ import typography from '@tailwindcss/typography';
 
 export default {
   content: [
-    "./src/**/*.{astro,html,js,jsx,ts,tsx,md,mdx}",
-    "./src/content/**/*.{md,mdx}",
+    './src/**/*.{astro,html,js,jsx,ts,tsx,md,mdx}',
+    './src/content/**/*.{md,mdx}',
   ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-
-
-export default {
   plugins: [
     fluidType({
       corePlugins: {

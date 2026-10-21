@@ -33,8 +33,6 @@ export type LanguageValue = (typeof languages)[LanguageKey];
  */
 export const getTranslationFile = (targetLocale: LanguageKey) => {
   if (targetLocale === 'en') return enTranslation;
-  if (targetLocale === 'zh-cn') return zhCnTranslation;
-  if (targetLocale === 'zh-tw') return zhTwTranslation;
   return enTranslation;
 };
 
@@ -90,7 +88,7 @@ export function changeLanguage(
   path: string,
   isDefaultLocalePrefixed = prefixDefaultLocale,
 ): string {
-  const languagePrefixes = Object.keys(languages);
+  const languagePrefixes = ['en', 'zh-cn', 'zh-tw'];
   const cleanedPath = removeLanguagePrefix(path, languagePrefixes);
   return constructNewPath(targetLocale, cleanedPath, isDefaultLocalePrefixed);
 }

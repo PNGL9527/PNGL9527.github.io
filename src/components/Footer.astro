@@ -1,6 +1,5 @@
 ---
-import { defaultLocale, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { website } from '@/utility/config.ts'
 
 const t = useTranslations(Astro.currentLocale as LanguageKey);

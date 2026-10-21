@@ -1,12 +1,12 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
-import { languages, useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
+import { useTranslations, type LanguageKey } from '@/i18n/i18n.ts';
 import { getEntry } from 'astro:content';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import QRCode from 'qrcode';
 
-const currentLocale = Astro.currentLocale as LanguageKey;
+const currentLocale: LanguageKey = 'en';
 const t = useTranslations(currentLocale as LanguageKey);
 
 const resume = (await getEntry('resume', currentLocale))?.data;
@@ -46,11 +46,6 @@ for (const link of resume.personalInfo?.socialLinks ?? []) {
   socialQrItems.push({ title: link.name, link: link.url, qr });
 }
 
-export function getStaticPaths() {
-  return Object.keys(languages).map((language) => ({
-    params: { language },
-  }));
-}
 ---
 
 <Base title={t('Resume-1')}>

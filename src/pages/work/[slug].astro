@@ -2,32 +2,22 @@
 import { getCollection, render } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
-import { languages, type LanguageKey, useTranslations } from '@/i18n/i18n.ts';
+import type { LanguageKey } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
-import ProjectCard from '../../../components/ProjectCard.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
 
 
 /* ---------------- getStaticPaths ---------------- */
 export async function getStaticPaths() {
-  const langs = Array.isArray(languages) ? languages : Object.keys(languages);
-  const projects = await getCollection('project', (p) => !p.data.draft);
+  const projects = await getCollection('project', (p) => !p.data.draft && p.id.startsWith('en/'));
 
-  return langs.flatMap((language) =>
-    projects
-      .filter((p) => p.id.startsWith(`${language}/`))
-      .map((p) => ({
-        params: {
-          language,
-          slug: p.id.slice(language.length + 1),
-        },
-      })),
-  );
+  return projects.map((project) => ({
+    params: { slug: project.id.slice('en/'.length) },
+  }));
 }
 
 /* ---------------- Page data ---------------- */
-const currentLocale = Astro.params.language as LanguageKey;
-const t = useTranslations(currentLocale);
-
+const currentLocale: LanguageKey = 'en';
 const slug = String(Astro.params.slug ?? '');
 
 const projects = await getCollection(
@@ -43,10 +33,14 @@ const typeLabel = project.data.type ?? '';
 
 const typeToIcon: Record<string, string> = {
   Research: 'material-symbols:science-outline',
+  Tool: 'material-symbols:build-outline',
   Product: 'material-symbols:widgets-outline',
   Service: 'material-symbols:handshake-outline',
   Strategy: 'material-symbols:strategy',
   Prototype: 'material-symbols:biotech-outline',
+  Spatial: 'material-symbols:architecture',
+  Teaching: 'material-symbols:school-outline',
+  Experiment: 'material-symbols:experiment-outline',
 };
 
 const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
@@ -78,19 +72,21 @@ const getType = (p: any) => (p?.data?.type ?? null);
 const sameType = currentType ? pool.filter((p) => getType(p) === currentType) : [];
 const otherType = currentType ? pool.filter((p) => getType(p) !== currentType) : pool;
 
-const byDateDesc = (a: any, b: any) => {
+const byPriority = (a: any, b: any) => {
+  const orderDifference = (a.data?.featuredOrder ?? 999) - (b.data?.featuredOrder ?? 999);
+  if (orderDifference !== 0) return orderDifference;
   const ad = a.data?.publishDate ? new Date(a.data.publishDate).getTime() : 0;
   const bd = b.data?.publishDate ? new Date(b.data.publishDate).getTime() : 0;
   return bd - ad;
 };
 
-sameType.sort(byDateDesc);
-otherType.sort(byDateDesc);
+sameType.sort(byPriority);
+otherType.sort(byPriority);
 
 const relatedProjects = [...sameType, ...otherType].slice(0, 2);
 
 // 返回到 Selected work 列表页
-const backToWorkHref = `/${currentLocale}/work`;
+const backToWorkHref = '/work';
 ---
 
 <style is:inline>
@@ -134,9 +130,13 @@ const backToWorkHref = `/${currentLocale}/work`;
       <section class="pt-[var(--navbar-height)]">
         {typeLabel && (
           <div class="mb-6">
-            <span class="inline-flex items-center gap-2 text-sm font-normal text-primary-900">
+            <span class="inline-flex flex-wrap items-center gap-2 text-sm font-normal text-primary-900">
               <Icon name={typeIcon} size={18} />
               {typeLabel}
+              {project.data.year && <span class="text-primary-500">· {project.data.year}</span>}
+              {project.data.status !== 'completed' && (
+                <span class="capitalize text-primary-500">· {project.data.status}</span>
+              )}
             </span>
           </div>
         )}
@@ -182,6 +182,15 @@ const backToWorkHref = `/${currentLocale}/work`;
         <div class="space-y-10">
           <div>
             {summary && <p class="text-lg leading-relaxed text-primary-700">{summary}</p>}
+
+            {project.data.contribution && (
+              <div class="mt-8 rounded-2xl bg-black/5 p-5">
+                <div class="text-sm font-semibold">My contribution</div>
+                <p class="mt-2 text-sm leading-relaxed text-primary-700">
+                  {project.data.contribution}
+                </p>
+              </div>
+            )}
 
             {highlights.length > 0 && (
               <div class="mt-10">
@@ -252,7 +261,7 @@ const backToWorkHref = `/${currentLocale}/work`;
 
           <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             {relatedProjects.map((p) => (
-              <ProjectCard project={p} currentLocale={currentLocale} />
+              <ProjectCard project={p} />
             ))}
           </div>
 
