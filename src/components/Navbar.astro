@@ -5,20 +5,16 @@ import Logo from '@/assets/logo.svg';
 
 const t = useTranslations(Astro.currentLocale as LanguageKey);
 
-const isLandingPage = Astro.url.pathname === '/';
+const links = [
+  { url: '/portfolio', name: t('Navbar-Portfolio'), activePath: '/portfolio' },
+  { url: '/research', name: t('Navbar-Research'), activePath: '/research' },
+  { url: '/research#publications', name: t('Navbar-Publications'), activePath: null },
+];
 
-const links = isLandingPage
-  ? [{ url: '/work', name: t('Navbar-Portfolio') }]
-  : [
-      { url: '/work', name: t('Navbar-Portfolio') },
-      { url: '/research', name: t('Navbar-Research') },
-      { url: '/resume', name: t('Navbar-CV') },
-    ];
-
-function isActiveNavItem(navItem: string) {
+function isActiveNavItem(navItem: string | null) {
+  if (!navItem) return false;
   const { pathname } = new URL(Astro.url);
 
-  // e.g. "/en/resume/" -> ["en", "resume"]
   const segments = pathname.split('/').filter(Boolean);
 
   // Home ("/") 特判
@@ -26,7 +22,7 @@ function isActiveNavItem(navItem: string) {
     return segments.length === 0 || segments.length === 1;
   }
 
-  const navSegment = navItem.replace(/^\/|\/$/g, '');
+  const navSegment = (navItem.split('#')[0] ?? '').replace(/^\/|\/$/g, '');
   return segments.includes(navSegment);
 }
 
@@ -48,13 +44,13 @@ function isActiveNavItem(navItem: string) {
   <div class="flex gap-2 items-center">
     <ul class="flex gap-2">
       {
-        links.map(({ url, name }) => (
+        links.map(({ url, name, activePath }) => (
           <li>
             <a
-              class={`md:px-8 px-4 py-4 rounded-full transition-colors whitespace-nowrap ${
-                isActiveNavItem(url) ? 'bg-primary-900 text-primary-50' : 'hover:bg-primary-100'
+              class={`px-3 py-4 text-sm sm:px-4 sm:text-base md:px-8 rounded-full transition-colors whitespace-nowrap ${
+                isActiveNavItem(activePath) ? 'bg-primary-900 text-primary-50' : 'hover:bg-primary-100'
               }`}
-              href={getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, url)}
+              href={url.includes('#') ? url : getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, url)}
             >
               {name}
             </a>

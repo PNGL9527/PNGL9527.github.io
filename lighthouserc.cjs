@@ -4,10 +4,9 @@ module.exports = {
       numberOfRuns: 1,
       startServerCommand: 'pnpm astro preview',
       url: [
-        'http://localhost:4321/en/',
-        'http://localhost:4321/en/resume/',
-        'http://localhost:4321/en/work/',
-        'http://localhost:4321/en/faq/',
+        'http://localhost:4321/',
+        'http://localhost:4321/portfolio/',
+        'http://localhost:4321/research/',
       ],
     },
     upload: {

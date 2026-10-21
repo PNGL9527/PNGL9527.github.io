@@ -18,7 +18,7 @@ export const globalOgImage = {
 
 export const website = {
   name: 'Peng Lu',
-  email: 'lupeng95@hotmail.com',
+  email: 'peng.lu.research@gmail.com',
   emojiStatus: '📷',
 
   // 全站背景纹理（本地）

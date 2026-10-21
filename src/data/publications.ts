@@ -79,7 +79,7 @@ export const researchProfiles = [
     url: 'https://scholar.google.com/citations?user=KaqQ8gIAAAAJ',
   },
   {
-    label: 'Politecnico di Milano research profile',
-    url: 'https://drin.design/penglu/',
+    label: 'ORCID',
+    url: 'https://orcid.org/0000-0002-9691-360X',
   },
 ];

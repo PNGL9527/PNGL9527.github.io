@@ -104,7 +104,7 @@ const sectionLabels: Record<string, string> = {
         <ul data-projects class="flex flex-col gap-16 md:gap-24">
           {sortedProjects.map((project) => {
             const slug = project.id.slice(currentLocale.length + 1);
-            const href = `/work/${slug}/`;
+            const href = `/portfolio/${slug}/`;
             const projectSection = project.data.section;
             const visibleTags = project.data.tags.slice(0, 3);
 
