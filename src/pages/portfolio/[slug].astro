@@ -7,6 +7,7 @@ import { Image } from 'astro:assets';
 import ProjectCard from '../../components/ProjectCard.astro';
 import FloatingTOC from '@/components/FloatingTOC.astro';
 import ProjectTitle from '@/components/ProjectTitle.astro';
+import { selectRelatedProjects } from '@/utility/related-projects';
 
 
 /* ---------------- getStaticPaths ---------------- */
@@ -65,28 +66,7 @@ const { Content, headings } = await render(project);
 const sections = headings.filter((heading) => heading.depth === 2);
 
 /* ---------------- More selected work (logic) ---------------- */
-const currentType = typeLabel || null;
-const currentId = project.id;
-
-const pool = projects.filter((p) => p.id !== currentId);
-
-const getType = (p: any) => (p?.data?.type ?? null);
-
-const sameType = currentType ? pool.filter((p) => getType(p) === currentType) : [];
-const otherType = currentType ? pool.filter((p) => getType(p) !== currentType) : pool;
-
-const byPriority = (a: any, b: any) => {
-  const orderDifference = (a.data?.featuredOrder ?? 999) - (b.data?.featuredOrder ?? 999);
-  if (orderDifference !== 0) return orderDifference;
-  const ad = a.data?.publishDate ? new Date(a.data.publishDate).getTime() : 0;
-  const bd = b.data?.publishDate ? new Date(b.data.publishDate).getTime() : 0;
-  return bd - ad;
-};
-
-sameType.sort(byPriority);
-otherType.sort(byPriority);
-
-const relatedProjects = [...sameType, ...otherType].slice(0, 2);
+const relatedProjects = selectRelatedProjects(project, projects);
 
 // 返回到 Selected work 列表页
 const backToWorkHref = '/portfolio';

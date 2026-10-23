@@ -41,12 +41,39 @@ const filters = [
     const sortRoot = document.querySelector('[data-portfolio-sort]');
     if (!projectRoot || projectRoot.dataset.initialized) return;
     projectRoot.dataset.initialized = 'true';
+    let selectedSection = 'all';
+    let selectedMode: PortfolioSortMode = 'type';
+
+    const sortCards = () => {
+      const cards = [...projectRoot.querySelectorAll<HTMLElement>(':scope > [data-project-section]')];
+      const key = (card: HTMLElement) => ({
+        id: card.dataset.projectId ?? '',
+        type: card.dataset.projectType,
+        year: card.dataset.projectYear,
+        order: Number(card.dataset.projectOrder ?? 999),
+      });
+      cards.sort((a, b) => comparePortfolioItems(key(a), key(b), selectedMode, selectedSection));
+      projectRoot.append(...cards);
+    };
+
+    const updateSortStatus = () => {
+      const teachingFirst = selectedSection === 'teaching-experiments';
+      const dateNote = document.querySelector('[data-sort-date-note]');
+      if (dateNote) {
+        dateNote.classList.toggle('hidden', selectedMode !== 'date');
+        dateNote.textContent = teachingFirst
+          ? 'Future Mobility first · Remaining projects newest first.'
+          : 'Newest first · Date ranges use their end year.';
+      }
+      const status = document.querySelector('[data-sort-status]');
+      if (status) status.textContent = `${teachingFirst ? 'Future Mobility Design Workshop is shown first. ' : ''}${selectedMode === 'date' ? 'Projects sorted newest first by project year.' : 'Projects grouped by type.'}`;
+    };
 
     filterRoot?.addEventListener('click', (event) => {
       const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('button[data-section-filter]') : null;
       if (!button) return;
 
-      const selectedSection = button.dataset.sectionFilter;
+      selectedSection = button.dataset.sectionFilter ?? 'all';
 
       filterRoot.querySelectorAll<HTMLButtonElement>('button[data-section-filter]').forEach((candidate) => {
         const isActive = candidate.dataset.sectionFilter === selectedSection;
@@ -60,30 +87,23 @@ const filters = [
         const isVisible = selectedSection === 'all' || project.dataset.projectSection === selectedSection;
         project.classList.toggle('hidden', !isVisible);
       });
+      sortCards();
+      updateSortStatus();
     });
 
     sortRoot?.addEventListener('click', (event) => {
       const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[data-project-sort]') : null;
       if (!button) return;
       const mode: PortfolioSortMode = button.dataset.projectSort === 'date' ? 'date' : 'type';
-      const cards = [...projectRoot.querySelectorAll<HTMLElement>(':scope > [data-project-section]')];
-      const key = (card: HTMLElement) => ({
-        id: card.dataset.projectId ?? '',
-        type: card.dataset.projectType,
-        year: card.dataset.projectYear,
-        order: Number(card.dataset.projectOrder ?? 999),
-      });
-      cards.sort((a, b) => comparePortfolioItems(key(a), key(b), mode));
-      projectRoot.append(...cards);
+      selectedMode = mode;
+      sortCards();
       sortRoot.querySelectorAll<HTMLElement>('[data-project-sort]').forEach((candidate) => {
         const active = candidate.dataset.projectSort === mode;
         candidate.setAttribute('aria-pressed', String(active));
         candidate.classList.toggle('bg-primary-900', active);
         candidate.classList.toggle('text-white', active);
       });
-      document.querySelector('[data-sort-date-note]')?.classList.toggle('hidden', mode !== 'date');
-      const status = document.querySelector('[data-sort-status]');
-      if (status) status.textContent = mode === 'date' ? 'Projects sorted newest first by project year.' : 'Projects grouped by type.';
+      updateSortStatus();
     });
   });
 </script>

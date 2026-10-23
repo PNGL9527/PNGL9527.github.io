@@ -13,7 +13,12 @@ export function projectEndYear(year?: string): number | null {
 }
 
 /** Never substitute website publishDate for the actual project year. */
-export function comparePortfolioItems(a: PortfolioSortItem, b: PortfolioSortItem, mode: PortfolioSortMode): number {
+export function comparePortfolioItems(a: PortfolioSortItem, b: PortfolioSortItem, mode: PortfolioSortMode, selectedSection = 'all'): number {
+  // Lead with teaching when this category is explicitly selected, without
+  // changing the global list or the order of the remaining projects.
+  const pinnedId = selectedSection === 'teaching-experiments' ? 'en/future-mobility-workshop' : undefined;
+  const pinDifference = Number(b.id === pinnedId) - Number(a.id === pinnedId);
+  if (pinDifference) return pinDifference;
   if (mode === 'date') {
     const difference = (projectEndYear(b.year) ?? -1) - (projectEndYear(a.year) ?? -1);
     if (difference) return difference;
