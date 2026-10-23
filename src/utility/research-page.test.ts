@@ -5,6 +5,16 @@ import { publications } from '../data/publications';
 const page = readFileSync(new URL('../pages/research.astro', import.meta.url), 'utf8');
 
 describe('Research page follows the research statement', () => {
+  it('emphasizes only Peng Lu in author lists without changing the underlying citations', () => {
+    expect(page).toContain('publication.authors.split(/(\\bPeng Lu\\b)/)');
+    expect(page).toContain("authorPart === 'Peng Lu'");
+    expect(page).toContain('<strong class="font-semibold">{authorPart}</strong>');
+    expect(page).not.toContain('set:html');
+    for (const publication of publications) {
+      expect(publication.authors).toContain('Peng Lu');
+      expect(publication.authors).not.toContain('<strong');
+    }
+  });
   it('states the research identity and covers all four contribution/current inquiry areas', () => {
     for (const phrase of [
       'postphenomenology and design research', 'technological mediation theory',
