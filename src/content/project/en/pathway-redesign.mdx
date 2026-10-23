@@ -1,0 +1,82 @@
+---
+title: "Pathway Redesign Tool"
+description: "A shared workspace that brings patient-experience insights and clinical-managerial evidence around the same care pathway, supporting discussion across professional perspectives."
+publishDate: 2026-10-21
+draft: false
+thumbnail: /assets/projects/pathway-redesign/tricolour-cover.webp
+thumbnailAlt: "White pencil, branching pathway and medical cross on red, yellow and blue panels"
+type: Tool
+section: research-tools
+year: "2021"
+status: prototype
+featured: false
+featuredOrder: 999
+contribution: "Tool concept, pathway representation, prototype iterations, and development of the interactive web version."
+tags:
+  - Service Design
+  - Healthcare
+  - Design Tool
+  - Boundary Object
+highlights:
+  - "Origin: MSc thesis, Politecnico di Milano"
+  - "For: Service designers, healthcare professionals, and clinical managers"
+  - "Format: Spreadsheet prototypes and an interactive web version"
+link:
+  url: https://www.penglu.work/PathwayRedesign_Online/
+---
+
+import LightboxImage from '@/components/LightboxImage.astro';
+
+<div className="case-actions not-prose">
+  <a className="btn-pill" href="https://www.penglu.work/PathwayRedesign_Online/" target="_blank" rel="noopener noreferrer">Try Pathway Redesign ↗</a>
+</div>
+
+## One pathway, different perspectives
+
+<LightboxImage src="/assets/projects/pathway-redesign/boundary-object-cover.webp" alt="Conceptual illustration of designers and healthcare professionals discussing a shared care pathway" caption="Two professional perspectives, one shared object of discussion. Conceptual illustration, not an application screenshot." />
+
+Improving a care service requires more than one kind of knowledge. A service designer may notice confusing information or a difficult encounter; a clinical manager may focus on waiting time or resource use. **How can these concerns be discussed around the same process?**
+
+Pathway Redesign uses the clinical pathway as a shared reference. It explores the role of a **boundary object**: something different professional groups can work around without needing to share the same expertise.
+
+| Perspective | What it brings into the conversation |
+| --- | --- |
+| Experience design | Arrangements, communication, encounters, locations, and qualitative observations. |
+| Shared pathway | The care sequence, decision points, branches, and selected patient flow. |
+| Clinical management | Lead time, waiting time, costs, effectiveness, and related evidence. |
+
+<LightboxImage src="/assets/projects/pathway-redesign/workspace.png" alt="Actual Pathway Redesign web prototype with red experience-design fields, a central yellow clinical pathway, and blue clinical-managerial fields" caption="The actual web prototype: two professional perspectives connected to a shared clinical pathway." />
+
+## Follow a flow, then compare the evidence
+
+The workspace keeps both perspectives connected to the same selected sub-section and patient flow. Observations and measurements sit beside their interpretation, rather than being reduced to a score alone.
+
+1. **Choose a point in the pathway.** Select a sub-section and flow to focus the discussion.
+2. **Record what each perspective sees.** Add observations, roles, places, operational measures, and reasons for any grades.
+3. **Read across the evidence.** Use the matrix to compare flows and identify questions or priorities for redesign.
+
+<LightboxImage src="/assets/projects/pathway-redesign/evidence-matrix.png" alt="Evidence matrix aligning patient flows with experience-design dimensions, clinical-managerial measures, and team-assigned grades" caption="The web prototype's evidence matrix. The reconstructed example is illustrative; blank records remain visible rather than being treated as zero." />
+
+## From mapping to dialogue
+
+The project began with a service blueprint of Humanitas's pre-admission process during my master's work. Its representation developed through three forms:
+
+- **Service blueprint:** understand the service process and its encounters.
+- **Timeline-based tool:** align different kinds of evidence along common phases.
+- **Flowchart-based tool:** keep branching clinical pathways at the centre instead of forcing them into a linear timeline.
+
+Expert feedback raised a deeper question: **who decides which dimensions matter, and what the grades mean?** The thesis proposed jointly configuring the tool as part of the conversation. That was a future direction, not an implemented or longitudinally validated fourth thesis prototype.
+
+## Explore the current web prototype
+
+The later web version makes this direction tangible through **Set up together**: teams can define their purpose, adjust dimensions and weights, and explain their grading criteria. The workspace, evidence matrix, and discussion-priority views offer different ways into the same material. Projects stay in the browser and can be exchanged as JSON files.
+
+<LightboxImage src="/assets/projects/pathway-redesign/setup-together.png" alt="Set up together view with editable experience-design and clinical-managerial dimensions, weights, and grading criteria" caption="Joint configuration in the current web prototype, distinct from the earlier thesis proposal. Measures and grading rules are choices to discuss, not universal clinical standards." />
+
+This is a design and facilitation prototype, not a deployed hospital system or a clinical decision tool. Its historical pathway example demonstrates the interface, not current medical guidance or evidence of improved patient outcomes.
+
+<div className="case-actions not-prose">
+  <a className="btn-pill" href="https://www.penglu.work/PathwayRedesign_Online/" target="_blank" rel="noopener noreferrer">Open the online tool ↗</a>
+</div>
+
+<p className="text-sm text-neutral-500">Origin: MSc thesis at Politecnico di Milano, supervised by Prof. Daniela Sangiorgi. Text adapted from the project brief; screenshots show the live web prototype's built-in illustrative example.</p>

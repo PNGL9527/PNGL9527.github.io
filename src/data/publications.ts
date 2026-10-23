@@ -3,7 +3,7 @@ export type Publication = {
   authors: string;
   venue: string;
   year: string;
-  type: 'Journal article' | 'Conference paper';
+  type: 'Journal article' | 'Conference paper' | 'Doctoral thesis';
   url?: string;
 };
 
@@ -16,6 +16,14 @@ export const publications: Publication[] = [
     year: '2026',
     type: 'Conference paper',
     url: 'https://doi.org/10.1145/3821402.3830102',
+  },
+  {
+    title: 'Feeling together with the car: towards theorizing co-driving pleasure from a technological mediation perspective',
+    authors: 'Peng Lu',
+    venue: 'Doctoral dissertation, Politecnico di Milano',
+    year: '2025',
+    type: 'Doctoral thesis',
+    url: 'https://hdl.handle.net/10589/238659',
   },
   {
     title: 'Speculative Exploration on Future Sustainable Human-Machine Interface Design in Automated Shuttle Buses',
@@ -47,6 +55,7 @@ export const publications: Publication[] = [
     venue: 'DeSForM 2023',
     year: '2023',
     type: 'Conference paper',
+    url: 'https://hdl.handle.net/11311/1261905',
   },
   {
     title: 'Feeling the Future Car: Designing for Driving Pleasure in the Era of Co-Driving',
@@ -70,6 +79,7 @@ export const publications: Publication[] = [
     venue: 'ServDes.2020: Tensions, Paradoxes and Plurality Conference Proceedings',
     year: '2021',
     type: 'Conference paper',
+    url: 'https://doi.org/10.21606/servdes2020.8',
   },
 ];
 

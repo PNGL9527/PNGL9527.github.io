@@ -1,0 +1,31 @@
+<div class="yaogongmiao-case">
+  <slot />
+</div>
+
+<style>
+  .yaogongmiao-case > :global(h2:first-child) { margin-top: 0; }
+
+  /* Share image/caption rows so differing source ratios keep the same baseline. */
+  .yaogongmiao-case :global(.case-grid:is(.case-history, .case-living)) { grid-template-rows: auto auto; row-gap: .7rem; align-items: stretch; }
+  .yaogongmiao-case :global(:is(.case-history, .case-living) > figure) { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
+  .yaogongmiao-case :global(:is(.case-history, .case-living) .image-trigger) { align-self: end; }
+  .yaogongmiao-case :global(:is(.case-history, .case-living) figcaption) { margin-top: 0; }
+
+  .yaogongmiao-case :global(.case-storefronts > .storefront-wide),
+  .yaogongmiao-case :global(.case-storefronts > .storefront-centered) { grid-column: 1 / -1; }
+  .yaogongmiao-case :global(.case-storefronts > .storefront-centered) { width: calc((100% - 1.5rem) / 2); justify-self: start; }
+
+  .yaogongmiao-case :global(.image-hint) { opacity: 0; pointer-events: none; transition: opacity .15s ease; }
+  .yaogongmiao-case :global(.image-trigger:hover .image-hint),
+  .yaogongmiao-case :global(.image-trigger:focus-visible .image-hint) { opacity: 1; }
+
+  @media (max-width: 40rem) {
+    .yaogongmiao-case :global(.case-grid:is(.case-history, .case-living)) { grid-template-rows: none; row-gap: 1.5rem; }
+    .yaogongmiao-case :global(:is(.case-history, .case-living) > figure) { display: block; grid-row: auto; }
+    .yaogongmiao-case :global(:is(.case-history, .case-living) figcaption) { margin-top: .7rem; }
+    .yaogongmiao-case :global(.case-storefronts > .storefront-centered) { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .yaogongmiao-case :global(.image-hint) { transition: none; }
+  }
+</style>

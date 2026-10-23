@@ -1,0 +1,101 @@
+{
+  "note": "Author-supplied running-app screenshots. Complete source frames retained; resized and WebP encoded only. Cover is the separate author-supplied product illustration.",
+  "images": [
+    {
+      "source": "01-reading.png",
+      "output": "01-reading.webp",
+      "original": [
+        2816,
+        2194
+      ],
+      "size": [
+        2400,
+        1870
+      ]
+    },
+    {
+      "source": "02-quick-annotation.png",
+      "output": "02-quick-annotation.webp",
+      "original": [
+        2594,
+        1972
+      ],
+      "size": [
+        2400,
+        1825
+      ]
+    },
+    {
+      "source": "03a-toolbar-top.png",
+      "output": "03a-toolbar-top.webp",
+      "original": [
+        2816,
+        2194
+      ],
+      "size": [
+        2400,
+        1870
+      ]
+    },
+    {
+      "source": "03b-toolbar-side.png",
+      "output": "03b-toolbar-side.webp",
+      "original": [
+        2816,
+        2194
+      ],
+      "size": [
+        2400,
+        1870
+      ]
+    },
+    {
+      "source": "04-reference-preview.png",
+      "output": "04-reference-preview.webp",
+      "original": [
+        2816,
+        2194
+      ],
+      "size": [
+        2400,
+        1870
+      ]
+    },
+    {
+      "source": "05-side-by-side.png",
+      "output": "05-side-by-side.webp",
+      "original": [
+        2816,
+        2194
+      ],
+      "size": [
+        2400,
+        1870
+      ]
+    },
+    {
+      "source": "06-ai-assistance.png",
+      "output": "06-ai-assistance.webp",
+      "original": [
+        2816,
+        2194
+      ],
+      "size": [
+        2400,
+        1870
+      ]
+    },
+    {
+      "source": "07-page-overview.png",
+      "output": "07-page-overview.webp",
+      "original": [
+        2816,
+        2194
+      ],
+      "size": [
+        2400,
+        1870
+      ]
+    }
+  ]
+}

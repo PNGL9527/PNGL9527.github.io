@@ -1,0 +1,66 @@
+---
+const relations = [
+  { name: 'Embodiment', shape: 'circle' },
+  { name: 'Hermeneutic', shape: 'square' },
+  { name: 'Background', shape: 'diamond' },
+  { name: 'Alterity', shape: 'triangle' },
+];
+const variables = [
+  ['Position', 'forefronting'],
+  ['Opacity', 'transparency'],
+  ['Size', 'relative impact'],
+  ['Diffuse region', 'field composition'],
+  ['Dashed edge', 'situational horizon'],
+];
+---
+
+<div class="mcd-grammar-figure not-prose">
+  <aside class="grammar-legend" aria-label="MCD visual grammar legend">
+    <h3>Relation type = shape</h3>
+    <p class="legend-intro">Shape identifies the dominant mediation relation.</p>
+    <ul class="relation-types">
+      {relations.map(({ name, shape }) => (
+        <li>
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            {shape === 'circle' && <circle cx="10" cy="10" r="8" />}
+            {shape === 'square' && <rect x="2" y="2" width="16" height="16" />}
+            {shape === 'diamond' && <path d="M10 0L20 10L10 20L0 10Z" />}
+            {shape === 'triangle' && <path d="M10 1L20 19H0Z" />}
+          </svg>
+          <span>{name}</span>
+        </li>
+      ))}
+    </ul>
+    <h3>Visual variables</h3>
+    <dl>
+      {variables.map(([term, meaning]) => (
+        <div><dt>{term}</dt><span aria-hidden="true"> – </span><dd>{meaning}</dd></div>
+      ))}
+    </dl>
+    <p class="legend-note">Descriptive, not metric</p>
+  </aside>
+  <div class="grammar-diagram"><slot /></div>
+</div>
+
+<style>
+  .mcd-grammar-figure { display: grid; grid-template-columns: minmax(17rem, .85fr) minmax(0, 1.3fr); gap: 2rem; align-items: center; margin: 2rem 0; }
+  .grammar-legend { min-width: 0; font-size: 1rem; line-height: 1.55; color: #383638; }
+  .grammar-legend h3 { color: #39799c; font-size: 1rem; font-weight: 700; font-style: italic; text-transform: uppercase; margin: 0 0 .8rem; }
+  .legend-intro { color: #d93b90; margin: 0 0 .7rem; }
+  .relation-types { list-style: none; padding: 0; margin: 0 0 1.8rem; }
+  .relation-types li { display: flex; align-items: center; gap: .65rem; margin: .25rem 0; font-style: italic; }
+  .relation-types svg { width: 1rem; height: 1rem; flex: none; fill: currentColor; }
+  dl { margin: 0; }
+  dl > div { margin: .25rem 0; }
+  dt, dd { display: inline; margin: 0; }
+  dt { font-weight: 650; }
+  dd { font-style: italic; }
+  .legend-note { color: #d93b90; font-size: .85rem; text-transform: uppercase; letter-spacing: .025em; margin: 1rem 0 0; }
+  .grammar-diagram { min-width: 0; }
+  .grammar-diagram :global(figure) { margin: 0; }
+  .mcd-grammar-figure :global(.image-trigger) { background: white; }
+  @media (max-width: 48rem) {
+    .mcd-grammar-figure { grid-template-columns: minmax(0, 1fr); }
+    .grammar-diagram { max-width: 34rem; width: 100%; margin: 0 auto; }
+  }
+</style>

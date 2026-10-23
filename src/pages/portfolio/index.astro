@@ -4,6 +4,8 @@ import Base from '@/layouts/Base.astro';
 import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 import type { LanguageKey } from '@/i18n/i18n.ts';
+import { comparePortfolioItems } from '@/utility/portfolio-sort';
+import ProjectTitle from '@/components/ProjectTitle.astro';
 
 const currentLocale: LanguageKey = 'en';
 const projects = await getCollection(
@@ -11,11 +13,11 @@ const projects = await getCollection(
   (project) => !project.data.draft && project.id.startsWith(`${currentLocale}/`),
 );
 
-const sortedProjects = projects.sort((a, b) => {
-  const orderDifference = a.data.featuredOrder - b.data.featuredOrder;
-  if (orderDifference !== 0) return orderDifference;
-  return b.data.publishDate.getTime() - a.data.publishDate.getTime();
-});
+const sortedProjects = projects.sort((a, b) => comparePortfolioItems(
+  { id: a.id, type: a.data.type, year: a.data.year, order: a.data.featuredOrder },
+  { id: b.id, type: b.data.type, year: b.data.year, order: b.data.featuredOrder },
+  'type',
+));
 
 const filters = [
   { id: 'all', label: 'All work', icon: 'material-symbols:apps' },
@@ -28,25 +30,25 @@ const filters = [
   },
 ] as const;
 
-const sectionLabels: Record<string, string> = {
-  'research-tools': 'Research & Tools',
-  'design-practice': 'Design Practice',
-  'teaching-experiments': 'Teaching & Experiments',
-};
 ---
 
-<script is:inline>
+<script>
+  import { comparePortfolioItems, type PortfolioSortMode } from '@/utility/portfolio-sort';
+
   document.addEventListener('astro:page-load', () => {
     const filterRoot = document.querySelector('[data-portfolio-filters]');
-    const projectRoot = document.querySelector('[data-projects]');
+    const projectRoot = document.querySelector<HTMLElement>('[data-projects]');
+    const sortRoot = document.querySelector('[data-portfolio-sort]');
+    if (!projectRoot || projectRoot.dataset.initialized) return;
+    projectRoot.dataset.initialized = 'true';
 
     filterRoot?.addEventListener('click', (event) => {
-      const button = event.target?.closest?.('button[data-section-filter]');
+      const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('button[data-section-filter]') : null;
       if (!button) return;
 
       const selectedSection = button.dataset.sectionFilter;
 
-      filterRoot.querySelectorAll('button[data-section-filter]').forEach((candidate) => {
+      filterRoot.querySelectorAll<HTMLButtonElement>('button[data-section-filter]').forEach((candidate) => {
         const isActive = candidate.dataset.sectionFilter === selectedSection;
         candidate.classList.toggle('bg-primary-900', isActive);
         candidate.classList.toggle('text-white', isActive);
@@ -54,10 +56,34 @@ const sectionLabels: Record<string, string> = {
         candidate.setAttribute('aria-pressed', String(isActive));
       });
 
-      projectRoot?.querySelectorAll('[data-project-section]').forEach((project) => {
+      projectRoot.querySelectorAll<HTMLElement>('[data-project-section]').forEach((project) => {
         const isVisible = selectedSection === 'all' || project.dataset.projectSection === selectedSection;
         project.classList.toggle('hidden', !isVisible);
       });
+    });
+
+    sortRoot?.addEventListener('click', (event) => {
+      const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('[data-project-sort]') : null;
+      if (!button) return;
+      const mode: PortfolioSortMode = button.dataset.projectSort === 'date' ? 'date' : 'type';
+      const cards = [...projectRoot.querySelectorAll<HTMLElement>(':scope > [data-project-section]')];
+      const key = (card: HTMLElement) => ({
+        id: card.dataset.projectId ?? '',
+        type: card.dataset.projectType,
+        year: card.dataset.projectYear,
+        order: Number(card.dataset.projectOrder ?? 999),
+      });
+      cards.sort((a, b) => comparePortfolioItems(key(a), key(b), mode));
+      projectRoot.append(...cards);
+      sortRoot.querySelectorAll<HTMLElement>('[data-project-sort]').forEach((candidate) => {
+        const active = candidate.dataset.projectSort === mode;
+        candidate.setAttribute('aria-pressed', String(active));
+        candidate.classList.toggle('bg-primary-900', active);
+        candidate.classList.toggle('text-white', active);
+      });
+      document.querySelector('[data-sort-date-note]')?.classList.toggle('hidden', mode !== 'date');
+      const status = document.querySelector('[data-sort-status]');
+      if (status) status.textContent = mode === 'date' ? 'Projects sorted newest first by project year.' : 'Projects grouped by type.';
     });
   });
 </script>
@@ -80,6 +106,7 @@ const sectionLabels: Record<string, string> = {
       </section>
 
       <section class="mt-12" aria-label="Filter portfolio projects">
+        <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <ul class="flex flex-wrap gap-2" data-portfolio-filters>
           {filters.map((filter, index) => (
             <li>
@@ -98,10 +125,17 @@ const sectionLabels: Record<string, string> = {
             </li>
           ))}
         </ul>
+        <div class="ml-auto flex shrink-0 rounded-full border border-black/10 bg-black/[0.03] p-1" data-portfolio-sort role="group" aria-label="Sort projects">
+          <button type="button" data-project-sort="type" aria-pressed="true" class="rounded-full bg-primary-900 px-4 py-2 text-sm text-white transition-colors">By type</button>
+          <button type="button" data-project-sort="date" aria-pressed="false" class="rounded-full px-4 py-2 text-sm transition-colors">By date</button>
+        </div>
+        </div>
+        <p class="mt-3 hidden text-right text-xs text-primary-500" data-sort-date-note>Newest first · Date ranges use their end year.</p>
+        <p class="sr-only" aria-live="polite" data-sort-status></p>
       </section>
 
       <section class="mt-16">
-        <ul data-projects class="flex flex-col gap-16 md:gap-24">
+        <ul data-projects class="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:gap-x-10 lg:gap-y-16">
           {sortedProjects.map((project) => {
             const slug = project.id.slice(currentLocale.length + 1);
             const href = `/portfolio/${slug}/`;
@@ -111,11 +145,15 @@ const sectionLabels: Record<string, string> = {
             return (
               <li
                 data-project-section={projectSection}
-                class="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 md:gap-12"
+                data-project-id={project.id}
+                data-project-type={project.data.type}
+                data-project-year={project.data.year ?? ''}
+                data-project-order={project.data.featuredOrder}
+                class="flex min-w-0 flex-col"
               >
                 <a
                   href={href}
-                  class="group block aspect-[16/9] w-full overflow-hidden rounded-2xl border border-black/10 bg-black/5"
+                  class="group block aspect-[2/1] w-full shrink-0 overflow-hidden rounded-2xl border border-black/10 bg-black/5"
                 >
                   {project.data.thumbnail &&
                     (typeof project.data.thumbnail === 'string' ? (
@@ -135,41 +173,19 @@ const sectionLabels: Record<string, string> = {
                     ))}
                 </a>
 
-                <div class="flex max-w-prose flex-col md:py-2">
-                  <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-primary-500">
-                    <span>{sectionLabels[projectSection]}</span>
-                    {project.data.year && <span>{project.data.year}</span>}
-                    {project.data.status !== 'completed' && (
-                      <span class="capitalize">{project.data.status}</span>
-                    )}
-                  </div>
-
-                  <h2 class="mt-4 text-2xl font-semibold leading-snug md:text-3xl">
-                    <a href={href} class="hover:underline hover:underline-offset-4">{project.data.title}</a>
+                <div class="flex flex-1 flex-col pt-5">
+                  <h2 class="text-xl font-semibold leading-snug md:text-2xl">
+                    <a href={href} class="hover:underline hover:underline-offset-4"><ProjectTitle project={project} /></a>
                   </h2>
-                  <p class="mt-4 text-lg leading-relaxed text-primary-700">{project.data.description}</p>
-
-                  {project.data.contribution && (
-                    <p class="mt-5 border-l-2 border-black/15 pl-4 text-sm leading-relaxed text-primary-700">
-                      <span class="font-semibold text-primary-900">My contribution:</span>{' '}
-                      {project.data.contribution}
-                    </p>
-                  )}
 
                   {visibleTags.length > 0 && (
-                    <ul class="mt-6 flex flex-wrap gap-2">
+                    <ul class="mt-4 flex flex-wrap gap-2">
                       {visibleTags.map((tag) => (
                         <li class="rounded-full bg-black/5 px-3 py-1 text-xs text-primary-700">{tag}</li>
                       ))}
                     </ul>
                   )}
 
-                  <div class="mt-7 md:mt-auto md:pt-8">
-                    <a href={href} class="btn-pill w-full md:w-auto">
-                      View project
-                      <Icon name="material-symbols:arrow-forward-rounded" size={18} />
-                    </a>
-                  </div>
                 </div>
               </li>
             );

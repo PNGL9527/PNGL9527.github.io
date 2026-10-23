@@ -5,6 +5,8 @@ import { Icon } from 'astro-icon/components';
 import type { LanguageKey } from '@/i18n/i18n.ts';
 import { Image } from 'astro:assets';
 import ProjectCard from '../../components/ProjectCard.astro';
+import FloatingTOC from '@/components/FloatingTOC.astro';
+import ProjectTitle from '@/components/ProjectTitle.astro';
 
 
 /* ---------------- getStaticPaths ---------------- */
@@ -59,7 +61,8 @@ const highlights = highlightsRaw
   .map((h: any) => (typeof h === 'string' ? h : h?.text ?? ''))
   .filter(Boolean);
 
-const { Content } = await render(project);
+const { Content, headings } = await render(project);
+const sections = headings.filter((heading) => heading.depth === 2);
 
 /* ---------------- More selected work (logic) ---------------- */
 const currentType = typeLabel || null;
@@ -89,41 +92,71 @@ const relatedProjects = [...sameType, ...otherType].slice(0, 2);
 const backToWorkHref = '/portfolio';
 ---
 
-<style is:inline>
+<style>
 
   /* ---------- CTA buttons ---------- */
-  .case-btn {
+  :global(.case-btn) {
     border: 1px solid rgba(0, 0, 0, 0.25);
     background: transparent;
     transition: background 0.15s ease, color 0.15s ease;
   }
 
   @media (hover: hover) {
-    .case-btn:hover {
+    :global(.case-btn:hover) {
       background: #111;
       color: white;
     }
   }
 
   @media (hover: none) {
-    .case-btn {
+    :global(.case-btn) {
       background: #111;
       color: white;
     }
   }
 
   /* ---------- MDX media ---------- */
-  :global(.case-prose img),
-  :global(.case-prose figure),
-  :global(.case-prose video),
-  :global(.case-prose iframe) {
-    border-radius: 1.5rem;
-    width: 100%;
-    display: block;
+  :global(.case-prose) { overflow-wrap: anywhere; }
+  :global(.case-prose h2) { margin-top: 4rem; scroll-margin-top: 2rem; }
+  :global(.case-prose h3) { scroll-margin-top: 2rem; }
+  :global(.case-prose > h2:first-child) { margin-top: 0; }
+  :global(.case-prose .case-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; align-items: start; }
+  :global(.case-prose .case-grid > *) { min-width: 0; }
+  :global(.case-prose .case-grid-three) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  :global(.case-prose .case-grid.case-align-bottom) { grid-template-rows: auto auto; row-gap: .7rem; align-items: stretch; }
+  :global(.case-prose .case-align-bottom > figure) { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
+  :global(.case-prose .case-align-bottom .image-trigger) { align-self: end; }
+  :global(.case-prose .case-align-bottom figcaption) { margin-top: 0; }
+  :global(.case-prose .case-evidence) { margin: 2rem 0; }
+  :global(.case-prose .case-table-scroll) { overflow-x: auto; margin: 2rem 0; border: 1px solid #ddd; border-radius: 1rem; }
+  :global(.case-prose .case-table-scroll:focus-visible) { outline: 3px solid #ffa808; outline-offset: 3px; }
+  :global(.case-prose .case-persona-table) { min-width: 42rem; border-collapse: collapse; font-size: .95rem; line-height: 1.6; margin: 0; }
+  :global(.case-prose .case-persona-table caption) { text-align: left; font-weight: 600; padding: 1rem; background: #fafafa; }
+  :global(.case-prose .case-persona-table th), :global(.case-prose .case-persona-table td) { text-align: left; vertical-align: top; padding: 1rem; border-bottom: 1px solid #ddd; border-right: 1px solid #eee; }
+  :global(.case-prose .case-persona-table th:first-child) { width: 18%; }
+  :global(.case-prose .case-persona-table tbody th) { background: #fafafa; font-weight: 500; }
+  :global(.case-prose .case-persona-table .case-image) { margin: 0; }
+  :global(.case-prose .case-persona-table .image-trigger) { background: transparent; }
+  :global(.case-prose .case-persona-table tr:last-child > *) { border-bottom: 0; }
+  :global(.case-prose .case-actions) { display: flex; flex-wrap: wrap; gap: .75rem; margin: 2rem 0; }
+  :global(.case-prose .case-actions a) { white-space: normal; text-align: center; }
+  :global(.case-prose details) { border: 1px solid #0002; border-radius: 1rem; padding: 1.2rem; margin: 1.75rem 0; }
+  :global(.case-prose summary) { cursor: pointer; font-weight: 600; }
+  :global(.case-prose .case-prototype) { border: 1px solid #0002; border-radius: 1rem; padding: 1rem; }
+  :global(.case-prose .case-prototype h3) { font-size: 1rem; margin: 0 0 1rem; }
+  :global(.case-prose .case-prototype iframe) { width: 100%; aspect-ratio: 9 / 16; border: 0; border-radius: .75rem; }
+  :global(.case-prose .case-prototype a) { display: inline-block; margin-top: 1rem; text-decoration: underline; }
+  :global(.case-prose table) { width: 100%; table-layout: fixed; }
+  :global(.case-prose td), :global(.case-prose th) { overflow-wrap: anywhere; padding-right: .6rem; }
+  @media (max-width: 40rem) {
+    :global(.case-prose .case-grid) { grid-template-columns: minmax(0, 1fr); }
+    :global(.case-prose .case-grid.case-align-bottom) { grid-template-rows: none; row-gap: 1.5rem; }
+    :global(.case-prose .case-align-bottom > figure) { display: block; grid-row: auto; }
+    :global(.case-prose .case-align-bottom figcaption) { margin-top: .7rem; }
   }
 </style>
 
-<Base title={project.data.title}>
+<Base title={project.data.title} description={project.data.description} socialImage={typeof cover === 'string' ? cover : undefined}>
   <main>
     <div class="mx-auto w-full max-w-[56rem] px-6">
       <!-- ================= Hero ================= -->
@@ -155,18 +188,15 @@ const backToWorkHref = '/portfolio';
             tracking-tight
           "
         >
-          {project.data.title}
+          <ProjectTitle project={project} />
         </h1>
 
         <!-- Cover -->
         <div
           class="
             mt-8 w-full overflow-hidden rounded-3xl border border-black/10 bg-black/5
-            aspect-[2/1]
-            sm:aspect-[2/1]
-            md:aspect-[2/1]
-            lg:aspect-[2/1]
           "
+          style={{ aspectRatio: project.data.coverAspectRatio }}
         >
           {cover &&
             (typeof cover === 'string' ? (
@@ -210,6 +240,8 @@ const backToWorkHref = '/portfolio';
       </section>
 
 
+      <FloatingTOC sections={sections} />
+
       <!-- ================= Body ================= -->
       <section class="mt-12">
         <div class="case-prose prose prose-zinc max-w-none">
@@ -222,9 +254,7 @@ const backToWorkHref = '/portfolio';
   <div class="mt-12 flex flex-col items-center gap-4 text-center">
     <p class="max-w-[36rem] text-sm leading-relaxed text-neutral-500">
       <em>
-        This page presents a curated overview of the project.
-        The full case includes detailed research, design iterations,
-        and reflections.
+        Additional project documentation is available on Notion.
       </em>
     </p>
 
@@ -234,7 +264,7 @@ const backToWorkHref = '/portfolio';
       rel="noopener noreferrer"
       class="case-btn inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold md:w-auto w-full"
     >
-      Read full case
+      View project archive
       <Icon name="material-symbols:open-in-new-rounded" size={18} />
     </a>
   </div>

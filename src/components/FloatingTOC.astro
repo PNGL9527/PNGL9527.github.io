@@ -1,0 +1,135 @@
+---
+interface Props {
+  sections: { slug: string; text: string }[];
+}
+const { sections } = Astro.props;
+const panelId = `toc-${crypto.randomUUID()}`;
+---
+
+{sections.length > 0 && (
+  <aside class="floating-toc" data-floating-toc>
+    <button class="toc-toggle" type="button" aria-label="Show table of contents" aria-expanded="false" aria-controls={panelId} data-toc-toggle>
+      <span class="toc-rail" aria-hidden="true">
+        {sections.map((_, index) => <span class:list={['toc-mark', { 'is-active': index === 0 }]} data-toc-mark />)}
+      </span>
+    </button>
+    <nav id={panelId} class="toc-panel" aria-label="On this page" inert>
+      <div class="toc-header"><span>On this page</span><button type="button" aria-label="Close table of contents" data-toc-close>×</button></div>
+      <ol>
+        {sections.map((section, index) => (
+          <li><a href={`#${section.slug}`} data-toc-link aria-current={index === 0 ? 'location' : undefined} title={section.text}>
+            <span class="toc-label">{section.text}</span><span class="toc-mark" aria-hidden="true" />
+          </a></li>
+        ))}
+      </ol>
+    </nav>
+  </aside>
+)}
+
+<script>
+  import { activeSectionIndex } from '@/utility/toc';
+
+  function initializeTOC() {
+    document.querySelectorAll<HTMLElement>('[data-floating-toc]').forEach((root) => {
+      if (root.dataset.ready) return;
+      root.dataset.ready = 'true';
+      const toggle = root.querySelector<HTMLButtonElement>('[data-toc-toggle]')!;
+      const panel = root.querySelector<HTMLElement>('.toc-panel')!;
+      const close = root.querySelector<HTMLButtonElement>('[data-toc-close]')!;
+      const links = [...root.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
+      const marks = [...root.querySelectorAll<HTMLElement>('[data-toc-mark]')];
+      const headings = links.map(link => document.getElementById(decodeURIComponent(link.hash.slice(1))));
+      const controller = new AbortController();
+      const { signal } = controller;
+      let expanded = false;
+      let frame = 0;
+
+      const setOpen = (open: boolean) => {
+        expanded = open;
+        root.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        panel.inert = !open;
+      };
+      const update = () => {
+        frame = 0;
+        const index = activeSectionIndex(headings.map(h => h?.getBoundingClientRect().top ?? Infinity), Math.min(180, innerHeight * .25));
+        links.forEach((link, i) => {
+          if (i === index) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+          marks[i]?.classList.toggle('is-active', i === index);
+        });
+      };
+      const queueUpdate = () => { if (!frame) frame = requestAnimationFrame(update); };
+      root.addEventListener('pointerenter', (event) => { if (event.pointerType === 'mouse') setOpen(true); }, { signal });
+      root.addEventListener('pointerleave', (event) => {
+        if (event.pointerType === 'mouse' && !panel.contains(document.activeElement)) setOpen(false);
+      }, { signal });
+      toggle.addEventListener('click', (event) => {
+        // A mouse click follows pointerenter; do not undo the just-opened hover panel.
+        const mouse = event instanceof PointerEvent && event.pointerType === 'mouse';
+        setOpen(mouse ? true : !expanded);
+      }, { signal });
+      close.addEventListener('click', () => { setOpen(false); toggle.focus(); }, { signal });
+      root.addEventListener('focusout', (event) => {
+        if (!root.contains(event.relatedTarget as Node | null)) setOpen(false);
+      }, { signal });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && expanded) { setOpen(false); toggle.focus(); }
+      }, { signal });
+      document.addEventListener('pointerdown', (event) => {
+        if (!root.contains(event.target as Node)) setOpen(false);
+      }, { signal });
+      links.forEach((link, index) => link.addEventListener('click', () => {
+        setOpen(false);
+        const heading = headings[index];
+        if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+        queueUpdate();
+      }, { signal }));
+      window.addEventListener('scroll', queueUpdate, { passive: true, signal });
+      window.addEventListener('resize', queueUpdate, { passive: true, signal });
+      window.addEventListener('hashchange', queueUpdate, { signal });
+      const resize = new ResizeObserver(queueUpdate);
+      const article = document.querySelector('.case-prose');
+      if (article) resize.observe(article);
+      document.addEventListener('astro:before-swap', () => {
+        controller.abort();
+        resize.disconnect();
+        cancelAnimationFrame(frame);
+      }, { once: true, signal });
+      update();
+    });
+  }
+  initializeTOC();
+  document.addEventListener('astro:page-load', initializeTOC);
+</script>
+
+<style>
+  .floating-toc { position: fixed; z-index: 40; right: max(1rem, env(safe-area-inset-right)); top: 50%; transform: translateY(-50%); width: 3rem; }
+  .toc-toggle { display: flex; align-items: center; justify-content: center; width: 3rem; padding: 1rem; border: 0; border-radius: 1rem; cursor: pointer; background: #fff9; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .toc-rail { display: flex; flex-direction: column; align-items: flex-end; gap: 1.4rem; }
+  .toc-mark { display: block; width: .7rem; height: 3px; flex-shrink: 0; background: #8888; transition: width .18s, background .18s; }
+  .toc-mark.is-active { width: 1.4rem; background: #202020; }
+  .toc-panel { position: absolute; top: 50%; right: 0; width: min(25rem, calc(100vw - 2rem)); max-height: 72dvh; overflow-y: auto; padding: .75rem; color: #555; background: #fff9; border: 1px solid #ffffffb3; border-radius: 1.4rem; box-shadow: 0 8px 28px #00000012; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; pointer-events: none; transform: translate(8px, -50%); transition: opacity .18s, transform .18s, visibility .18s; }
+  .is-open .toc-panel { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(0, -50%); }
+  .is-open .toc-toggle { opacity: 0; }
+  .toc-header { display: flex; justify-content: space-between; align-items: center; padding: .2rem .5rem .6rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; }
+  .toc-header button { color: #555; background: none; border: 0; padding: .4rem .65rem; font-size: 1.2rem; line-height: 1; cursor: pointer; border-radius: .5rem; }
+  ol { list-style: none; padding: 0; margin: 0; }
+  li { margin: 0; }
+  a { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; padding: .75rem .5rem; border-radius: .6rem; text-decoration: none; color: #555; font-size: .9rem; line-height: 1.5; }
+  .toc-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+  a .toc-mark { width: .8rem; background: #8888; }
+  a[aria-current='location'] { color: #171717; font-weight: 600; }
+  a[aria-current='location'] .toc-mark { width: 1.5rem; background: #202020; }
+  a:hover { color: #111; background: #00000006; }
+  button:focus-visible, a:focus-visible { outline: 2px solid #f6c344; outline-offset: 2px; }
+  @media (max-width: 48rem) {
+    .floating-toc { right: max(.25rem, env(safe-area-inset-right)); top: auto; bottom: 1.25rem; transform: none; }
+    .toc-toggle { background: #fff9; box-shadow: 0 4px 18px #00000012; padding: .8rem 1rem; }
+    .toc-rail { gap: .6rem; }
+    .toc-mark.is-active { background: #202020; }
+    .toc-panel { top: auto; bottom: 0; width: min(25rem, calc(100vw - 1rem)); max-height: 65dvh; transform: translateX(8px); }
+    .is-open .toc-panel { transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .toc-panel, .toc-mark { transition: none; } }
+</style>

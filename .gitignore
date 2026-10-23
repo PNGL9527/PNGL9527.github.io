@@ -20,11 +20,5 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
-# Skip Symbolic link file
-src/content
-
 # Lighthouse
 .lighthouseci
-.DS_Store
-src/.DS_Store
-.DS_Store

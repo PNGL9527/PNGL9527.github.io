@@ -1,0 +1,181 @@
+---
+title: "What's Next?"
+description: "An inclusive interaction design concept that turns a personal smartphone demonstration into a reusable guide, making gestures and their targets visible during replay."
+publishDate: 2026-10-22
+draft: false
+thumbnail: /assets/projects/whats-next/title-cover-aligned.webp
+thumbnailAlt: "Pink What's Next? cover with left-aligned title and explanatory text, and an illustration of an older person navigating a digital environment"
+type: Product
+section: design-practice
+year: "2017"
+status: prototype
+featured: false
+featuredOrder: 8
+tags:
+  - Interaction Design
+  - Inclusive Design
+  - Digital Literacy
+  - Gesture Visualisation
+highlights:
+  - "Focus: Independent learning of unfamiliar smartphone tasks"
+  - "Proposition: Personal demonstrations with visible gesture cues"
+  - "Format: Application concept, interface mockups, and storyboard"
+  - "Status: Concept proposal; not a released or validated application"
+---
+
+import LightboxImage from '@/components/LightboxImage.astro';
+import WhatsNextJourney from '@/components/WhatsNextJourney.astro';
+import WhatsNextImageGroup from '@/components/WhatsNextImageGroup.astro';
+
+## When the demonstration is over, what remains?
+
+A family member shows someone how to complete a task on their phone. It makes sense in the moment—but the next time, the sequence is difficult to reconstruct. The person who explained it may no longer be available.
+
+**What's Next?** explores how this moment of assistance could remain useful. The concept proposes saving a demonstration of a specific app task, then making the gestures behind each screen change visible when the learner returns to it.
+
+> Not just what happens on screen, but how to make it happen.
+
+The original context is older adults learning smartphone applications in China, with relatives helping them. The aim is not to replace that relationship, but to give the learner a resource they can revisit independently.
+
+## Choosing a learning challenge
+
+The proposal considers several potential barriers: small visual elements, hard-to-hear guidance, fine-motor demands, and difficulty remembering an unfamiliar sequence. It narrows the design focus to **recalling a multi-step operation after being shown how to do it**.
+
+<LightboxImage src="/assets/projects/whats-next/user-barrier-diagram.webp" alt="Original concept illustration of potential hearing, vision, learning and finger-mobility barriers" caption="The original barrier illustration frames the design space. These are potential difficulties, not a profile shared by all older adults." />
+
+The selected scenario is repeated instruction: a grandfather asks his younger relative to show him the same task again. The issue is not simply access to a phone, but how to recover the steps later without depending on another live explanation.
+
+<WhatsNextImageGroup ratios="1.312217fr 1.171598fr">
+<LightboxImage src="/assets/projects/whats-next/problem-focus.webp" alt="Original graphic highlighting recall of multi-step operations as the selected focus" caption="The design narrows from several possible barriers to remembering how." />
+<LightboxImage src="/assets/projects/whats-next/teaching-scenario-clean.webp" alt="Illustrated grandfather asking a younger family member to repeat smartphone instruction" caption="A scenario used to frame the concept—not a documented research interview." />
+</WhatsNextImageGroup>
+
+This framing is a design proposition. The original illustrations are not presented here as evidence from a usability study, nor as a claim that all older learners have the same needs.
+
+## A personal library of reusable guides
+
+Rather than send a generic tutorial, a helper would record the exact operation the learner needs—for example, how to post to WeChat Moments. That demonstration would be saved under **an application and a named action**.
+
+The relationship is simple: **app → task → demonstration**, with an optional voice note. One app could contain several task guides; a task would keep its explanation and recording together.
+
+<LightboxImage src="/assets/projects/whats-next/feature-architecture-complete.webp" alt="Original function diagram connecting the app to Record, Learning and Setting" caption="The proposed architecture: create a demonstration, retrieve it later, and adjust the learning interface." />
+
+The interface translates this structure into three functions.
+
+<WhatsNextImageGroup phones>
+<section>
+<h3>Record</h3>
+<LightboxImage src="/assets/projects/whats-next/record-screen.webp" alt="Original Record phone mockup with app selection, task name, voice note and record button" caption="Original interface concept: Record." />
+<p>Choose the app, name the task, and attach an optional spoken reminder before starting the demonstration.</p>
+</section>
+<section>
+<h3>Learning</h3>
+<LightboxImage src="/assets/projects/whats-next/learning-screen.webp" alt="Original Learning phone mockup grouping saved actions under WeChat, Alipay and Taobao" caption="Original interface concept: Learning." />
+<p>Find a task within its app group, then play the recording or listen to the accompanying voice note.</p>
+</section>
+<section>
+<h3>Setting</h3>
+<LightboxImage src="/assets/projects/whats-next/settings-screen.webp" alt="Original Setting phone mockup with contrast, font-size and tutorial controls" caption="Original interface concept: Setting." />
+<p>Adjust contrast and text size in What’s Next? and access its tutorial. These controls do not change third-party apps.</p>
+</section>
+</WhatsNextImageGroup>
+
+WeChat provides the illustrated task examples. Alipay and Taobao appear as library categories, not completed integrations or fully documented tutorials. The payment-related task name visible in the original mockup is an example label, not working payment functionality.
+
+## From teaching to independent replay
+
+The five-stage journey connects a helper's demonstration to a learner's later review. Each step below is an original interface mockup; the sequence describes the **proposed** behaviour.
+
+<WhatsNextJourney>
+<li>
+<h3><span>1</span>Choose the task</h3>
+<LightboxImage src="/assets/projects/whats-next/workflow-01-complete.webp" alt="Record concept showing app selection, the named Send Moments action and a voice note field" caption="Step 1 · original concept mockup." />
+<p>Choose WeChat, name the action “Send Moments,” and optionally add a voice note.</p>
+</li>
+<li>
+<h3><span>2</span>Enter the app</h3>
+<LightboxImage src="/assets/projects/whats-next/workflow-02-complete.webp" alt="Original phone mockup with a hand selecting WeChat on the home screen" caption="Step 2 · original concept mockup." />
+<p>Switch to the target application to begin the demonstration.</p>
+</li>
+<li>
+<h3><span>3</span>Teach and record</h3>
+<LightboxImage src="/assets/projects/whats-next/workflow-03-complete.webp" alt="Original conceptual Teaching and Recording screen" caption="Step 3 · original concept mockup." />
+<p>Demonstrate the operation while the proposed recording runs in the background.</p>
+</li>
+<li>
+<h3><span>4</span>Return and save</h3>
+<LightboxImage src="/assets/projects/whats-next/workflow-04-complete.webp" alt="Original save screen associating a recorded Moments demonstration with its task" caption="Step 4 · original concept mockup." />
+<p>Return to What’s Next? and save the guide under the named task.</p>
+</li>
+<li>
+<h3><span>5</span>Choose and review</h3>
+<LightboxImage src="/assets/projects/whats-next/workflow-05-complete.webp" alt="Original Learning library showing a replay control for Send Moments" caption="Step 5 · original concept mockup." />
+<p>Find the saved task in Learning and replay it when needed.</p>
+</li>
+</WhatsNextJourney>
+
+The key transition is from **one-time explanation to a resource for later use**. Naming the action makes the guide easier to find; keeping it under its app provides a familiar point of entry.
+
+Background recording across apps is part of the original vision, not an implemented capability demonstrated by these screens.
+
+## Making the missing gesture visible
+
+A screen recording shows an interface changing. It may not reveal what the demonstrator's finger did to produce that change: where it touched, how long it stayed, or in which direction it moved.
+
+What's Next? proposes a visual layer that reconnects the screen to the action. In the WeChat example, a highlighted region and a hand cue indicate the intended interaction area.
+
+<div className="case-grid">
+<LightboxImage src="/assets/projects/whats-next/gesture-replay-example.webp" alt="Original WeChat Discover mockup with a pink target highlight and a finger cue over the interaction area" caption="Gesture-enhanced replay concept: the screen, target region, and action cue are shown together." />
+<section>
+<h3>Three parts of a readable action</h3>
+<p><strong>The screen</strong> preserves the interface seen during the demonstration.</p>
+<p><strong>The target highlight</strong> identifies the region to attend to or interact with.</p>
+<p><strong>The gesture cue</strong> indicates the kind or direction of action associated with that region.</p>
+<p>For this to become a useful replay, the cues would need to match both the screen position and the moment in the demonstration. A static legend alone would not communicate the sequence.</p>
+<h3>A hypothesis, not a result</h3>
+<p>The original project calls this mechanism <em>Hypothetical Technology</em>. Its proposition is that visible gestures could help learners recall the teaching situation; the supplied materials do not establish that this effect has been tested.</p>
+</section>
+</div>
+
+<LightboxImage src="/assets/projects/whats-next/gesture-reference-six.webp" alt="Six original gesture drawings labelled Tab, 2x Room In, Rotate, Touch and hold, Horizontal scroll, and Vertical scroll" caption="Original gesture vocabulary, retained as drawn. “Tab” and “2x Room In” are ambiguous source labels; their intended terminology has not been confirmed." />
+
+The reference includes touch-and-hold, rotation, and horizontal and vertical scrolling. The two uncertain labels are not reinterpreted here as a particular double-tap or pinch gesture.
+
+The design contribution is the relationship between **recorded interface, visible action, and later recall**—not a claim to have solved native touch-event capture.
+
+## A guide to return to
+
+The storyboard follows Grandpa and Jack through one illustrative situation. It makes the intended value of the guide concrete without presenting the story as a user test.
+
+<WhatsNextImageGroup ratios=".911950fr 1.144654fr">
+<section>
+<h3>1. The task is forgotten</h3>
+<LightboxImage src="/assets/projects/whats-next/storyboard-01-complete.webp" alt="Grandpa asks Jack to teach the task again, with both complete speech bubbles visible" caption="Grandpa needs help reconstructing a previously demonstrated operation." />
+<p>The difficulty appears when the same procedure is needed again. A successful explanation in the moment has not necessarily become a repeatable personal routine.</p>
+</section>
+<section>
+<h3>2. Help becomes a saved resource</h3>
+<LightboxImage src="/assets/projects/whats-next/storyboard-02-complete.webp" alt="Original storyboard excerpt of Jack teaching his grandfather and saving a named demonstration" caption="Jack introduces What’s Next? and saves the procedure for future reference." />
+<p>The helper demonstrates the task again, this time leaving a guide rather than only an explanation. The saved action gives the learner something specific to return to.</p>
+</section>
+</WhatsNextImageGroup>
+
+### 3. The learner returns independently
+
+<LightboxImage src="/assets/projects/whats-next/storyboard-03-complete.webp" alt="Original storyboard excerpt showing the grandfather reviewing a saved guide while Jack is busy" caption="When Jack is unavailable, Grandpa can return to the saved tutorial." />
+
+The intended shift is from repeated dependence on immediate help to **reusable, personally relevant assistance**. Whether that actually improves independent task completion remains a question for future evaluation.
+
+## From concept to a testable experience
+
+The original work establishes an interaction concept, interface mockups, and a scenario—not a released application or validated recording system.
+
+A useful next step would be a small playback prototype: a short demonstration with **manually authored, synchronised gesture cues**, step navigation, and optional spoken notes. It could explore whether the cues help a learner reconstruct the procedure without another live explanation.
+
+That would test the **learning experience**, not native cross-app capture. Recording other apps and their touch events would remain a separate technical and privacy challenge. No functional prototype or live recording is claimed on this page.
+
+<section className="case-evidence">
+<h3>Original design materials</h3>
+<p>Concept project, 2017. Adapted from the five supplied portfolio pages, printed pages 34–38. All illustrations and interfaces shown here are original concept artwork, not live application captures or user-testing records. Source wording is retained within the images; surrounding copy uses learning-barrier language rather than treating ageing as a uniform deficit.</p>
+</section>
+

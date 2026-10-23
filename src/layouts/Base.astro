@@ -12,9 +12,11 @@ const t = useTranslations(Astro.currentLocale as LanguageKey);
 interface Props {
   title?: string;
   description?: string;
+  socialImage?: string | undefined;
 }
 
-const { title, description } = Astro.props;
+const { title, description, socialImage } = Astro.props;
+const socialImageUrl = new URL(socialImage || globalOgImage.url, Astro.site || Astro.url.origin).toString();
 
 const globalTitle = `${title || t('Head-1')} - ${t('Head-2')}`;
 const globalDescription = `${
@@ -58,20 +60,18 @@ const customTransition = {
       basic: {
         title: `${globalTitle}`,
         type: 'website',
-        image: `${globalOgImage.url}`,
+        image: socialImageUrl,
       },
       image: {
-        type: `${globalOgImage.type}`,
-        alt: `${globalOgImageAlt}`,
-        height: 630,
-        width: 1200,
+        alt: socialImage ? (title || globalOgImageAlt) : globalOgImageAlt,
       },
+      optional: { description: globalDescription },
     }}
     twitter={{
       title: `${globalTitle}`,
       description: `${globalDescription}`,
-      image: `${globalOgImage.url}`,
-      imageAlt: `${globalOgImageAlt}`,
+      image: socialImageUrl,
+      imageAlt: socialImage ? (title || globalOgImageAlt) : globalOgImageAlt,
     }}
     extend={{
       link: [

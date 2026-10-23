@@ -1,0 +1,30 @@
+<figure class="musynk-system not-prose">
+  <div class="system-flow" role="group" aria-label="Music.app connects through MuSynk M to MuSynk A, with changes able to return through synchronization">
+    <div class="system-node"><span>Manage</span><strong>Music.app</strong><p>The existing Mac collection</p></div>
+    <div class="system-link"><span aria-hidden="true">↔</span><p>Library access<br />and write-back</p></div>
+    <div class="system-node"><span>Sync</span><strong>MuSynk M</strong><p>Select, preview, transfer, review</p></div>
+    <div class="system-link"><span aria-hidden="true">↔</span><p>Selected media<br />and supported changes</p></div>
+    <div class="system-node"><span>Listen</span><strong>MuSynk A</strong><p>Local playback and library</p></div>
+  </div>
+  <div class="history-layer"><strong>Last.fm ↔ Music Trail</strong><p>Optional listening history and summaries on Android—not a requirement for playback.</p></div>
+  <figcaption>A shared collection, with different platform roles. Listening history is a separate layer.</figcaption>
+</figure>
+
+<style>
+  .musynk-system { margin: 2rem 0; }
+  .system-flow { display: grid; grid-template-columns: 1fr .55fr 1fr .55fr 1fr; gap: .6rem; align-items: center; }
+  .system-node { min-width: 0; padding: 1.2rem .9rem; border: 1px solid #ded8dc; border-radius: 1rem; background: #fcfafb; }
+  .system-node > span { display: block; color: #8d3155; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; }
+  .system-node strong { display: block; font-size: 1rem; margin: .5rem 0; }
+  .system-node p, .system-link p, .history-layer p { margin: 0; font-size: .75rem; line-height: 1.6; color: #626262; }
+  .system-link { text-align: center; }
+  .system-link > span { display: block; font-size: 1.3rem; color: #8d3155; }
+  .history-layer { margin-top: 1rem; padding: 1rem; border: 1px dashed #d7cbd0; border-radius: 1rem; }
+  .history-layer strong { display: block; margin-bottom: .35rem; font-size: .875rem; }
+  figcaption { margin-top: .75rem; font-size: .875rem; line-height: 1.5; color: #626262; }
+  @media (max-width: 40rem) {
+    .system-flow { grid-template-columns: minmax(0, 1fr); }
+    .system-link > span { transform: rotate(90deg); }
+    .system-node { padding: 1rem; }
+  }
+</style>

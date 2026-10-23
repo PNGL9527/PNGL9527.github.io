@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import type { CollectionEntry } from 'astro:content';
+import ProjectTitle from './ProjectTitle.astro';
 
 interface Props {
   project: CollectionEntry<'project'>;
@@ -11,6 +12,7 @@ const { project } = Astro.props;
 
 // -------- data mapping --------
 const title = project.data.title;
+const summary = project.data.contribution || project.data.description;
 const typeLabel = project.data.type ?? '';
 const slug = project.id.split('/').slice(1).join('/');
 
@@ -87,10 +89,10 @@ const typeIcon = typeToIcon[typeLabel] ?? 'material-symbols:apps';
     )}
 
     <h3 class="text-base font-semibold leading-snug tracking-tight">
-      {title}
+      <ProjectTitle project={project} />
     </h3>
-    {project.data.contribution && (
-      <p class="mt-2 text-sm leading-relaxed text-black/60">{project.data.contribution}</p>
+    {summary && (
+      <p class="mt-2 text-sm leading-relaxed text-black/60">{summary}</p>
     )}
   </div>
 </a>

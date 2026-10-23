@@ -1,247 +1,119 @@
 ---
-title: "a.wear: App & Service Design for Teenager's Smart Wearables"
-description: "A mobile companion app concept that turns smart-wearable data into empathetic, context-aware daily guidance for teenagers."
-
+title: "a.wear: Designing for Teenage Self-Acceptance"
+description: "A wearable service concept exploring how a playful app can turn body data into everyday support for teenagers."
 publishDate: 2025-01-01
 draft: false
-
 thumbnail: /assets/projects/awear/cover.jpg
-thumbnailAlt: Cover image for awear
-
+thumbnailAlt: "a.wear wearable service and mobile application"
 type: Product
 section: design-practice
+year: "2018"
 status: completed
 featured: true
 featuredOrder: 4
-contribution: "Interaction design, feedback logic, and the visual language of the mobile experience."
-
+contribution: "I designed the mobile app's UX, UI, and interaction prototypes, and contributed to the team's service concept and brand strategy."
+tags:
+  - Smart Wearables
+  - Interaction Design
+  - Product-Service System
+  - Sensitive Data
 highlights:
-- "Role: UX/UI Designer (Interaction design, feedback logic, visual language)"
-- "Duration: 12 weeks"
-- "Team: Group work; I was responsible for the App independently."
-- "Outcome: Interactive mobile app prototype demonstrating empathetic feedback loops"
-
-
+  - "Context: Health & Wealth Innovation Studio, Politecnico di Milano"
+  - "Team: Group project; sole designer of the mobile app"
+  - "Duration: 3 months"
+  - "Deliverable: App interaction prototypes within a wearable service concept"
 caseUrl: "https://penglu.notion.site/a-wear-Smart-Wearable-App-Service-Design-2a9813165f488063b47fd70be164c8c1"
-
 ---
 
 import LightboxImage from '@/components/LightboxImage.astro';
 
-## The Project Context
+## The challenge: support without comparison
 
-The project’s vision was to promote ***Uniqueness and Self-Acceptance*** by enabling teenagers to feel more comfortable with the physiological changes they experience.
+Teenagers aged 13–15 experience physical changes alongside growing social pressure about appearance. Our studio project explored a wearable service that could help them understand their bodies and feel more comfortable with those changes.
 
-To solve this, we moved beyond just a product and defined a customized service strategy to help teenagers:
+> How might everyday feedback support self-acceptance without turning the body into another score to improve?
 
-- Understand and love their bodies better.
-- Focus on self-improvement through physical activity and regular feedback.
+This question shaped my app design: use approachable language, make routine advice optional, and give users direct control over personal settings.
 
-## Research Insight
+The studio brief called for a personalized product informed by a chosen user group. Our investigation focused on the physical and social transitions of early adolescence, including bodily changes, smartphone use, and concerns about appearance. This led the team to a direction centered on uniqueness and self-acceptance.
 
-From the research, three insights became central to the design:
-- Generic health metrics often increase anxiety instead of motivation.
-- Teen users respond better to gentle, contextual prompts than explicit instructions.
-- Feedback timing and tone matter more than data accuracy alone.
+For my app work, the central design problem became the translation of body data into an experience: what should be visible, when should the app interrupt, and how much attention should a suggestion ask for?
 
+<LightboxImage src="/assets/projects/awear/teenage-users.jpg" alt="Research framing for teenagers aged 13–15 and their changing physical and social experiences" caption="The team's starting point: physical change, body image, and self-acceptance." />
 
-## System Overview: Bridging Biometrics and Emotional Well-being
+## A service connecting garment, app, and brand
 
-To deliver on this principle, a.wear was conceived as a **Product-Service System (PSS)** that translates physical change into actionable, positive digital feedback.
+<figure className="not-prose my-8">
+  <video controls playsInline preload="metadata" poster="/assets/projects/awear/service-concept-title.jpg" className="w-full rounded-2xl" aria-label="a.wear project presentation video">
+    <source src="/assets/projects/awear/service-concept-video.mp4" type="video/mp4" />
+    <a href="/assets/projects/awear/service-concept-video.mp4">Watch the a.wear project video</a>
+  </video>
+  <figcaption className="mt-3 text-sm text-primary-600">a.wear — the garment, companion app, and service concept.</figcaption>
+</figure>
 
-<LightboxImage
-  src={`${import.meta.env.BASE_URL}assets/projects/awear/awear_system.jpg`}
-  alt="System Overview of a.wear"
-  className="rounded-2xl w-full block"
-  caption="System Overview of a.wear."
-/>
+The team developed a product-service concept comprising smart garments, a companion app, and a shared visual identity. Proposed garment sensors would monitor perspiration, pulse, and temperature; an optional detachable vibration device was conceived for menstrual discomfort.
 
-### Why an App?
+My focus was the app: how someone would set it up, interpret feedback, and control the connected device. These are design concepts and interaction prototypes; sensing accuracy and health benefits were not established through this project.
 
-<LightboxImage
-  src={`${import.meta.env.BASE_URL}assets/projects/awear/awear_app.jpg`}
-  alt="The a.wear App"
-  className="rounded-2xl w-full block"
-  caption="The a.wear App."
-/>
+<LightboxImage src="/assets/projects/awear/awear_system.jpg" alt="a.wear product-service system connecting smart garments, the companion app, and brand community" caption="The wider service concept: garment, companion app, and shared identity." />
 
-- **Continuous interaction:** The problem unfolds across the day, not at a single moment  
-- **Personalized feedback loops:** Data interpretation and guidance require contextual adaptation  
-- **Coordination hub:** The app mediates between wearable sensing, user reflection, and action  
+## From service idea to interaction strategy
 
----
+I developed the interface around three recurring situations: introducing oneself to the service, encountering feedback during everyday activity, and configuring something personal. Each situation asks for a different form of control.
 
-## Prototype
+Onboarding uses avatars and a nickname to introduce self-expression. Feedback distinguishes a direct reminder from advice that can be ignored. Settings use visual selection and immediate controls to make private or hardware-related actions understandable. These decisions carry the service's self-acceptance goal into the app's behavior.
 
-<div className="not-prose my-8">
-  <div
-    style={{
-      display: "grid",
-      gap: "24px",
-      gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-      alignItems: "start",
-    }}
-  >
-    {/* Prototype A */}
-    <div
-      style={{
-        width: "100%",
-        maxWidth: "420px",
-        margin: "0 auto",
-        borderRadius: "16px",
-        overflow: "hidden",
-        border: "1px solid rgba(0,0,0,0.10)",
-        aspectRatio: "9 / 16",
-        background: "#fff",
-      }}
-    >
-      <iframe
-        src="https://cloud.protopie.io/p/cv3ZUTKQv5k/"
-        title="a-wear ProtoPie Prototype – Flow A"
-        style={{ width: "100%", height: "100%", border: "0" }}
-        loading="lazy"
-        allow="fullscreen; clipboard-read; clipboard-write"
-        allowFullScreen
-      />
-    </div>
+The shared brand language also connects the pieces: expressive characters and playful typography help the screens feel like parts of the same service. The design challenge is to retain that character without making important actions difficult to recognize.
 
-    {/* Prototype B */}
-    <div
-      style={{
-        width: "100%",
-        maxWidth: "420px",
-        margin: "0 auto",
-        borderRadius: "16px",
-        overflow: "hidden",
-        border: "1px solid rgba(0,0,0,0.10)",
-        aspectRatio: "9 / 16",
-        background: "#fff",
-      }}
-    >
-      <iframe
-        src="https://cloud.protopie.io/p/6nbrAGkYh9e/"
-        title="a-wear ProtoPie Prototype – Flow B"
-        style={{ width: "100%", height: "100%", border: "0" }}
-        loading="lazy"
-        allow="fullscreen; clipboard-read; clipboard-write"
-        allowFullScreen
-      />
-    </div>
-  </div>
+<LightboxImage src="/assets/projects/awear/product-sensors.png" alt="Garment concept showing a detachable sensor assembly and its placement" caption="The proposed hardware provides the context for the app's feedback and controls." />
+
+<section className="case-evidence">
+  <h3>Supporting brand identity</h3>
+<p>Comfortaa typography, bright colors, and expressive characters connect the app to the wider service identity. My contribution included translating that language into the interface.</p>
+  <LightboxImage src="/assets/projects/awear/brand-identity.png" alt="a.wear logo construction, Comfortaa typography, and color palette" />
+</section>
+
+<LightboxImage src="/assets/projects/awear/awear_app.jpg" alt="a.wear interaction overview from personal setup to body feedback, everyday prompts, and device controls" caption="An overview of the app's interaction language before the individual flows below." />
+
+## Three interaction decisions
+
+### 1. Match the interruption to the message
+
+I separated an attention-getting water reminder from everyday advice. The reminder presents a clear message and acknowledgment; routine suggestions appear as drifting clouds that users can engage with or let pass. This gives the prototype two different rhythms of interaction.
+
+The water reminder is a concept for feedback, rather than a clinically validated emergency alert. Its tone and trigger conditions would need testing.
+
+The contrast between the two interactions makes a deliberate trade-off visible. A strong interruption is easy to notice but can feel directive; a drifting prompt respects the user's attention but can be missed. The prototype explores both, giving different messages different levels of insistence.
+
+<div className="case-grid">
+  <LightboxImage src="/assets/projects/awear/water-reminder.gif" alt="Animated water reminder and acknowledgment interaction" caption="An explicit prompt when attention is needed." className="case-phone" />
+  <LightboxImage src="/assets/projects/awear/cloud-prompts.gif" alt="Optional advice presented through drifting interactive clouds" caption="Optional prompts for everyday engagement." className="case-phone" />
 </div>
 
+### 2. Make onboarding feel like self-expression
 
-#### Prototype Coverage
+Avatar selection, nickname creation, and age selection use the brand's playful visual language. The intention is to make initial setup welcoming while keeping the steps understandable.
 
-- Covered: onboarding, daily loop, insights, alerts, vibrator setting, system settings
-- Not covered: edge cases, account recovery, battery charging, etc.
+The sequence moves from a character choice to personal identification and basic configuration. It establishes the app's tone through actions, rather than relying on a long introduction. In subsequent testing, I would examine whether the playful treatment remains clear and appropriate across the intended age group.
 
----
+<LightboxImage src="/assets/projects/awear/avatar-setup.gif" alt="Avatar and nickname selection during a.wear onboarding" caption="A playful setup sequence, designed to introduce the app's tone." className="case-phone" />
 
-## Key Flows
+### 3. Make personal settings tangible
 
-<div
-  style={{
-    display: "grid",
-    gap: "32px",
-    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-    margin: "2rem 0",
-  }}
->
-  {/* Flow 1 */}
-  <div style={{ textAlign: "left" }}>
-    <p style={{ fontWeight: 600 }}>
-      **1. Onboarding → device pairing → personalization**
-    </p>
-    <img
-      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_1.gif"}
-      alt="Key Flow: onboarding"
-      style={{
-        display: "block",
-        width: "100%",
-        maxWidth: "360px",
-        margin: "1rem auto 0",
-        borderRadius: "16px",
-      }}
-    />
-  </div>
+For cycle tracking, visual date selection replaces a long form. For the proposed vibration device, direct controls let users adjust settings without navigating through multiple menus.
 
-  {/* Flow 2 */}
-  <div style={{ textAlign: "left" }}>
-    <p style={{ fontWeight: 600 }}>
-      **2. Real-time feedback → alert → resolution**
-    </p>
-    <img
-      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_2.gif"}
-      alt="Key Flow: real-time feedback"
-      style={{
-        display: "block",
-        width: "100%",
-        maxWidth: "360px",
-        margin: "1rem auto 0",
-        borderRadius: "16px",
-      }}
-    />
-  </div>
+These screens address two different challenges. Date selection helps make a sensitive input task legible; hardware controls connect an on-screen action to a proposed physical response. Both require clear state and feedback. A working service would also need to explain what is stored, how it is used, and what happens when the device is disconnected.
 
-  {/* Flow 3 */}
-  <div style={{ textAlign: "left" }}>
-    <p style={{ fontWeight: 600 }}>
-      **3. Interactive Cloud → insights → behavior loop**
-    </p>
-    <img
-      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_3.gif"}
-      alt="Key Flow: interactive cloud"
-      style={{
-        display: "block",
-        width: "100%",
-        maxWidth: "360px",
-        margin: "1rem auto 0",
-        borderRadius: "16px",
-      }}
-    />
-  </div>
-
-  {/* Flow 4 */}
-  <div style={{ textAlign: "left" }}>
-    <p style={{ fontWeight: 600 }}>
-      **4. Settings → privacy / data control**
-    </p>
-    <img
-      src={import.meta.env.BASE_URL + "assets/projects/awear/awear_app_4.gif"}
-      alt="Key Flow: settings"
-      style={{
-        display: "block",
-        width: "100%",
-        maxWidth: "360px",
-        margin: "1rem auto 0",
-        borderRadius: "16px",
-      }}
-    />
-  </div>
+<div className="case-grid">
+  <LightboxImage src="/assets/projects/awear/cycle-tracker.gif" alt="Visual date selection in the cycle tracking prototype" caption="Cycle settings through visual selection." className="case-phone" />
+  <LightboxImage src="/assets/projects/awear/device-control.gif" alt="Vibration device settings in the app prototype" caption="Direct controls for connected hardware." className="case-phone" />
 </div>
 
----
+## Outcome and reflection
 
-## Design Rationale
+The project produced a coherent app concept and interaction prototypes connecting onboarding, contextual feedback, and personal controls to a wider wearable service.
 
-- **Data-to-Action Feedback Loop:** Eliminating Friction
-- **Gamification & Novel Interaction:** Expressive & Playful Visual Language
-- **Sensitive Data Configuration:** Designing with Empathy
+The hardest design trade-off was balancing expressive interaction with clear, trustworthy feedback. The prototypes demonstrate that design direction; they do not establish improved retention, reduced anxiety, or health outcomes.
 
----
+A next iteration would test comprehension and emotional response with the intended age group, refine the more directive reminder language, and develop consent, data deletion, and device-disconnection flows alongside the core experience.
 
-## Outcome
-
-- Successfully translated a sensitive emotional issue (teen body image pressure) into an empathetic, actionable app experience.
-- Dual-mode feedback (immediate alerts vs. casual cloud prompts) balanced guidance, autonomy, and non-judgmental interaction.
-- Expressive, gamified UI elements proved effective in building trust, engagement, and a youth-oriented brand identity.
-
----
-
-## Reflection
-
-This project strengthened my ability to design low-friction, emotion-centric interactions for sensitive health contexts. Prioritizing empathetic feedback over competitive metrics challenged conventional UX assumptions for wearable systems.  
-The hardest trade-off was balancing expressive UI with clarity and data trust. With more time, I would validate assumed emotional responses with longitudinal user studies and refine prompt phrasing for deeper personalization.
-
----

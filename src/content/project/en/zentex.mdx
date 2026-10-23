@@ -1,0 +1,101 @@
+---
+title: "ZenTex"
+titleIcon: /assets/projects/zentex/title-icon.png
+description: "A writing-first LaTeX editor for macOS, designed to keep local files, readable previews, and the act of writing in the same flow."
+publishDate: 2026-10-22
+draft: false
+thumbnail: /assets/projects/zentex/cover.png
+coverAspectRatio: 1.6666666667
+thumbnailAlt: "ZenTex identity image: a green typewriter holding a sheet titled A writing-first LaTeX workbench"
+type: Product
+section: teaching-experiments
+year: "2026"
+status: ongoing
+featured: false
+featuredOrder: 999
+contribution: "Personal workflow framing, interaction design, and AI-assisted development with Workbuddy and REA."
+tags:
+  - LaTeX
+  - macOS
+  - AI-Assisted Development
+  - Academic Writing
+highlights:
+  - "Focus: Immersive academic writing with local files"
+  - "Platform: macOS desktop application"
+  - "Approach: Personal toolmaking through AI-assisted development"
+---
+
+import LightboxImage from '@/components/LightboxImage.astro';
+
+## A tool I wanted for my own writing
+
+ZenTex began when my Politecnico di Milano–linked Overleaf subscription expired. I also wanted to keep my manuscripts on my own computer. What I did not want to lose was the closeness between writing and seeing the document take shape.
+
+Years of writing with LaTeX had given me a collection of small frustrations: moving between source and output, finding a section across files, looking up citation keys, and keeping revision notes somewhere useful. I wanted these tasks to recede so that I could **stay with the argument I was writing**.
+
+Using <a href="https://www.texifier.com/" target="_blank" rel="noopener noreferrer">Texifier</a> as a behavioural reference, I worked with Workbuddy and REA to develop an independent macOS editor, then extended it around my own writing needs. The aim was a workspace where readable text and direct control over LaTeX could coexist.
+
+## Write where you read
+
+The central idea is an editable preview. Headings, equations, tables, figures, and references become readable in the writing column. Moving the cursor into a decorated region reveals the underlying source so it can be edited directly.
+
+This is one document, not two versions to keep in sync. The writer can move between reading and editing without leaving the place where a sentence belongs.
+
+<div className="case-grid">
+  <LightboxImage src="/assets/projects/zentex/source.png" alt="ZenTex source mode showing the LaTeX preamble, title commands, and manuscript text in a narrow writing column" caption="Source mode keeps the LaTeX visible and directly accessible." />
+  <LightboxImage src="/assets/projects/zentex/preview.png" alt="The same ZenTex introduction in preview mode, with a collapsed preamble, rendered heading, and an image displayed within the editor" caption="Preview mode makes the same document readable in place." />
+</div>
+
+**Read → place the cursor → edit → return to the text.** The preamble can retreat into a summary, while the body keeps its visual hierarchy. Formula and table previews help the writer inspect meaning without repeatedly switching to the final PDF.
+
+<div className="case-grid">
+  <LightboxImage src="/assets/projects/zentex/math-updated.png" alt="ZenTex preview displaying a mathematical equation inside the editable manuscript column" caption="An equation rendered within the writing flow." />
+  <LightboxImage src="/assets/projects/zentex/table.png" alt="ZenTex preview displaying a formatted table of capabilities inside the manuscript, surrounded by editable LaTeX" caption="A table becomes legible without hiding its editable source." />
+</div>
+
+## Fewer interruptions around the sentence
+
+Immersion also depends on the smaller actions around writing. I grouped the supporting features around recovering context, bringing in references, and leaving a useful next step.
+
+**Find without losing your place.** A document outline and project search help locate sections and labels.
+
+**Bring your library into the writing flow.** ZenTex can import a Zotero library exported through Better BibTeX. A reference does not need to be in the current project's `.bib` file already: if it is in the imported library, it can be selected inside the editor. ZenTex inserts the citation and automatically copies the corresponding bibliography entry into the project's `.bib` file. The writer can work from their wider reference collection without leaving the manuscript to hunt for a citation key or manually copy an entry.
+
+**Leave the next step in the manuscript.** TODOs remain connected to their source locations. Completing one in the sidebar updates the source note, rather than creating a separate task list to maintain.
+
+<div className="case-grid">
+  <LightboxImage src="/assets/projects/zentex/completion-updated.png" alt="ZenTex citation popup showing references from the imported Zotero library and explaining that a selected entry is added to the project's bibliography" caption="Select from the imported Zotero library; ZenTex adds the reference to the project's bibliography." />
+  <LightboxImage src="/assets/projects/zentex/todo.png" alt="ZenTex TODO sidebar showing open and completed notes alongside corresponding TODO and DONE comments in the source" caption="Revision notes stay attached to the text they concern." />
+</div>
+
+**Shape a comfortable writing space.** Text width and position can be adjusted independently. In **Zen mode**, only the passage at the cursor stays highlighted while the surrounding text recedes, helping the writer stay with the current thought. The sidebar, appearance, and reader settings let the interface support the session rather than dictate it.
+
+<div className="case-grid">
+  <LightboxImage src="/assets/projects/zentex/zen-mode-updated.png" alt="ZenTex Zen mode with the passage at the cursor highlighted, surrounding text dimmed, and the sidebar hidden" caption="Zen mode keeps attention on the passage being written; the rest of the manuscript recedes." />
+  <LightboxImage src="/assets/projects/zentex/settings.png" alt="ZenTex settings with controls for autosave, sidebar visibility, text width, text-block position, and line-number placement" caption="Adjusting the writing column is part of the experience, not only a cosmetic preference." />
+</div>
+
+## Keep the files, check the page
+
+The readable editor does not replace LaTeX's typeset output. A split view keeps the working document beside its compiled PDF, and SyncTeX provides jumps between source and output when a precise page check is needed.
+
+<LightboxImage src="/assets/projects/zentex/split.png" alt="ZenTex split view with an editable preview on the left and the compiled PDF of the same introduction on the right" caption="Write in the readable document; inspect the compiled page when layout matters." />
+
+The application works with local project files and a local TeX toolchain. A Swift/AppKit shell surrounds the editing and preview layer built with CodeMirror, KaTeX, and pdf.js. This choice supports the original aim: a desktop writing workflow without requiring my manuscript to live in a cloud editor.
+
+## Personal toolmaking with AI
+
+Workbuddy and REA supported the investigation and implementation. My role was to define the writing problems, shape the interactions, and decide which behaviours served the workflow I wanted. The reference app provided a starting point; my own writing experience set the priorities.
+
+ZenTex remains an evolving personal tool. It supports source-to-PDF navigation, but not continuous PDF scroll-following while typing. Local TeX setup and language support still need refinement; the Chinese preamble summary visible in the screenshots is one known localization gap.
+
+The design goal remains simple: **make more room for writing, with less attention spent managing the editor.**
+
+<section className="case-evidence">
+  <h3>Context and credits</h3>
+  <p>Independent personal project, developed with Workbuddy and <a href="https://github.com/morluto/rea" target="_blank" rel="noopener noreferrer">REA — Reverse Engineer Anything</a>. <a href="https://www.texifier.com/" target="_blank" rel="noopener noreferrer">Texifier</a> was the behavioural reference; its application binary and assets are not redistributed with ZenTex. CodeMirror, KaTeX, and pdf.js retain their respective open-source credits. Screenshots show demonstration documents, alongside ZenTex identity artwork.</p>
+</section>
+
+<div className="case-actions not-prose">
+  <a className="btn-pill" href="https://github.com/PNGL9527/ZenTex" target="_blank" rel="noopener noreferrer">View ZenTex on GitHub ↗</a>
+</div>

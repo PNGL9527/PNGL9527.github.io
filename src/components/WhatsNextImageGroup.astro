@@ -1,0 +1,24 @@
+---
+interface Props {
+  phones?: boolean;
+  ratios?: string;
+}
+const { phones = false, ratios = '1fr 1fr' } = Astro.props;
+---
+
+<div class:list={['whats-next-images', { 'whats-next-phones': phones }]} style={{ '--image-columns': phones ? 'repeat(3, minmax(0, 1fr))' : ratios }}>
+  <slot />
+</div>
+
+<style>
+  .whats-next-images { display: grid; grid-template-columns: var(--image-columns); gap: 1.5rem; align-items: start; }
+  .whats-next-images > :global(*) { min-width: 0; }
+  .whats-next-images :global(h3) { min-height: 3.4rem; margin: 1.5rem 0 0; }
+  .whats-next-phones :global(.image-trigger) { aspect-ratio: .53; display: grid; place-items: center; background: transparent; }
+  .whats-next-phones :global(.image-trigger > img) { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+  @media (max-width: 48rem) {
+    .whats-next-images { grid-template-columns: minmax(0, 1fr); }
+    .whats-next-images :global(h3) { min-height: 0; }
+    .whats-next-phones :global(figure) { max-width: 18rem; margin-left: auto; margin-right: auto; }
+  }
+</style>

@@ -18,6 +18,7 @@ export const collections = {
         draft: z.boolean().default(false),
         hasContainerized: z.boolean().optional(),
         title: z.string(),
+        titleIcon: z.string().optional(),
         description: z.string(),
 
         type: z
@@ -53,6 +54,7 @@ export const collections = {
         // ✅ Now image() is defined
         thumbnail: z.string().optional(),
         thumbnailAlt: z.string().optional(),
+        coverAspectRatio: z.number().positive().default(2),
 
         video: z.array(z.object({ src: z.string(), type: z.string() })).optional(),
         tech: z.array(allowedTechsEnum).default([]),

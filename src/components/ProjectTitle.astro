@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { project: CollectionEntry<'project'>; }
+const { project } = Astro.props;
+const { title, titleIcon } = project.data;
+// MuSynk's supplied foreground asset has generous transparent margins.
+const iconScale = project.id === 'en/musynk' ? 2.1 : 1;
+---
+
+{titleIcon ? (
+  <span class="project-title">
+    <span class="title-icon" aria-hidden="true">
+      <img src={titleIcon} alt="" style={{ transform: `scale(${iconScale})` }} />
+    </span>
+    <span>{title}</span>
+  </span>
+) : title}
+
+<style>
+  .project-title { display: inline-flex; align-items: center; gap: .25em; max-width: 100%; }
+  .title-icon { display: inline-flex; width: 1em; height: 1em; flex: none; }
+  .title-icon img { display: block; width: 100%; height: 100%; object-fit: contain; }
+</style>

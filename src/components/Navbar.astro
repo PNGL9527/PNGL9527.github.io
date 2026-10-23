@@ -8,7 +8,7 @@ const t = useTranslations(Astro.currentLocale as LanguageKey);
 const links = [
   { url: '/portfolio', name: t('Navbar-Portfolio'), activePath: '/portfolio' },
   { url: '/research', name: t('Navbar-Research'), activePath: '/research' },
-  { url: '/research#publications', name: t('Navbar-Publications'), activePath: null },
+  { url: 'https://scholar.google.com/citations?user=KaqQ8gIAAAAJ', name: t('Navbar-Publications'), activePath: null },
 ];
 
 function isActiveNavItem(navItem: string | null) {
@@ -50,7 +50,9 @@ function isActiveNavItem(navItem: string | null) {
               class={`px-3 py-4 text-sm sm:px-4 sm:text-base md:px-8 rounded-full transition-colors whitespace-nowrap ${
                 isActiveNavItem(activePath) ? 'bg-primary-900 text-primary-50' : 'hover:bg-primary-100'
               }`}
-              href={url.includes('#') ? url : getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, url)}
+              href={url.startsWith('https://') || url.includes('#') ? url : getRelativeLocaleUrl(Astro.currentLocale || defaultLocale, url)}
+              target={url.startsWith('https://') ? '_blank' : undefined}
+              rel={url.startsWith('https://') ? 'noopener noreferrer' : undefined}
             >
               {name}
             </a>

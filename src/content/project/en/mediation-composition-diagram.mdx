@@ -1,0 +1,101 @@
+---
+title: "Mediation Composition Diagram"
+description: "A diagrammatic tool for articulating situated human–technology relations, developed from mediation granularity into a visual grammar and interactive prototype."
+publishDate: 2026-10-21
+draft: false
+thumbnail: /assets/projects/mcd/cover-wide.webp
+coverAspectRatio: 2
+thumbnailAlt: "Mediation Composition Diagram visual grammar"
+type: Tool
+section: research-tools
+year: "2026"
+status: prototype
+featured: false
+featuredOrder: 999
+contribution: "Concept development, diagrammatic grammar design, interactive prototype, and the NordiCHI 2026 poster and paper."
+tags:
+  - Interaction Design
+  - HCI
+  - Diagrammatic Method
+  - Postphenomenology
+highlights:
+  - "Concept: Mediation granularity and the situated analytical cut"
+  - "Design output: Visual grammar and interactive prototype"
+  - "Research output: NordiCHI 2026 Adjunct paper and poster"
+link:
+  url: https://www.penglu.work/Online_MCD/
+---
+
+import LightboxImage from '@/components/LightboxImage.astro';
+import MCDGrammarFigure from '@/components/MCDGrammarFigure.astro';
+
+<div className="case-actions not-prose">
+  <a className="btn-pill" href="https://www.penglu.work/Online_MCD/" target="_blank" rel="noopener noreferrer">Explore interactive MCD ↗</a>
+  <a className="btn-pill" href="https://doi.org/10.1145/3821402.3830102" target="_blank" rel="noopener noreferrer">Read the paper ↗</a>
+</div>
+
+## The challenge: make a configuration visible
+
+Human–technology experience often involves several relations at once: some come to the forefront, some recede, and others shape the wider field of awareness.
+
+MCD translates this analytical problem into a diagrammatic language. The project connects a conceptual account of **mediation granularity**, a visual grammar, and an exploratory interactive prototype.
+
+The design task was to make an analytical choice inspectable: which relations are distinguished, which remain grouped, and how their organization is represented. That task connects the theoretical concept to the diagram's visual conventions.
+
+> What becomes visible in an analysis depends on where we draw the analytical cut.
+
+## Analytical cuts: one situation, different questions
+
+Mediation granularity describes the resolution through which human–technology relations are selectively articulated. In a movie theater, one inquiry may treat the situation broadly; another may distinguish the screen, seating, or sound system.
+
+<LightboxImage src="/assets/projects/mcd/analytical_cuts.png" alt="Three parallel analytical cuts of a movie-theater experience: broad, differentiated, and inquiry-led" caption="Adapted from Rosenberger & Verbeek (2015, p. 24) and Lu (2026, Section 3.1). Icons: Material Design Icons Round, Apache-2.0." />
+
+- **Broad cut:** consider the theater as a broad mediated situation.
+- **Differentiated cut:** distinguish screen, sound, seating, darkness, and spatial arrangement.
+- **Inquiry-led cut:** focus on immersive sound, distinguishing speaker placement, volume, spatialization, and bass response while other elements remain grouped.
+
+These are parallel readings of the same situation. Each responds to a different inquiry rather than following a fixed sequence.
+
+## Visual grammar: compose the relations
+
+The grammar brings relation type and experiential organization into one representation. Shapes distinguish relation types; position, opacity, size, and diffuse regions express how they are organized within a situational horizon.
+
+<MCDGrammarFigure>
+<LightboxImage src="/assets/projects/mcd/grammar-diagram.svg" alt="Original MCD schematic: relations of varying size and opacity within a diffuse field of awareness, enclosed by the complete dashed situational horizon" caption="An example composition within a situational horizon." />
+</MCDGrammarFigure>
+
+The composition expresses situated analytical judgments. It is descriptive rather than a standardized numerical measurement.
+
+The grammar separates two decisions. Relation type determines the shape of an element; compositional properties describe its role within the situation. This allows the representation to retain several simultaneous relations while showing how they differ in prominence and influence. The boundary makes the chosen situational horizon explicit.
+
+## Comparison: from city driving to highway automation
+
+A driver and a friend travel to an unfamiliar airport while talking and listening to familiar music. Two key frames explore the same wider activity under manual city driving and highway Navigation on Autopilot (NoA).
+
+<div className="case-grid">
+  <LightboxImage src="/assets/projects/mcd/scenario_manual.svg" background="white" alt="Manual city driving configuration with continuous bodily driving control foregrounded" caption="A. Manual city driving." />
+  <LightboxImage src="/assets/projects/mcd/scenario_noA.svg" background="white" alt="Highway NoA configuration with automation foregrounded and manual control receding" caption="B. Highway with Navigation on Autopilot." />
+</div>
+
+The comparison articulates manual control receding, NoA becoming salient as an alterity mediator, and music gaining field-compositional influence. These diagrams demonstrate analytical comparison; they are not attention measurements or population-level findings.
+
+## Prototype: work with the representation
+
+The online prototype lets users compose and revise configurations, adjust relations, and explore how analytical decisions affect the diagram. It extends the static grammar into an interactive setting for comparison and discussion.
+
+Moving into an interactive form makes revision part of the method's presentation. A configuration can be reconsidered as the analytical question changes, supporting discussion about the cut as well as the resulting diagram. The static examples explain the reading; the prototype provides a place to work with it.
+
+<LightboxImage src="/assets/projects/mcd/prototype-workspace.png" alt="Live MCD prototype showing the built-in manual-driving example, situational horizon, relations, and legend" caption="The live prototype's built-in manual-driving example, captured on 21 October 2026." />
+
+The prototype also explores **sedimentation** as a separate encoding. This is an exploratory addition, distinct from the grammar established in the poster.
+
+<div className="case-actions not-prose">
+  <a className="btn-pill" href="https://www.penglu.work/Online_MCD/" target="_blank" rel="noopener noreferrer">Launch the prototype ↗</a>
+</div>
+
+## Contribution and next questions
+
+The project connects an explicit analytical cut to a visual means of articulating situated mediation. Its present research foundation concerns descriptive comparison of selected key frames. Future work can examine participatory use, temporal change, and socio-structural conditions.
+
+Peng Lu. 2026. *Granularity as Analytical Cut: A Diagrammatic Approach to Situated Mediation Analysis in Postphenomenological Design Research*. In *NordiCHI '26 Adjunct*. ACM. [Read the publication](https://doi.org/10.1145/3821402.3830102).
+

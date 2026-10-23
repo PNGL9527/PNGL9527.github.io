@@ -1,66 +1,82 @@
 ---
-const { src, alt = "", className = "", caption = "" } = Astro.props;
-
-// 生成一个足够唯一的 id（服务于同页多张图）
-const id = `lb-${Math.random().toString(36).slice(2, 10)}`;
+interface Props {
+  src: string;
+  alt?: string;
+  className?: string;
+  caption?: string;
+  background?: string;
+  width?: number;
+  height?: number;
+}
+const { src, alt = "", className = "", caption = "", background, width, height } = Astro.props;
+const id = `image-${crypto.randomUUID()}`;
 ---
 
-<figure class="m-0" data-lightbox-root={id}>
-  <!-- Thumbnail -->
-  <img
-    src={src}
-    alt={alt}
-    loading="lazy"
-    class={`block w-full cursor-zoom-in ${className}`}
-    data-lightbox-thumb={id}
-  />
-
-  {caption ? (
-    <figcaption class="mt-2 text-sm text-neutral-500">{caption}</figcaption>
-  ) : null}
-
-  <!-- Overlay -->
-  <div
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4"
-    aria-hidden="true"
-    data-lightbox-overlay={id}
-  >
-    <img
-      src={src}
-      alt={alt}
-      class="max-h-[90vh] max-w-[90vw] rounded-2xl"
-    />
-  </div>
+<figure class="case-image not-prose">
+  <button type="button" class="image-trigger" style={background ? { backgroundColor: background } : undefined} data-lightbox-open={id} aria-label={`Enlarge image: ${alt || caption || 'project image'}`} aria-haspopup="dialog" aria-controls={id}>
+    <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" class={className} />
+    <span class="image-hint" aria-hidden="true">Enlarge ↗</span>
+  </button>
+  {caption && <figcaption>{caption}</figcaption>}
+  <dialog id={id} class="image-dialog" data-lightbox-dialog aria-label={alt || caption || 'Project image'}>
+    <div class="image-toolbar">
+      <a href={src} target="_blank" rel="noopener noreferrer">Open original ↗</a>
+      <button type="button" data-lightbox-close autofocus aria-label="Close enlarged image">Close ×</button>
+    </div>
+    <img src={src} alt={alt} loading="lazy" decoding="async" />
+    {caption && <p>{caption}</p>}
+  </dialog>
 </figure>
 
-<!-- IMPORTANT: use define:vars to pass id into the script -->
-<script is:inline define:vars={{ id }}>
-  (() => {
-    const thumb = document.querySelector(`[data-lightbox-thumb="${id}"]`);
-    const overlay = document.querySelector(`[data-lightbox-overlay="${id}"]`);
-
-    if (!thumb || !overlay) return;
-
-    const open = () => {
-      overlay.classList.remove("hidden");
-      overlay.classList.add("flex");
-      overlay.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-    };
-
-    const close = () => {
-      overlay.classList.add("hidden");
-      overlay.classList.remove("flex");
-      overlay.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-    };
-
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") close();
-    };
-
-    thumb.addEventListener("click", open);
-    overlay.addEventListener("click", close);
-    document.addEventListener("keydown", onKeyDown);
-  })();
+<script>
+  // Delegation survives Astro's client-side page transitions without duplicate listeners.
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element)) return;
+    const trigger = event.target.closest<HTMLButtonElement>('[data-lightbox-open]');
+    if (trigger) {
+      const dialog = document.getElementById(trigger.dataset.lightboxOpen ?? '');
+      if (dialog instanceof HTMLDialogElement && !dialog.open) {
+        dialog.showModal();
+        document.documentElement.style.overflow = 'hidden';
+      }
+      return;
+    }
+    const close = event.target.closest('[data-lightbox-close]');
+    if (close) close.closest('dialog')?.close();
+    if (event.target instanceof HTMLDialogElement && event.target.hasAttribute('data-lightbox-dialog')) {
+      const bounds = event.target.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) {
+        event.target.close();
+      }
+    }
+  });
+  document.addEventListener('close', (event) => {
+    if (event.target instanceof HTMLDialogElement && event.target.hasAttribute('data-lightbox-dialog')) {
+      document.documentElement.style.overflow = '';
+    }
+  }, true);
+  document.addEventListener('astro:before-swap', () => {
+    document.querySelectorAll<HTMLDialogElement>('dialog[data-lightbox-dialog][open]').forEach(dialog => dialog.close());
+    document.documentElement.style.overflow = '';
+  });
 </script>
+
+<style>
+  .case-image { min-width: 0; margin: 1.75rem 0; }
+  .image-trigger { display: block; position: relative; width: 100%; padding: 0; border: 0; background: #f7f7f7; border-radius: 1rem; cursor: zoom-in; }
+  .image-trigger:focus-visible { outline: 3px solid #ffa808; outline-offset: 5px; }
+  .image-trigger img { display: block; width: 100%; height: auto; border-radius: 1rem; }
+  .image-trigger :global(.case-phone) { width: auto; max-width: 100%; max-height: 32rem; margin: 0 auto; object-fit: contain; }
+  .image-trigger :global(.case-portrait) { width: auto; max-width: 100%; height: 10rem; object-fit: contain; margin: 1rem auto; }
+  .image-hint { position: absolute; bottom: .6rem; right: .6rem; background: #ffffffed; color: #222; font-size: .75rem; padding: .25rem .55rem; border-radius: 2rem; opacity: 0; pointer-events: none; transition: opacity .15s ease; }
+  .image-trigger:hover .image-hint, .image-trigger:focus-visible .image-hint { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .image-hint { transition: none; } }
+  figcaption { margin-top: .7rem; color: #626262; font-size: .875rem; line-height: 1.5; }
+  .image-dialog { width: min(94vw, 100rem); max-width: 94vw; max-height: 94dvh; padding: 1rem; margin: auto; border: 0; border-radius: 1rem; background: white; color: #222; overflow: auto; }
+  .image-dialog::backdrop { background: #000c; }
+  .image-dialog img { display: block; width: auto; max-width: 100%; max-height: 76dvh; height: auto; object-fit: contain; margin: auto; }
+  .image-toolbar { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; font-size: .875rem; }
+  .image-toolbar a, .image-toolbar button { padding: .6rem .8rem; border: 1px solid #ddd; border-radius: 2rem; cursor: pointer; }
+  .image-dialog p { margin: 1rem 0 0; font-size: .875rem; }
+</style>
+

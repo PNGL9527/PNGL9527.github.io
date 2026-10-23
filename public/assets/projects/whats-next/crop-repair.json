@@ -1,0 +1,106 @@
+{
+  "source": "Peng Lu_Portfolio (pages 37-41).pdf",
+  "units": "PDF points, top-left origin",
+  "crops": [
+    {
+      "page": 2,
+      "id": "teaching-scenario-clean",
+      "rect": [
+        998,
+        64,
+        1394,
+        402
+      ]
+    },
+    {
+      "page": 3,
+      "id": "feature-architecture-complete",
+      "rect": [
+        40,
+        65,
+        684,
+        400
+      ]
+    },
+    {
+      "page": 4,
+      "id": "workflow-01-complete",
+      "rect": [
+        56,
+        82,
+        185,
+        343
+      ]
+    },
+    {
+      "page": 4,
+      "id": "workflow-02-complete",
+      "rect": [
+        231,
+        82,
+        364,
+        343
+      ]
+    },
+    {
+      "page": 4,
+      "id": "workflow-03-complete",
+      "rect": [
+        417,
+        82,
+        543,
+        343
+      ]
+    },
+    {
+      "page": 4,
+      "id": "workflow-04-complete",
+      "rect": [
+        592,
+        82,
+        722,
+        343
+      ]
+    },
+    {
+      "page": 4,
+      "id": "workflow-05-complete",
+      "rect": [
+        774,
+        82,
+        905,
+        343
+      ]
+    },
+    {
+      "page": 5,
+      "id": "storyboard-01-complete",
+      "rect": [
+        250,
+        65,
+        540,
+        383
+      ]
+    },
+    {
+      "page": 5,
+      "id": "storyboard-02-complete",
+      "rect": [
+        552,
+        65,
+        916,
+        383
+      ]
+    },
+    {
+      "page": 5,
+      "id": "storyboard-03-complete",
+      "rect": [
+        945,
+        65,
+        1640,
+        383
+      ]
+    }
+  ]
+}

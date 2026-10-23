@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="800" viewBox="0 0 1600 800">
+<title>Different perspectives, one shared pathway</title>
+<desc>Experience-design observations and clinical measures connect to the same pathway. A conceptual diagram, not clinical guidance.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="#59564e" stroke-width="1.3"/></marker></defs>
+<rect width="1600" height="800" fill="#f7f6f2"/>
+<g fill="none" stroke-width="2.5" stroke-dasharray="5 8">
+  <path d="M403 307C510 307 540 260 680 260" stroke="#d64e3e"/>
+  <path d="M1198 307C1090 307 1060 260 920 260" stroke="#5481e6"/>
+  <path d="M425 505C485 505 525 507 586 507" stroke="#d64e3e"/>
+  <path d="M1175 505C1115 505 1075 507 1014 507" stroke="#5481e6"/>
+</g>
+<rect x="560" y="86" width="480" height="610" rx="14" fill="#fffefa" stroke="#dedbd2" stroke-width="2"/>
+<path d="M574 86H1026Q1040 86 1040 100V108H560V100Q560 86 574 86" fill="#efc33e"/>
+<g fill="none" stroke="#59564e" stroke-width="2.5" marker-end="url(#arrow)">
+  <path d="M800 192V230"/><path d="M800 294V334"/>
+  <path d="M748 386H650V482"/><path d="M852 386H950V482"/>
+  <path d="M650 532V575H800V610"/><path d="M950 532V575H800" marker-end="none"/>
+</g>
+<g stroke="#837443" stroke-width="2.2" fill="#fff2bc">
+  <rect x="718" y="144" width="164" height="48" rx="24"/>
+  <rect x="680" y="230" width="240" height="64" rx="7"/>
+  <path d="M800 334L852 386L800 438L748 386Z"/>
+  <rect x="586" y="482" width="128" height="50" rx="6"/>
+  <rect x="886" y="482" width="128" height="50" rx="6"/>
+  <rect x="718" y="610" width="164" height="44" rx="22"/>
+</g>
+<circle cx="680" cy="260" r="6" fill="#d64e3e"/><circle cx="920" cy="260" r="6" fill="#5481e6"/>
+<circle cx="586" cy="507" r="6" fill="#d64e3e"/><circle cx="1014" cy="507" r="6" fill="#5481e6"/>
+<g transform="rotate(-4 285 279)">
+  <rect x="150" y="184" width="270" height="190" rx="7" fill="#f8e5df"/>
+  <path d="M186 220H239Q248 220 248 229V258Q248 267 239 267H209L195 281V267H186Q177 267 177 258V229Q177 220 186 220Z" fill="none" stroke="#bd5145" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M189 235H235M189 248H224M179 311H378M179 328H350M179 345H300" fill="none" stroke="#ca796e" stroke-width="4" stroke-linecap="round"/>
+</g>
+<g transform="rotate(3 315 510)">
+  <rect x="205" y="424" width="220" height="155" rx="7" fill="#f3d8d0"/>
+  <path d="M243 448C227 448 216 462 216 476C216 496 243 518 243 518C243 518 270 496 270 476C270 462 259 448 243 448Z" fill="none" stroke="#bd5145" stroke-width="3.5"/><circle cx="243" cy="475" r="9" fill="none" stroke="#bd5145" stroke-width="3"/>
+  <path d="M290 462H393M290 480H373M228 544H393" fill="none" stroke="#ca796e" stroke-width="4" stroke-linecap="round"/>
+</g>
+<g transform="rotate(4 1315 279)">
+  <rect x="1180" y="184" width="270" height="190" rx="7" fill="#e3eaf7"/>
+  <circle cx="1229" cy="245" r="27" fill="none" stroke="#5174b4" stroke-width="3.5"/>
+  <path d="M1229 226V245H1244M1207 311H1408M1207 328H1380M1207 345H1330" fill="none" stroke="#7593c7" stroke-width="4" stroke-linecap="round"/>
+</g>
+<g transform="rotate(-3 1285 510)">
+  <rect x="1175" y="424" width="220" height="155" rx="7" fill="#d5e1f4"/>
+  <path d="M1204 500V469M1226 500V457M1248 500V445" stroke="#5174b4" stroke-width="11"/>
+  <path d="M1273 462H1365M1273 480H1348M1200 544H1365" fill="none" stroke="#7593c7" stroke-width="4" stroke-linecap="round"/>
+</g>
+<g font-family="Helvetica,Arial,sans-serif" font-size="24" fill="#58564e" text-anchor="middle">
+  <text x="290" y="650">Experience</text><text x="800" y="746">One shared pathway</text><text x="1310" y="650">Clinical insight</text>
+</g>
+</svg>
