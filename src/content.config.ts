@@ -55,6 +55,7 @@ export const collections = {
         thumbnail: z.string().optional(),
         thumbnailAlt: z.string().optional(),
         coverAspectRatio: z.number().positive().default(2),
+        coverPosition: z.string().default("50% 50%"),
 
         video: z.array(z.object({ src: z.string(), type: z.string() })).optional(),
         tech: z.array(allowedTechsEnum).default([]),

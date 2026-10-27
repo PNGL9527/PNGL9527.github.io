@@ -107,6 +107,7 @@ const backToWorkHref = '/portfolio';
   :global(.case-prose .case-align-bottom > figure) { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
   :global(.case-prose .case-align-bottom .image-trigger) { align-self: end; }
   :global(.case-prose .case-align-bottom figcaption) { margin-top: 0; }
+  :global(.case-prose .case-images-center .image-trigger) { align-self: center; }
   :global(.case-prose .case-evidence) { margin: 2rem 0; }
   :global(.case-prose .case-table-scroll) { overflow-x: auto; margin: 2rem 0; border: 1px solid #ddd; border-radius: 1rem; }
   :global(.case-prose .case-table-scroll:focus-visible) { outline: 3px solid #ffa808; outline-offset: 3px; }
@@ -180,9 +181,9 @@ const backToWorkHref = '/portfolio';
         >
           {cover &&
             (typeof cover === 'string' ? (
-              <img src={cover} alt={coverAlt} class="h-full w-full object-cover" />
+              <img src={cover} alt={coverAlt} class="h-full w-full object-cover" style={{ objectPosition: project.data.coverPosition }} />
             ) : (
-              <Image src={cover} alt={coverAlt} class="h-full w-full object-cover" />
+              <Image src={cover} alt={coverAlt} class="h-full w-full object-cover" style={{ objectPosition: project.data.coverPosition }} />
             ))}
         </div>
       </section>
