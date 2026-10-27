@@ -108,6 +108,15 @@ const backToWorkHref = '/portfolio';
   :global(.case-prose .case-align-bottom .image-trigger) { align-self: end; }
   :global(.case-prose .case-align-bottom figcaption) { margin-top: 0; }
   :global(.case-prose .case-images-center .image-trigger) { align-self: center; }
+  :global(.case-prose figure.case-image .image-trigger img.case-pair-reference-size) { width: calc(46% - .69rem); margin-inline: auto; }
+  :global(.case-prose .case-steps-equal) { align-items: stretch; row-gap: .7rem; }
+  :global(.case-prose .case-steps-equal > section) { display: grid; grid-row: span 4; grid-template-rows: subgrid; }
+  :global(.case-prose .case-steps-equal > section > h3) { margin: 1.5rem 0 .7rem; }
+  :global(.case-prose .case-steps-equal .case-image) { display: grid; grid-row: span 2; grid-template-rows: subgrid; margin: 0; }
+  :global(.case-prose .case-steps-equal .image-trigger) { align-self: stretch; display: flex; align-items: center; background: white; }
+  :global(.case-prose .case-steps-equal .image-trigger img.case-helper-scale) { width: 92%; margin-inline: auto; }
+  :global(.case-prose .case-steps-equal figcaption) { margin-top: 0; }
+  :global(.case-prose .case-steps-equal > section > p) { margin: .7rem 0 1.5rem; }
   :global(.case-prose .case-evidence) { margin: 2rem 0; }
   :global(.case-prose .case-table-scroll) { overflow-x: auto; margin: 2rem 0; border: 1px solid #ddd; border-radius: 1rem; }
   :global(.case-prose .case-table-scroll:focus-visible) { outline: 3px solid #ffa808; outline-offset: 3px; }
@@ -130,7 +139,10 @@ const backToWorkHref = '/portfolio';
   :global(.case-prose table) { width: 100%; table-layout: fixed; }
   :global(.case-prose td), :global(.case-prose th) { overflow-wrap: anywhere; padding-right: .6rem; }
   @media (max-width: 40rem) {
+    :global(.case-prose figure.case-image .image-trigger img.case-pair-reference-size) { width: 92%; }
     :global(.case-prose .case-grid) { grid-template-columns: minmax(0, 1fr); }
+    :global(.case-prose .case-steps-equal > section), :global(.case-prose .case-steps-equal .case-image) { display: block; grid-row: auto; }
+    :global(.case-prose .case-steps-equal figcaption) { margin-top: .7rem; }
     :global(.case-prose .case-grid.case-align-bottom) { grid-template-rows: none; row-gap: 1.5rem; }
     :global(.case-prose .case-align-bottom > figure) { display: block; grid-row: auto; }
     :global(.case-prose .case-align-bottom figcaption) { margin-top: .7rem; }
