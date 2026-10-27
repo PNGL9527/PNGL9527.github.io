@@ -46,3 +46,28 @@ The brief distinguishes SyncTeX jumps from continuous scroll-following. The visi
 - The latest `03-dark-preview-math.png`, `09-dark-completion.png`, and `Zen mode.png` were copied unchanged to `math-updated.png`, `completion-updated.png`, and `zen-mode-updated.png`. Versioned filenames prevent stale image caches. Zen mode remains left of settings; the original copies are retained but no longer used by this page.
 - ZenTex alone sets `coverAspectRatio` to 5:3 instead of the default 2:1, increasing detail-page cover height by 20% at the same width. Portfolio list cards retain their existing proportions.
 - Added the author-supplied GitHub repository button after the credits.
+
+## Refresh — 2026-10-27
+
+Updated narrative from the author-supplied Desktop/ZenTex 作品集材料 feature inventory and seven-layer architecture. Screenshot checklist used as reference only; no app screenshots were staged or generated. New image source: /Users/peng/文件/Coding/personal website/zentex-portfolio-kit/assets. Images copied unchanged to dated filenames to avoid stale caches. Original origin and development credits retained. Previous limits concerning absent linked scrolling and a localisation gap superseded by the new supplied feature inventory. Test counts explicitly attributed to the supplied 0.17.43 report, not independently rerun.
+
+- source-20261027.png ← 01-dark-source.png
+- preview-20261027.png ← 02-dark-preview.png
+- math-20261027.png ← 03-dark-preview-math.png
+- table-20261027.png ← 04-dark-preview-findings.png
+- split-20261027.png ← 05-dark-split-compiled.png
+- outline-20261027.png ← 06-dark-outline.png
+- todo-20261027.png ← 07-dark-todo.png
+- search-20261027.png ← 08-dark-search.png
+- completion-20261027.png ← 09-dark-completion.png
+- settings-20261027.png ← 10-dark-settings.png
+- zen-mode-20261027.png ← Zen mode.png
+- folding-20261027.png ← section and figure folded.png
+- palette-20261027.png ← dark-Code Palette-pigment.png
+- palette-settings-20261027.png ← dark-Code Palette-setting.png
+- history-20261027.png ← dark-version history.png
+- document-settings-20261027.png ← document settings.png
+- diagnostics-20261027.png ← error locating.png
+- reader-20261027.png ← pdf review.png
+- editor-settings-20261027.png ← setting-editor.png
+- symbols-20261027.png ← symbol tab.png
