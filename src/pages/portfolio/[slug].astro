@@ -102,6 +102,9 @@ const backToWorkHref = '/portfolio';
   :global(.case-prose > h2:first-child) { margin-top: 0; }
   :global(.case-prose .case-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; align-items: start; }
   :global(.case-prose .case-grid > *) { min-width: 0; }
+  :global(.case-prose .case-research-pair > section) { display: grid; grid-row: span 3; grid-template-rows: subgrid; }
+  :global(.case-prose .case-research-pair h3) { margin-bottom: 0; }
+  :global(.case-prose .case-research-pair figure) { margin: 0; align-self: start; }
   :global(.case-prose .case-grid-three) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   :global(.case-prose .case-grid.case-align-bottom) { grid-template-rows: auto auto; row-gap: .7rem; align-items: stretch; }
   :global(.case-prose .case-align-bottom > figure) { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
@@ -139,6 +142,7 @@ const backToWorkHref = '/portfolio';
   :global(.case-prose table) { width: 100%; table-layout: fixed; }
   :global(.case-prose td), :global(.case-prose th) { overflow-wrap: anywhere; padding-right: .6rem; }
   @media (max-width: 40rem) {
+    :global(.case-prose .case-research-pair > section) { display: block; grid-row: auto; }
     :global(.case-prose figure.case-image .image-trigger img.case-pair-reference-size) { width: 92%; }
     :global(.case-prose .case-grid) { grid-template-columns: minmax(0, 1fr); }
     :global(.case-prose .case-steps-equal > section), :global(.case-prose .case-steps-equal .case-image) { display: block; grid-row: auto; }
