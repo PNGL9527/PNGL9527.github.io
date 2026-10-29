@@ -139,6 +139,10 @@ const backToWorkHref = '/portfolio';
   :global(.case-prose .case-prototype h3) { font-size: 1rem; margin: 0 0 1rem; }
   :global(.case-prose .case-prototype iframe) { width: 100%; aspect-ratio: 9 / 16; border: 0; border-radius: .75rem; }
   :global(.case-prose .case-prototype a) { display: inline-block; margin-top: 1rem; text-decoration: underline; }
+  :global(.case-prose .zentex-architecture-table th:first-child), :global(.case-prose .zentex-architecture-table td:first-child) { width: 20%; }
+  :global(.case-prose .zentex-architecture-table th:nth-child(2)), :global(.case-prose .zentex-architecture-table td:nth-child(2)), :global(.case-prose .zentex-architecture-table th:nth-child(3)), :global(.case-prose .zentex-architecture-table td:nth-child(3)) { width: 40%; }
+  :global(.case-prose .image-trigger:has(> .pdfclip-annotation-crop)) { overflow: hidden; }
+  :global(.case-prose figure.case-image .image-trigger > img.pdfclip-annotation-crop) { transform: scale(1.012); transform-origin: bottom right; border-radius: 0; }
   :global(.case-prose table) { width: 100%; table-layout: fixed; }
   :global(.case-prose td), :global(.case-prose th) { overflow-wrap: anywhere; padding-right: .6rem; }
   @media (max-width: 40rem) {

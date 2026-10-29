@@ -112,6 +112,8 @@ Local text files remain the document’s source of truth. Settings, saved code, 
 
 A native Swift/AppKit shell hosts the interface in WKWebView, with no Electron or Node runtime required by the application. One process can hold multiple project windows, each with its own session state.
 
+<div className="zentex-architecture-table">
+
 | Layer | Responsibility | Why it matters to the writer |
 | --- | --- | --- |
 | Native shell | Windows, menus, deep links and notifications | Projects behave as desktop documents. |
@@ -121,6 +123,8 @@ A native Swift/AppKit shell hosts the interface in WKWebView, with no Electron o
 | Typesetting | Engines, diagnostics, SyncTeX and export | Writing leads to a checkable page and actionable errors. |
 | Local data | Documents, preferences, reusable code and snapshots | The writer retains accessible files and recovery options. |
 | Verification | Type checks, automated tests, templates and packaging checks | Changes are checked at several levels of the workflow. |
+
+</div>
 
 The supplied 0.17.43 development report records zero type errors, 903 unit tests, 315 backend checks, 1,155 browser end-to-end checks, six compilable templates, and twelve packaging checks. These are a dated development snapshot, not evidence of a user study or an independent test run for this portfolio update.
 
